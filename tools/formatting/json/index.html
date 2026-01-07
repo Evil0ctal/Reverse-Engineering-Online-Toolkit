@@ -15,21 +15,23 @@
     <link rel="stylesheet" href="../../../assets/css/main.css">
     <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
     <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="json.css">
 </head>
 <body>
     <div class="tool-container">
         <header class="tool-header">
             <h1 data-i18n="tools.json.title">JSON 格式化</h1>
-            <p data-i18n="tools.json.description">JSON 格式化、压缩、校验</p>
+            <p data-i18n="tools.json.description">JSON 格式化、压缩、校验、可视化，右键JSON节点可复制JSON Path。</p>
         </header>
 
         <main class="tool-main">
+            <!-- 选项区域 -->
             <section class="options-section">
                 <div class="option-group">
                     <label data-i18n="tools.json.indent">缩进</label>
                     <select id="indent-select" class="form-select">
-                        <option value="2">2 空格</option>
-                        <option value="4" selected>4 空格</option>
+                        <option value="2" data-i18n="tools.json.spaces2">2 空格</option>
+                        <option value="4" selected data-i18n="tools.json.spaces4">4 空格</option>
                         <option value="\t">Tab</option>
                     </select>
                 </div>
@@ -39,32 +41,88 @@
                         <span data-i18n="tools.json.sortKeys">排序键名</span>
                     </label>
                 </div>
+                <div class="option-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="auto-python" checked>
+                        <span data-i18n="tools.json.autoPython">自动转换 Python Dict</span>
+                    </label>
+                </div>
             </section>
 
+            <!-- 输入区域 -->
             <section class="input-section">
                 <label data-i18n="common.input">输入</label>
                 <textarea id="input"
                           class="form-input form-textarea form-textarea--code"
                           data-i18n-placeholder="tools.json.inputPlaceholder"
-                          placeholder="请输入 JSON..."></textarea>
+                          placeholder="请输入 JSON 或 Python Dict..."></textarea>
             </section>
 
+            <!-- 操作按钮 -->
             <section class="action-section">
                 <button id="format-btn" class="btn btn--primary" data-i18n="common.format">格式化</button>
                 <button id="minify-btn" class="btn btn--secondary" data-i18n="common.minify">压缩</button>
+                <button id="tree-btn" class="btn btn--secondary" data-i18n="tools.json.treeView">树形视图</button>
                 <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
                 <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
             </section>
 
-            <section class="output-section">
+            <!-- 输出区域 - 文本模式 -->
+            <section class="output-section" id="text-output-section">
                 <label data-i18n="common.output">输出</label>
+                <div id="highlighted-output" class="json-highlighted-output"></div>
                 <textarea id="output"
                           class="form-input form-textarea form-textarea--code"
-                          readonly></textarea>
+                          readonly
+                          style="display: none;"></textarea>
+            </section>
+
+            <!-- 输出区域 - 树形视图 -->
+            <section class="output-section tree-output-section" id="tree-output-section" style="display: none;">
+                <div class="tree-toolbar">
+                    <label data-i18n="tools.json.treeView">树形视图</label>
+                    <div class="tree-actions">
+                        <button id="expand-all" class="btn btn--sm btn--outline" data-i18n="tools.json.expandAll">全部展开</button>
+                        <button id="collapse-all" class="btn btn--sm btn--outline" data-i18n="tools.json.collapseAll">全部折叠</button>
+                        <button id="back-to-text" class="btn btn--sm btn--outline" data-i18n="tools.json.backToText">返回文本</button>
+                    </div>
+                </div>
+                <div id="json-tree" class="json-tree"></div>
             </section>
         </main>
+
+        <!-- 右键菜单 (移到 tool-container 内部) -->
+        <div id="context-menu" class="context-menu" style="display: none;">
+            <div class="context-menu-item" data-action="copy-path">
+                <span class="context-menu-icon">📋</span>
+                <span data-i18n="tools.json.copyPath">复制 JSON Path</span>
+            </div>
+            <div class="context-menu-item" data-action="copy-key">
+                <span class="context-menu-icon">🔑</span>
+                <span data-i18n="tools.json.copyKey">复制键名</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" data-action="copy-value-formatted">
+                <span class="context-menu-icon">📄</span>
+                <span data-i18n="tools.json.copyValueFormatted">复制值 (格式化)</span>
+            </div>
+            <div class="context-menu-item" data-action="copy-value-minified">
+                <span class="context-menu-icon">📝</span>
+                <span data-i18n="tools.json.copyValueMinified">复制值 (压缩)</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" data-action="expand-children">
+                <span class="context-menu-icon">➕</span>
+                <span data-i18n="tools.json.expandChildren">展开子节点</span>
+            </div>
+            <div class="context-menu-item" data-action="collapse-children">
+                <span class="context-menu-icon">➖</span>
+                <span data-i18n="tools.json.collapseChildren">折叠子节点</span>
+            </div>
+        </div>
     </div>
 
+    <!-- 引入脚本 -->
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
     <script src="json.js"></script>

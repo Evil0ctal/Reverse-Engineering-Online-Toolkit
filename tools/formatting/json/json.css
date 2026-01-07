@@ -1,0 +1,352 @@
+/**
+ * JSON 格式化工具样式
+ */
+
+/* 高亮输出区域 */
+.json-highlighted-output {
+    width: 100%;
+    min-height: 200px;
+    max-height: 500px;
+    padding: var(--spacing-md);
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* 默认中文占位符 */
+.json-highlighted-output:empty::before {
+    content: '格式化后的 JSON 将显示在这里...';
+    color: var(--text-muted);
+}
+
+/* 英文占位符 */
+:root[lang="en-US"] .json-highlighted-output:empty::before,
+html[lang="en-US"] .json-highlighted-output:empty::before {
+    content: 'Formatted JSON will appear here...';
+}
+
+/* 语法高亮颜色 */
+.json-key {
+    color: #9cdcfe;
+}
+
+.json-string {
+    color: #ce9178;
+}
+
+.json-number {
+    color: #b5cea8;
+}
+
+.json-boolean {
+    color: #569cd6;
+}
+
+.json-null {
+    color: #569cd6;
+}
+
+.json-bracket {
+    color: var(--text-primary);
+}
+
+.json-colon {
+    color: var(--text-primary);
+}
+
+.json-comma {
+    color: var(--text-primary);
+}
+
+/* 浅色主题下的语法高亮 */
+:root:not(.dark-theme) .json-key,
+html:not(.dark-theme) .json-key {
+    color: #0451a5;
+}
+
+:root:not(.dark-theme) .json-string,
+html:not(.dark-theme) .json-string {
+    color: #a31515;
+}
+
+:root:not(.dark-theme) .json-number,
+html:not(.dark-theme) .json-number {
+    color: #098658;
+}
+
+:root:not(.dark-theme) .json-boolean,
+html:not(.dark-theme) .json-boolean {
+    color: #0000ff;
+}
+
+:root:not(.dark-theme) .json-null,
+html:not(.dark-theme) .json-null {
+    color: #0000ff;
+}
+
+/* 树形视图 */
+.tree-output-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.tree-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tree-toolbar label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.tree-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.json-tree {
+    min-height: 200px;
+    max-height: 600px;
+    padding: var(--spacing-md);
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    line-height: 1.8;
+    overflow: auto;
+}
+
+/* 树节点 */
+.tree-node {
+    position: relative;
+    padding-left: 20px;
+}
+
+.tree-node-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+    padding: 2px 4px;
+    border-radius: var(--radius-sm);
+    cursor: default;
+}
+
+.tree-node-content:hover {
+    background-color: var(--bg-hover);
+}
+
+.tree-node-content.selected {
+    background-color: rgba(59, 130, 246, 0.2);
+}
+
+/* 折叠按钮 */
+.tree-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.15s ease;
+}
+
+.tree-toggle:hover {
+    color: var(--text-primary);
+}
+
+.tree-toggle.collapsed {
+    transform: rotate(-90deg);
+}
+
+.tree-toggle-placeholder {
+    display: inline-block;
+    width: 16px;
+    margin-right: 4px;
+}
+
+/* 树节点键名 */
+.tree-key {
+    color: #9cdcfe;
+    font-weight: 500;
+}
+
+:root:not(.dark-theme) .tree-key,
+html:not(.dark-theme) .tree-key {
+    color: #0451a5;
+}
+
+/* 树节点值 */
+.tree-value {
+    margin-left: 4px;
+}
+
+.tree-value-string {
+    color: #ce9178;
+}
+
+.tree-value-number {
+    color: #b5cea8;
+}
+
+.tree-value-boolean {
+    color: #569cd6;
+}
+
+.tree-value-null {
+    color: #569cd6;
+    font-style: italic;
+}
+
+:root:not(.dark-theme) .tree-value-string,
+html:not(.dark-theme) .tree-value-string {
+    color: #a31515;
+}
+
+:root:not(.dark-theme) .tree-value-number,
+html:not(.dark-theme) .tree-value-number {
+    color: #098658;
+}
+
+:root:not(.dark-theme) .tree-value-boolean,
+html:not(.dark-theme) .tree-value-boolean {
+    color: #0000ff;
+}
+
+:root:not(.dark-theme) .tree-value-null,
+html:not(.dark-theme) .tree-value-null {
+    color: #0000ff;
+}
+
+/* 类型标识 */
+.tree-type {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+
+/* 子节点容器 */
+.tree-children {
+    padding-left: 20px;
+    border-left: 1px dashed var(--border-color);
+    margin-left: 8px;
+}
+
+.tree-children.collapsed {
+    display: none;
+}
+
+/* 数组/对象预览 */
+.tree-preview {
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+    margin-left: 4px;
+}
+
+/* 右键菜单 */
+.context-menu {
+    position: fixed;
+    z-index: 10000;
+    min-width: 200px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: var(--spacing-xs) 0;
+}
+
+.context-menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    transition: background-color var(--transition-fast);
+}
+
+.context-menu-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.context-menu-icon {
+    width: 20px;
+    text-align: center;
+}
+
+.context-menu-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: var(--spacing-xs) 0;
+}
+
+/* 行号 */
+.line-numbers {
+    display: flex;
+}
+
+.line-numbers-col {
+    flex-shrink: 0;
+    padding-right: var(--spacing-md);
+    margin-right: var(--spacing-md);
+    border-right: 1px solid var(--border-color);
+    text-align: right;
+    color: var(--text-muted);
+    user-select: none;
+}
+
+.line-numbers-content {
+    flex: 1;
+    overflow-x: auto;
+}
+
+/* 错误显示 */
+.json-error {
+    color: var(--color-error);
+    padding: var(--spacing-md);
+    background-color: var(--color-error-bg);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar .form-input {
+        min-width: auto;
+    }
+
+    .search-options {
+        justify-content: flex-start;
+    }
+
+    .tree-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .tree-actions {
+        flex-wrap: wrap;
+    }
+}

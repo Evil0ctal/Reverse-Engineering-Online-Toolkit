@@ -1,0 +1,7 @@
+{
+    "title": "MD5 哈希",
+    "description": "计算文本的 MD5 哈希值",
+    "inputPlaceholder": "请输入要计算哈希的内容...",
+    "md5Lower": "MD5 (32位小写)",
+    "md5Upper": "MD5 (32位大写)"
+}

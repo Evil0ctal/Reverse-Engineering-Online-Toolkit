@@ -1,0 +1,10 @@
+{
+    "title": "UUID 生成器",
+    "description": "生成 UUID v1/v4/v5/v7",
+    "version": "版本",
+    "count": "数量",
+    "uppercase": "大写",
+    "noDashes": "无连字符",
+    "uuidV4Random": "UUID v4 (随机)",
+    "uuidV1Timestamp": "UUID v1 (时间戳)"
+}

@@ -1,0 +1,129 @@
+/**
+ * 时间戳转换工具样式
+ */
+
+.current-time-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.current-time-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.current-time-card label {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-sm);
+}
+
+.current-time-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.timestamp-value {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.timestamp-unit {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.current-datetime {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-sm);
+}
+
+.convert-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.convert-section h3 {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.convert-row {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.convert-row .form-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.convert-row .form-select {
+    width: auto;
+    min-width: 100px;
+}
+
+.result-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.result-row label {
+    min-width: 80px;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.result-row .form-input {
+    flex: 1;
+    font-family: var(--font-mono);
+}
+
+.result-row .copy-btn {
+    flex-shrink: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .convert-row {
+        flex-direction: column;
+    }
+
+    .convert-row .form-input,
+    .convert-row .form-select {
+        width: 100%;
+    }
+
+    .result-row {
+        flex-wrap: wrap;
+    }
+
+    .result-row label {
+        width: 100%;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .result-row .form-input {
+        flex: 1;
+        min-width: 0;
+    }
+}

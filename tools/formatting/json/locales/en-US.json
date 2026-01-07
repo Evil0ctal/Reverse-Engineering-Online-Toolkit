@@ -1,0 +1,20 @@
+{
+    "title": "JSON Formatter",
+    "description": "JSON formatting, compression, validation, and visualization, right-click on a JSON node to copy its JSON Path.",
+    "indent": "Indent",
+    "spaces2": "2 Spaces",
+    "spaces4": "4 Spaces",
+    "sortKeys": "Sort Keys",
+    "autoPython": "Auto Convert Python Dict",
+    "treeView": "Tree View",
+    "inputPlaceholder": "Enter JSON or Python Dict...",
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "backToText": "Back to Text",
+    "copyPath": "Copy JSON Path",
+    "copyKey": "Copy Key",
+    "copyValueFormatted": "Copy Value (Formatted)",
+    "copyValueMinified": "Copy Value (Minified)",
+    "expandChildren": "Expand Children",
+    "collapseChildren": "Collapse Children"
+}

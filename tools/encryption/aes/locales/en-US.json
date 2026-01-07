@@ -1,0 +1,16 @@
+{
+    "title": "AES Encryption",
+    "description": "AES symmetric encryption and decryption with multiple modes",
+    "mode": "Mode",
+    "keySize": "Key Size",
+    "outputFormat": "Output Format",
+    "key": "Key",
+    "keyPlaceholder": "Enter key...",
+    "keyHint128": "Requires 16 bytes (128 bit)",
+    "keyHint192": "Requires 24 bytes (192 bit)",
+    "keyHint256": "Requires 32 bytes (256 bit)",
+    "iv": "IV Vector",
+    "ivPlaceholder": "Enter IV vector...",
+    "ivHint": "Requires 16 bytes (128 bit)",
+    "inputPlaceholder": "Enter content to encrypt/decrypt..."
+}

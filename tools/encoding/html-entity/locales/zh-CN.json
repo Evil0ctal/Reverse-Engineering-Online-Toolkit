@@ -1,0 +1,10 @@
+{
+    "title": "HTML 实体编解码",
+    "description": "HTML 实体编码与解码",
+    "mode": "模式",
+    "namedEntities": "命名实体",
+    "decimalEntities": "十进制实体",
+    "hexEntities": "十六进制实体",
+    "encodeAll": "编码所有字符",
+    "inputPlaceholder": "请输入 HTML 文本..."
+}

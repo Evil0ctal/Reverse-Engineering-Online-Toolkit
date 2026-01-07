@@ -1,0 +1,122 @@
+/**
+ * RSA 加解密工具样式
+ */
+
+.options-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.option-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-width: 150px;
+}
+
+.option-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.keys-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.key-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.key-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.key-header label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.key-panel .form-textarea {
+    min-height: 150px;
+    font-size: var(--font-size-xs);
+}
+
+.input-section,
+.output-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.input-section label,
+.output-section label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.action-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-textarea--code {
+    font-family: var(--font-mono);
+    min-height: 150px;
+}
+
+.note-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.note-text {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .keys-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .option-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .option-group {
+        width: 100%;
+    }
+
+    .action-section {
+        flex-direction: column;
+    }
+
+    .action-section .btn {
+        width: 100%;
+    }
+}

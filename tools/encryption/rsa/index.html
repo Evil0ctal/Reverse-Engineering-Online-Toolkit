@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.rsa.title">RSA 加解密 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="rsa.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.rsa.title">RSA 加解密</h1>
+            <p data-i18n="tools.rsa.description">RSA 非对称加密与解密</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-row">
+                    <div class="option-group">
+                        <label data-i18n="tools.rsa.keySize">密钥长度</label>
+                        <select id="key-size-select" class="form-select">
+                            <option value="1024">1024 bit</option>
+                            <option value="2048" selected>2048 bit</option>
+                            <option value="4096">4096 bit</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.rsa.outputFormat">输出格式</label>
+                        <select id="output-format" class="form-select">
+                            <option value="base64" selected>Base64</option>
+                            <option value="hex">Hex</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <button id="generate-keys-btn" class="btn btn--primary" data-i18n="tools.rsa.generateKeys">生成密钥对</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 密钥区域 -->
+            <section class="keys-section">
+                <div class="key-panel">
+                    <div class="key-header">
+                        <label data-i18n="tools.rsa.publicKey">公钥</label>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="public-key" data-i18n="common.copy">复制</button>
+                    </div>
+                    <textarea id="public-key"
+                              class="form-input form-textarea form-textarea--code"
+                              data-i18n-placeholder="tools.rsa.publicKeyPlaceholder"
+                              placeholder="公钥将显示在这里..."></textarea>
+                </div>
+                <div class="key-panel">
+                    <div class="key-header">
+                        <label data-i18n="tools.rsa.privateKey">私钥</label>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="private-key" data-i18n="common.copy">复制</button>
+                    </div>
+                    <textarea id="private-key"
+                              class="form-input form-textarea form-textarea--code"
+                              data-i18n-placeholder="tools.rsa.privateKeyPlaceholder"
+                              placeholder="私钥将显示在这里..."></textarea>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.rsa.inputPlaceholder"
+                          placeholder="请输入要加密/解密的内容..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="encrypt-btn" class="btn btn--primary" data-i18n="common.encrypt">加密</button>
+                <button id="decrypt-btn" class="btn btn--secondary" data-i18n="common.decrypt">解密</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+
+            <!-- 说明 -->
+            <section class="note-section">
+                <p class="note-text" data-i18n="tools.rsa.note">
+                    注意：使用公钥加密，私钥解密。RSA 加密的数据长度受限于密钥长度。
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="rsa.js"></script>
+</body>
+</html>

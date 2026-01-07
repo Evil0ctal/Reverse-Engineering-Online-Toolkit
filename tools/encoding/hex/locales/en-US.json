@@ -1,0 +1,10 @@
+{
+    "title": "Hex Converter",
+    "description": "Convert between hexadecimal string and text",
+    "uppercase": "Uppercase",
+    "withSpaces": "With Spaces",
+    "withPrefix": "0x Prefix",
+    "inputPlaceholder": "Enter text or hex string...",
+    "textToHex": "Text to Hex",
+    "hexToText": "Hex to Text"
+}

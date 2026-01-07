@@ -1,0 +1,10 @@
+{
+    "title": "HTML Entity Encoder/Decoder",
+    "description": "HTML entity encoding and decoding",
+    "mode": "Mode",
+    "namedEntities": "Named Entities",
+    "decimalEntities": "Decimal Entities",
+    "hexEntities": "Hexadecimal Entities",
+    "encodeAll": "Encode All Characters",
+    "inputPlaceholder": "Enter HTML text..."
+}

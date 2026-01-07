@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.timestamp.title">时间戳转换 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="timestamp.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.timestamp.title">时间戳转换</h1>
+            <p data-i18n="tools.timestamp.description">Unix 时间戳转换与生成</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 当前时间戳 -->
+            <section class="current-time-section">
+                <div class="current-time-card">
+                    <label data-i18n="tools.timestamp.currentTimestamp">当前时间戳</label>
+                    <div class="current-time-display">
+                        <span id="current-seconds" class="timestamp-value">-</span>
+                        <span class="timestamp-unit" data-i18n="tools.timestamp.seconds">秒</span>
+                    </div>
+                    <div class="current-time-display">
+                        <span id="current-millis" class="timestamp-value">-</span>
+                        <span class="timestamp-unit" data-i18n="tools.timestamp.milliseconds">毫秒</span>
+                    </div>
+                    <div class="current-datetime" id="current-datetime">-</div>
+                </div>
+            </section>
+
+            <!-- 时间戳转日期 -->
+            <section class="convert-section">
+                <h3 data-i18n="tools.timestamp.timestampToDate">时间戳转日期时间</h3>
+                <div class="convert-row">
+                    <input type="text" id="timestamp-input" class="form-input"
+                           data-i18n-placeholder="tools.timestamp.enterTimestamp"
+                           placeholder="输入时间戳...">
+                    <select id="timestamp-unit" class="form-select">
+                        <option value="seconds" data-i18n="tools.timestamp.seconds">秒</option>
+                        <option value="milliseconds" data-i18n="tools.timestamp.milliseconds">毫秒</option>
+                    </select>
+                    <button id="convert-to-date-btn" class="btn btn--primary" data-i18n="common.convert">转换</button>
+                </div>
+                <div class="result-row">
+                    <label data-i18n="tools.timestamp.localTime">本地时间</label>
+                    <input type="text" id="local-datetime" class="form-input" readonly>
+                </div>
+                <div class="result-row">
+                    <label data-i18n="tools.timestamp.utcTime">UTC 时间</label>
+                    <input type="text" id="utc-datetime" class="form-input" readonly>
+                </div>
+                <div class="result-row">
+                    <label data-i18n="tools.timestamp.isoFormat">ISO 8601</label>
+                    <input type="text" id="iso-datetime" class="form-input" readonly>
+                </div>
+            </section>
+
+            <!-- 日期转时间戳 -->
+            <section class="convert-section">
+                <h3 data-i18n="tools.timestamp.dateToTimestamp">日期时间转时间戳</h3>
+                <div class="convert-row">
+                    <input type="datetime-local" id="datetime-input" class="form-input">
+                    <button id="convert-to-timestamp-btn" class="btn btn--primary" data-i18n="common.convert">转换</button>
+                    <button id="now-btn" class="btn btn--outline" data-i18n="tools.timestamp.now">现在</button>
+                </div>
+                <div class="result-row">
+                    <label data-i18n="tools.timestamp.seconds">秒</label>
+                    <input type="text" id="result-seconds" class="form-input" readonly>
+                    <button class="btn btn--sm btn--outline copy-btn" data-target="result-seconds" data-i18n="common.copy">复制</button>
+                </div>
+                <div class="result-row">
+                    <label data-i18n="tools.timestamp.milliseconds">毫秒</label>
+                    <input type="text" id="result-millis" class="form-input" readonly>
+                    <button class="btn btn--sm btn--outline copy-btn" data-target="result-millis" data-i18n="common.copy">复制</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="timestamp.js"></script>
+</body>
+</html>

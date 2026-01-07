@@ -1,0 +1,14 @@
+{
+    "title": "Timestamp Converter",
+    "description": "Unix timestamp conversion and generation",
+    "currentTimestamp": "Current Timestamp",
+    "seconds": "Seconds",
+    "milliseconds": "Milliseconds",
+    "timestampToDate": "Timestamp to Date",
+    "dateToTimestamp": "Date to Timestamp",
+    "enterTimestamp": "Enter timestamp...",
+    "localTime": "Local Time",
+    "utcTime": "UTC Time",
+    "isoFormat": "ISO 8601",
+    "now": "Now"
+}

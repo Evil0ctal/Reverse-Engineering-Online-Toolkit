@@ -1,0 +1,10 @@
+{
+    "title": "十六进制转换",
+    "description": "十六进制字符串与文本互转",
+    "uppercase": "大写",
+    "withSpaces": "带空格",
+    "withPrefix": "0x 前缀",
+    "inputPlaceholder": "请输入文本或十六进制字符串...",
+    "textToHex": "文本转十六进制",
+    "hexToText": "十六进制转文本"
+}

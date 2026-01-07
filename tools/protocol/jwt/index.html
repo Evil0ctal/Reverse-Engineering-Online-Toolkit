@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.jwt.title">JWT 解析 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="jwt.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.jwt.title">JWT 解析</h1>
+            <p data-i18n="tools.jwt.description">JWT Token 解析与验证</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.jwt.inputPlaceholder"
+                          placeholder="请输入 JWT Token..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="decode-btn" class="btn btn--primary" data-i18n="common.decode">解析</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+            </section>
+
+            <!-- 解析结果 -->
+            <section class="jwt-result" id="jwt-result" style="display: none;">
+                <!-- Header -->
+                <div class="jwt-section jwt-header-section">
+                    <div class="jwt-section-title">
+                        <span class="jwt-section-label" data-i18n="tools.jwt.header">Header</span>
+                        <span class="jwt-section-alg" id="jwt-alg"></span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="header-json" data-i18n="common.copy">复制</button>
+                    </div>
+                    <pre id="header-json" class="jwt-json"></pre>
+                </div>
+
+                <!-- Payload -->
+                <div class="jwt-section jwt-payload-section">
+                    <div class="jwt-section-title">
+                        <span class="jwt-section-label" data-i18n="tools.jwt.payload">Payload</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="payload-json" data-i18n="common.copy">复制</button>
+                    </div>
+                    <pre id="payload-json" class="jwt-json"></pre>
+
+                    <!-- 时间信息 -->
+                    <div class="jwt-times" id="jwt-times" style="display: none;">
+                        <div class="jwt-time-item" id="jwt-iat" style="display: none;">
+                            <span class="jwt-time-label">iat (Issued At):</span>
+                            <span class="jwt-time-value" id="jwt-iat-value"></span>
+                        </div>
+                        <div class="jwt-time-item" id="jwt-exp" style="display: none;">
+                            <span class="jwt-time-label">exp (Expires):</span>
+                            <span class="jwt-time-value" id="jwt-exp-value"></span>
+                            <span class="jwt-time-status" id="jwt-exp-status"></span>
+                        </div>
+                        <div class="jwt-time-item" id="jwt-nbf" style="display: none;">
+                            <span class="jwt-time-label">nbf (Not Before):</span>
+                            <span class="jwt-time-value" id="jwt-nbf-value"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signature -->
+                <div class="jwt-section jwt-signature-section">
+                    <div class="jwt-section-title">
+                        <span class="jwt-section-label" data-i18n="tools.jwt.signature">Signature</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="signature-value" data-i18n="common.copy">复制</button>
+                    </div>
+                    <div id="signature-value" class="jwt-signature"></div>
+                    <p class="jwt-signature-note" data-i18n="tools.jwt.signatureNote">注意：签名验证需要提供密钥，此工具仅解析不验证签名</p>
+                </div>
+            </section>
+
+            <!-- 错误信息 -->
+            <section class="error-section" id="error-section" style="display: none;">
+                <div class="error-message" id="error-message"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="jwt.js"></script>
+</body>
+</html>

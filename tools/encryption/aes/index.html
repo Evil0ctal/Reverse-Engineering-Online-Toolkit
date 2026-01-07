@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.aes.title">AES 加解密 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="aes.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.aes.title">AES 加解密</h1>
+            <p data-i18n="tools.aes.description">AES 对称加密与解密，支持多种模式</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-row">
+                    <div class="option-group">
+                        <label data-i18n="tools.aes.mode">模式</label>
+                        <select id="mode-select" class="form-select">
+                            <option value="CBC" selected>CBC</option>
+                            <option value="CTR">CTR</option>
+                            <option value="GCM">GCM</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.aes.keySize">密钥长度</label>
+                        <select id="key-size-select" class="form-select">
+                            <option value="128">128 bit</option>
+                            <option value="192">192 bit</option>
+                            <option value="256" selected>256 bit</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.aes.outputFormat">输出格式</label>
+                        <select id="output-format" class="form-select">
+                            <option value="base64" selected>Base64</option>
+                            <option value="hex">Hex</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 密钥和IV -->
+            <section class="key-section">
+                <div class="key-row">
+                    <div class="key-group">
+                        <label data-i18n="tools.aes.key">密钥</label>
+                        <div class="key-input-wrapper">
+                            <input type="text" id="key-input" class="form-input"
+                                   data-i18n-placeholder="tools.aes.keyPlaceholder"
+                                   placeholder="请输入密钥...">
+                            <button id="generate-key-btn" class="btn btn--sm btn--outline" data-i18n="common.generate">生成</button>
+                        </div>
+                        <span class="key-hint" id="key-hint" data-i18n="tools.aes.keyHint256">需要 32 字节 (256 bit)</span>
+                    </div>
+                </div>
+                <div class="key-row">
+                    <div class="key-group">
+                        <label data-i18n="tools.aes.iv">IV 向量</label>
+                        <div class="key-input-wrapper">
+                            <input type="text" id="iv-input" class="form-input"
+                                   data-i18n-placeholder="tools.aes.ivPlaceholder"
+                                   placeholder="请输入 IV 向量...">
+                            <button id="generate-iv-btn" class="btn btn--sm btn--outline" data-i18n="common.generate">生成</button>
+                        </div>
+                        <span class="key-hint" data-i18n="tools.aes.ivHint">需要 16 字节 (128 bit)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.aes.inputPlaceholder"
+                          placeholder="请输入要加密/解密的内容..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="encrypt-btn" class="btn btn--primary" data-i18n="common.encrypt">加密</button>
+                <button id="decrypt-btn" class="btn btn--secondary" data-i18n="common.decrypt">解密</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="aes.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "title": "RSA 加解密",
+    "description": "RSA 非对称加密与解密",
+    "keySize": "密钥长度",
+    "outputFormat": "输出格式",
+    "generateKeys": "生成密钥对",
+    "publicKey": "公钥",
+    "privateKey": "私钥",
+    "publicKeyPlaceholder": "公钥将显示在这里...",
+    "privateKeyPlaceholder": "私钥将显示在这里...",
+    "inputPlaceholder": "请输入要加密/解密的内容...",
+    "keysGenerated": "密钥对已生成",
+    "note": "注意：使用公钥加密，私钥解密。RSA 加密的数据长度受限于密钥长度。"
+}

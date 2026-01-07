@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="tools.md5.title">MD5 哈希 - REOT</title>
+    <title data-i18n="tools.sha.title">SHA 哈希 - REOT</title>
     <!-- 检测直接访问，重定向到主框架 -->
     <script>
         (function() {
@@ -19,16 +19,28 @@
 <body>
     <div class="tool-container">
         <header class="tool-header">
-            <h1 data-i18n="tools.md5.title">MD5 哈希</h1>
-            <p data-i18n="tools.md5.description">计算文本的 MD5 哈希值</p>
+            <h1 data-i18n="tools.sha.title">SHA 哈希</h1>
+            <p data-i18n="tools.sha.description">SHA-1, SHA-256, SHA-384, SHA-512 哈希计算</p>
         </header>
 
         <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.sha.algorithm">算法</label>
+                    <select id="algorithm-select" class="form-select">
+                        <option value="SHA-1">SHA-1</option>
+                        <option value="SHA-256" selected>SHA-256</option>
+                        <option value="SHA-384">SHA-384</option>
+                        <option value="SHA-512">SHA-512</option>
+                    </select>
+                </div>
+            </section>
+
             <section class="input-section">
                 <label data-i18n="common.input">输入</label>
                 <textarea id="input"
                           class="form-input form-textarea form-textarea--code"
-                          data-i18n-placeholder="tools.md5.inputPlaceholder"
+                          data-i18n-placeholder="tools.sha.inputPlaceholder"
                           placeholder="请输入要计算哈希的内容..."></textarea>
             </section>
 
@@ -39,12 +51,12 @@
             </section>
 
             <section class="output-section">
-                <label data-i18n="tools.md5.md5Lower">MD5 (32位小写)</label>
+                <label data-i18n="tools.sha.hashLower">哈希值 (小写)</label>
                 <input type="text" id="output-lower" class="form-input" readonly>
             </section>
 
             <section class="output-section">
-                <label data-i18n="tools.md5.md5Upper">MD5 (32位大写)</label>
+                <label data-i18n="tools.sha.hashUpper">哈希值 (大写)</label>
                 <input type="text" id="output-upper" class="form-input" readonly>
             </section>
         </main>
@@ -52,6 +64,6 @@
 
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
-    <script src="md5.js"></script>
+    <script src="sha.js"></script>
 </body>
 </html>

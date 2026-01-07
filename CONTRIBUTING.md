@@ -109,7 +109,10 @@ tools/<category>/<tool-name>/
 ├── index.html    # 工具页面
 ├── <tool>.js     # 核心逻辑
 ├── <tool>.css    # 工具样式（可选）
-└── README.md     # 工具文档
+├── README.md     # 工具文档
+└── locales/      # 工具专属国际化（推荐）
+    ├── zh-CN.json
+    └── en-US.json
 ```
 
 ### 实现步骤
@@ -117,18 +120,76 @@ tools/<category>/<tool-name>/
 1. 创建工具目录
 2. 实现 HTML 页面（使用 data-i18n 属性支持国际化）
 3. 实现 JavaScript 逻辑（使用 IIFE 模式）
-4. 添加国际化文本到 `locales/zh-CN.json` 和 `locales/en-US.json`
+4. 添加国际化支持（见下方详细说明）
 5. 在 `assets/js/tools-registry.js` 中注册工具
 6. 编写工具文档
 
 详细模板请参考 [README.md](./README.md) 中的"如何贡献新功能/工具"章节。
 
+### 模块化国际化
+
+REOT 采用**模块化国际化架构**，工具的翻译分为两部分：
+
+**1. 根目录 locales（必须）** - 用于侧边栏和搜索
+
+在 `locales/zh-CN.json` 和 `locales/en-US.json` 的 `tools` 对象中添加工具的 `title` 和 `description`：
+
+```json
+{
+    "tools": {
+        "my-tool": {
+            "title": "我的工具",
+            "description": "工具描述"
+        }
+    }
+}
+```
+
+**2. 工具目录 locales（推荐）** - 工具详细翻译
+
+在工具目录下创建 `locales/` 文件夹，存放工具特有的翻译：
+
+```
+tools/<category>/<tool-name>/locales/
+├── zh-CN.json
+└── en-US.json
+```
+
+工具 locales 文件格式（无需 `tools.my-tool` 前缀）：
+
+```json
+{
+    "title": "我的工具",
+    "description": "工具描述",
+    "placeholder": "请输入内容",
+    "customOption": "自定义选项"
+}
+```
+
+系统会自动将工具 locales 合并到 `tools.<tool-id>` 命名空间下。
+
+**优势**：
+- 工具完全自包含，便于添加/移除
+- 按需加载，提升性能
+- 避免 Git 合并冲突
+
 ## 添加新语言支持
+
+### 添加全局翻译
 
 1. 复制 `locales/en-US.json` 到新文件（如 `locales/ja-JP.json`）
 2. 翻译所有文本
-3. 在 `assets/js/i18n.js` 中注册新语言
+3. 在 `assets/js/i18n.js` 的 `supportedLocales` 数组中添加新语言代码
 4. 提交 PR
+
+### 添加工具翻译
+
+1. 找到工具目录下的 `locales/` 文件夹（如 `tools/formatting/json/locales/`）
+2. 复制 `en-US.json` 并重命名为新语言代码
+3. 翻译所有文本
+4. 提交 PR
+
+> **注意**：工具翻译是可选的。如果工具没有对应语言的翻译文件，系统会回退到 `zh-CN`。
 
 ## 代码规范
 

@@ -1,0 +1,10 @@
+{
+    "title": "UUID Generator",
+    "description": "Generate UUID v1/v4/v5/v7",
+    "version": "Version",
+    "count": "Count",
+    "uppercase": "Uppercase",
+    "noDashes": "No Dashes",
+    "uuidV4Random": "UUID v4 (Random)",
+    "uuidV1Timestamp": "UUID v1 (Timestamp)"
+}

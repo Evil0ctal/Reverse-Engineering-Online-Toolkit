@@ -1,0 +1,175 @@
+/**
+ * JWT 解析工具样式
+ */
+
+.jwt-result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.jwt-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.jwt-header-section {
+    border-left: 4px solid #ef4444;
+}
+
+.jwt-payload-section {
+    border-left: 4px solid #8b5cf6;
+}
+
+.jwt-signature-section {
+    border-left: 4px solid #06b6d4;
+}
+
+.jwt-section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.jwt-section-label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.jwt-section-alg {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    background-color: var(--bg-input);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+}
+
+.jwt-json {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    background-color: var(--bg-input);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.jwt-key {
+    color: #9cdcfe;
+}
+
+.jwt-string {
+    color: #ce9178;
+}
+
+.jwt-number {
+    color: #b5cea8;
+}
+
+.jwt-boolean {
+    color: #569cd6;
+}
+
+.jwt-null {
+    color: #569cd6;
+}
+
+/* 浅色主题 */
+:root:not(.dark-theme) .jwt-key,
+html:not(.dark-theme) .jwt-key {
+    color: #0451a5;
+}
+
+:root:not(.dark-theme) .jwt-string,
+html:not(.dark-theme) .jwt-string {
+    color: #a31515;
+}
+
+:root:not(.dark-theme) .jwt-number,
+html:not(.dark-theme) .jwt-number {
+    color: #098658;
+}
+
+:root:not(.dark-theme) .jwt-boolean,
+html:not(.dark-theme) .jwt-boolean,
+:root:not(.dark-theme) .jwt-null,
+html:not(.dark-theme) .jwt-null {
+    color: #0000ff;
+}
+
+.jwt-signature {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    background-color: var(--bg-input);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    word-break: break-all;
+    color: var(--text-secondary);
+}
+
+.jwt-signature-note {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+.jwt-times {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.jwt-time-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.jwt-time-label {
+    color: var(--text-muted);
+    min-width: 140px;
+}
+
+.jwt-time-value {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+.jwt-time-status {
+    font-size: var(--font-size-xs);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.jwt-time-status.expired {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.jwt-time-status.valid {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.error-section {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.error-message {
+    color: #ef4444;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}

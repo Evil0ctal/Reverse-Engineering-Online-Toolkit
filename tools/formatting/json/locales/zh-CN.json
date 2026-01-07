@@ -1,0 +1,20 @@
+{
+    "title": "JSON 格式化",
+    "description": "JSON 格式化、压缩、校验、可视化，右键JSON节点可复制JSON Path。",
+    "indent": "缩进",
+    "spaces2": "2 空格",
+    "spaces4": "4 空格",
+    "sortKeys": "排序键名",
+    "autoPython": "自动转换 Python Dict",
+    "treeView": "树形视图",
+    "inputPlaceholder": "请输入 JSON 或 Python Dict...",
+    "expandAll": "全部展开",
+    "collapseAll": "全部折叠",
+    "backToText": "返回文本",
+    "copyPath": "复制 JSON Path",
+    "copyKey": "复制键名",
+    "copyValueFormatted": "复制值 (格式化)",
+    "copyValueMinified": "复制值 (压缩)",
+    "expandChildren": "展开子节点",
+    "collapseChildren": "折叠子节点"
+}

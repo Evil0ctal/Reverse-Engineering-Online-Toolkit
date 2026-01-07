@@ -1,0 +1,8 @@
+{
+    "title": "SHA Hash",
+    "description": "SHA-1, SHA-256, SHA-384, SHA-512 hash calculation",
+    "algorithm": "Algorithm",
+    "inputPlaceholder": "Enter content to hash...",
+    "hashLower": "Hash (Lowercase)",
+    "hashUpper": "Hash (Uppercase)"
+}

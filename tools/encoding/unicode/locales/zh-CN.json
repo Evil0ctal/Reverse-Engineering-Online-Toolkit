@@ -1,0 +1,8 @@
+{
+    "title": "Unicode 编解码",
+    "description": "Unicode 编码与解码（\\uXXXX 格式）",
+    "format": "格式",
+    "uppercase": "大写",
+    "encodeAll": "编码所有字符",
+    "inputPlaceholder": "请输入文本或 Unicode 编码..."
+}

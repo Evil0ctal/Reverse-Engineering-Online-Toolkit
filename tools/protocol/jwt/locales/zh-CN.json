@@ -1,0 +1,9 @@
+{
+    "title": "JWT 解析",
+    "description": "JWT Token 解析与验证",
+    "inputPlaceholder": "请输入 JWT Token...",
+    "header": "头部 (Header)",
+    "payload": "载荷 (Payload)",
+    "signature": "签名 (Signature)",
+    "signatureNote": "注意：签名验证需要提供密钥，此工具仅解析不验证签名"
+}

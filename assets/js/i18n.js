@@ -1,6 +1,6 @@
 /**
  * REOT - Internationalization Module
- * 国际化模块
+ * 国际化模块 - 支持模块化工具翻译
  * @author Evil0ctal
  * @license Apache-2.0
  */
@@ -21,8 +21,11 @@
         // 支持的语言列表
         supportedLocales: ['zh-CN', 'en-US'],
 
-        // 语言包缓存
+        // 语言包缓存（根目录翻译）
         locales: {},
+
+        // 已加载的工具翻译缓存
+        toolLocales: {},
 
         // 语言显示名称
         localeNames: {
@@ -75,6 +78,9 @@
             this.currentLocale = locale;
             REOT.utils.storage.set('locale', locale);
 
+            // 重新加载当前工具的翻译（如果在工具页面）
+            await this.reloadCurrentToolLocale(locale);
+
             // 更新页面文本
             this.updatePageTexts();
 
@@ -106,6 +112,104 @@
                 // 使用内置的默认语言包
                 this.locales[locale] = this.getDefaultLocale(locale);
                 return this.locales[locale];
+            }
+        },
+
+        /**
+         * 加载工具特定的语言包
+         * @param {string} toolPath - 工具路径 (如 /tools/formatting/json/)
+         * @param {string} toolId - 工具ID (如 json)
+         * @returns {Promise<boolean>} - 是否成功加载
+         */
+        async loadToolLocale(toolPath, toolId) {
+            const locale = this.currentLocale;
+            const cacheKey = `${toolId}_${locale}`;
+
+            // 已经加载过则跳过
+            if (this.toolLocales[cacheKey]) {
+                return true;
+            }
+
+            // 确保路径以斜杠结尾
+            if (!toolPath.endsWith('/')) {
+                toolPath += '/';
+            }
+
+            try {
+                const response = await fetch(`${toolPath}locales/${locale}.json`);
+                if (!response.ok) {
+                    // 工具没有本地化文件是正常的，静默处理
+                    return false;
+                }
+
+                const toolTranslations = await response.json();
+                this.toolLocales[cacheKey] = toolTranslations;
+
+                // 合并到主语言包
+                this.mergeToolTranslations(locale, toolId, toolTranslations);
+
+                return true;
+            } catch (error) {
+                // 工具没有本地化文件是正常的，静默处理
+                return false;
+            }
+        },
+
+        /**
+         * 合并工具翻译到主语言包
+         * @param {string} locale - 语言代码
+         * @param {string} toolId - 工具ID
+         * @param {Object} translations - 工具翻译对象
+         */
+        mergeToolTranslations(locale, toolId, translations) {
+            if (!this.locales[locale]) {
+                this.locales[locale] = {};
+            }
+
+            if (!this.locales[locale].tools) {
+                this.locales[locale].tools = {};
+            }
+
+            // 将工具翻译合并到 tools.{toolId} 命名空间
+            this.locales[locale].tools[toolId] = this.deepMerge(
+                this.locales[locale].tools[toolId] || {},
+                translations
+            );
+        },
+
+        /**
+         * 深度合并对象
+         * @param {Object} target - 目标对象
+         * @param {Object} source - 源对象
+         * @returns {Object}
+         */
+        deepMerge(target, source) {
+            const result = { ...target };
+
+            for (const key in source) {
+                if (source.hasOwnProperty(key)) {
+                    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                        result[key] = this.deepMerge(result[key] || {}, source[key]);
+                    } else {
+                        result[key] = source[key];
+                    }
+                }
+            }
+
+            return result;
+        },
+
+        /**
+         * 切换语言时重新加载当前工具的翻译
+         * @param {string} locale - 新语言代码
+         */
+        async reloadCurrentToolLocale(locale) {
+            const currentPath = REOT.router?.getRoute();
+            if (currentPath && currentPath.startsWith('/tools/')) {
+                const tool = REOT.tools?.getByPath(currentPath);
+                if (tool) {
+                    await this.loadToolLocale(currentPath, tool.id);
+                }
             }
         },
 

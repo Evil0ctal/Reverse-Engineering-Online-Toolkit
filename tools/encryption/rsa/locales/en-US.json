@@ -1,0 +1,14 @@
+{
+    "title": "RSA Encryption",
+    "description": "RSA asymmetric encryption and decryption",
+    "keySize": "Key Size",
+    "outputFormat": "Output Format",
+    "generateKeys": "Generate Key Pair",
+    "publicKey": "Public Key",
+    "privateKey": "Private Key",
+    "publicKeyPlaceholder": "Public key will appear here...",
+    "privateKeyPlaceholder": "Private key will appear here...",
+    "inputPlaceholder": "Enter content to encrypt/decrypt...",
+    "keysGenerated": "Key pair generated",
+    "note": "Note: Encrypt with public key, decrypt with private key. RSA data length is limited by key size."
+}

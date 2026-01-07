@@ -1,0 +1,8 @@
+{
+    "title": "SHA 哈希",
+    "description": "SHA-1, SHA-256, SHA-384, SHA-512 哈希计算",
+    "algorithm": "算法",
+    "inputPlaceholder": "请输入要计算哈希的内容...",
+    "hashLower": "哈希值 (小写)",
+    "hashUpper": "哈希值 (大写)"
+}

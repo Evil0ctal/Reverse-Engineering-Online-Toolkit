@@ -1,0 +1,8 @@
+{
+    "title": "Unicode Encoder/Decoder",
+    "description": "Unicode encoding and decoding (\\uXXXX format)",
+    "format": "Format",
+    "uppercase": "Uppercase",
+    "encodeAll": "Encode All Characters",
+    "inputPlaceholder": "Enter text or Unicode encoding..."
+}

@@ -157,10 +157,7 @@
         },
         "json": {
             "title": "JSON 格式化",
-            "description": "JSON 格式化、压缩、校验",
-            "indent": "缩进",
-            "sortKeys": "排序键名",
-            "inputPlaceholder": "请输入 JSON..."
+            "description": "JSON 格式化、压缩、校验、可视化，右键JSON节点可复制JSON Path。"
         },
         "jwt": {
             "title": "JWT 解析",

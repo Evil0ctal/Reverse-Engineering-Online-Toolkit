@@ -1,0 +1,118 @@
+/**
+ * AES 加解密工具样式
+ */
+
+.options-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.option-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-width: 150px;
+}
+
+.option-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.key-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.key-row {
+    margin-bottom: var(--spacing-md);
+}
+
+.key-row:last-child {
+    margin-bottom: 0;
+}
+
+.key-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.key-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.key-input-wrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.key-input-wrapper .form-input {
+    flex: 1;
+    font-family: var(--font-mono);
+}
+
+.key-hint {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.input-section,
+.output-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.input-section label,
+.output-section label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.action-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-textarea--code {
+    font-family: var(--font-mono);
+    min-height: 150px;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+    .option-row {
+        flex-direction: column;
+    }
+
+    .option-group {
+        width: 100%;
+    }
+
+    .key-input-wrapper {
+        flex-direction: column;
+    }
+
+    .action-section {
+        flex-direction: column;
+    }
+
+    .action-section .btn {
+        width: 100%;
+    }
+}

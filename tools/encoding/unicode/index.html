@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="tools.uuid.title">UUID 生成器 - REOT</title>
+    <title data-i18n="tools.unicode.title">Unicode 编解码 - REOT</title>
     <!-- 检测直接访问，重定向到主框架 -->
     <script>
         (function() {
@@ -19,43 +19,56 @@
 <body>
     <div class="tool-container">
         <header class="tool-header">
-            <h1 data-i18n="tools.uuid.title">UUID 生成器</h1>
-            <p data-i18n="tools.uuid.description">生成 UUID v1/v4/v5/v7</p>
+            <h1 data-i18n="tools.unicode.title">Unicode 编解码</h1>
+            <p data-i18n="tools.unicode.description">Unicode 编码与解码（\uXXXX 格式）</p>
         </header>
 
         <main class="tool-main">
+            <!-- 选项区域 -->
             <section class="options-section">
                 <div class="option-group">
-                    <label data-i18n="tools.uuid.version">版本</label>
-                    <select id="version-select" class="form-select">
-                        <option value="4" selected data-i18n="tools.uuid.uuidV4Random">UUID v4 (随机)</option>
-                        <option value="1" data-i18n="tools.uuid.uuidV1Timestamp">UUID v1 (时间戳)</option>
+                    <label data-i18n="tools.unicode.format">格式</label>
+                    <select id="format-select" class="form-select">
+                        <option value="\\u" selected>\uXXXX</option>
+                        <option value="\\x">\xXX (ASCII)</option>
+                        <option value="&#">&#XXXX; (HTML)</option>
+                        <option value="&#x">&#xXXXX; (HTML Hex)</option>
+                        <option value="U+">U+XXXX</option>
                     </select>
-                </div>
-                <div class="option-group">
-                    <label data-i18n="tools.uuid.count">数量</label>
-                    <input type="number" id="count-input" class="form-input" value="1" min="1" max="100">
                 </div>
                 <div class="option-group">
                     <label class="form-checkbox">
                         <input type="checkbox" id="uppercase">
-                        <span data-i18n="tools.uuid.uppercase">大写</span>
+                        <span data-i18n="tools.unicode.uppercase">大写</span>
                     </label>
                 </div>
                 <div class="option-group">
                     <label class="form-checkbox">
-                        <input type="checkbox" id="no-dashes">
-                        <span data-i18n="tools.uuid.noDashes">无连字符</span>
+                        <input type="checkbox" id="encode-all">
+                        <span data-i18n="tools.unicode.encodeAll">编码所有字符</span>
                     </label>
                 </div>
             </section>
 
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.unicode.inputPlaceholder"
+                          placeholder="请输入文本或 Unicode 编码..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
             <section class="action-section">
-                <button id="generate-btn" class="btn btn--primary" data-i18n="common.generate">生成</button>
+                <button id="encode-btn" class="btn btn--primary" data-i18n="common.encode">编码</button>
+                <button id="decode-btn" class="btn btn--secondary" data-i18n="common.decode">解码</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
                 <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
                 <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
             </section>
 
+            <!-- 输出区域 -->
             <section class="output-section">
                 <label data-i18n="common.output">输出</label>
                 <textarea id="output"
@@ -67,6 +80,6 @@
 
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
-    <script src="uuid.js"></script>
+    <script src="unicode.js"></script>
 </body>
 </html>

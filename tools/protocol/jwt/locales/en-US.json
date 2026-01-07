@@ -1,0 +1,9 @@
+{
+    "title": "JWT Decoder",
+    "description": "JWT Token parsing and verification",
+    "inputPlaceholder": "Enter JWT Token...",
+    "header": "Header",
+    "payload": "Payload",
+    "signature": "Signature",
+    "signatureNote": "Note: Signature verification requires a key. This tool only decodes, it does not verify signatures."
+}

@@ -1,0 +1,14 @@
+{
+    "title": "时间戳转换",
+    "description": "Unix 时间戳转换与生成",
+    "currentTimestamp": "当前时间戳",
+    "seconds": "秒",
+    "milliseconds": "毫秒",
+    "timestampToDate": "时间戳转日期时间",
+    "dateToTimestamp": "日期时间转时间戳",
+    "enterTimestamp": "输入时间戳...",
+    "localTime": "本地时间",
+    "utcTime": "UTC 时间",
+    "isoFormat": "ISO 8601",
+    "now": "现在"
+}

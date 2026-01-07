@@ -173,6 +173,11 @@
                 // 加载工具CSS
                 this.loadToolStyle(path, tool.id);
 
+                // 加载工具特定的翻译文件（如果存在）
+                if (REOT.i18n) {
+                    await REOT.i18n.loadToolLocale(path, tool.id);
+                }
+
                 // 更新国际化文本
                 if (REOT.i18n) {
                     REOT.i18n.updatePageTexts();
