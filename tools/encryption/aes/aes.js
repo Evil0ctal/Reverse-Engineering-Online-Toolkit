@@ -363,4 +363,15 @@
 
     // 导出到全局
     window.AESTool = { encrypt, decrypt };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello, AES Encryption! 你好，AES 加密！';
+    }
+    if (keyInput && !keyInput.value) {
+        keyInput.value = 'my-secret-key-16';  // 16 bytes for AES-128
+    }
+    if (ivInput && !ivInput.value) {
+        ivInput.value = '1234567890123456';  // 16 bytes IV
+    }
 })();

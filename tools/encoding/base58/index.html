@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.base58.title">Base58 编解码 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.base58.title">Base58 编解码</h1>
+            <p data-i18n="tools.base58.description">Base58 编码与解码（Bitcoin 风格）</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.base58.alphabet">字母表</label>
+                    <select id="alphabet-select" class="form-select">
+                        <option value="bitcoin" selected data-i18n="tools.base58.bitcoin">Bitcoin</option>
+                        <option value="ripple" data-i18n="tools.base58.ripple">Ripple</option>
+                        <option value="flickr" data-i18n="tools.base58.flickr">Flickr</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.base58.inputPlaceholder"
+                          placeholder="请输入要编码/解码的内容..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="encode-btn" class="btn btn--primary" data-i18n="common.encode">编码</button>
+                <button id="decode-btn" class="btn btn--secondary" data-i18n="common.decode">解码</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="base58.js"></script>
+</body>
+</html>

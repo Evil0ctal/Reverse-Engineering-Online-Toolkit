@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.text-dedup.title">文本去重 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.text-dedup.title">文本去重</h1>
+            <p data-i18n="tools.text-dedup.description">去除重复行</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="case-sensitive" checked>
+                    <span data-i18n="tools.text-dedup.caseSensitive">区分大小写</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="trim-whitespace" checked>
+                    <span data-i18n="tools.text-dedup.trimWhitespace">去除首尾空白</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="keep-empty">
+                    <span data-i18n="tools.text-dedup.keepEmpty">保留空行</span>
+                </label>
+            </section>
+
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.text-dedup.inputPlaceholder"
+                          placeholder="请输入文本，每行一项..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="dedup-btn" class="btn btn--primary" data-i18n="tools.text-dedup.deduplicate">去重</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <div class="output-header">
+                    <label data-i18n="common.output">输出</label>
+                    <span id="stats" class="output-stats"></span>
+                </div>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="text-dedup.js"></script>
+</body>
+</html>

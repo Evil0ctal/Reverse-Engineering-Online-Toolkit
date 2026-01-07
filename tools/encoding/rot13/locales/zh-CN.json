@@ -1,0 +1,10 @@
+{
+    "title": "ROT13/ROT47 编码",
+    "description": "ROT13 和 ROT47 字符旋转编码",
+    "inputPlaceholder": "请输入要编码/解码的内容...",
+    "rotVariants": "ROT 变体说明",
+    "rot13Desc": "字母旋转 13 位 (A↔N, B↔O, ...)",
+    "rot47Desc": "ASCII 33-126 旋转 47 位",
+    "rot5Desc": "数字旋转 5 位 (0↔5, 1↔6, ...)",
+    "rot18Desc": "ROT13 + ROT5 组合"
+}

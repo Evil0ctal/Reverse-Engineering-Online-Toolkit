@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.color.title">颜色转换 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="color.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.color.title">颜色转换</h1>
+            <p data-i18n="tools.color.description">HEX, RGB, HSL, HSV 颜色格式互转</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="color-preview-section">
+                <div class="color-preview" id="color-preview"></div>
+                <input type="color" id="color-picker" class="color-picker">
+            </section>
+
+            <section class="color-inputs">
+                <div class="color-input-group">
+                    <label>HEX</label>
+                    <input type="text" id="hex" class="form-input form-input--code" placeholder="#FF5733">
+                </div>
+                <div class="color-input-group">
+                    <label>RGB</label>
+                    <div class="color-input-row">
+                        <input type="number" id="rgb-r" class="form-input" placeholder="R" min="0" max="255">
+                        <input type="number" id="rgb-g" class="form-input" placeholder="G" min="0" max="255">
+                        <input type="number" id="rgb-b" class="form-input" placeholder="B" min="0" max="255">
+                    </div>
+                </div>
+                <div class="color-input-group">
+                    <label>HSL</label>
+                    <div class="color-input-row">
+                        <input type="number" id="hsl-h" class="form-input" placeholder="H" min="0" max="360">
+                        <input type="number" id="hsl-s" class="form-input" placeholder="S%" min="0" max="100">
+                        <input type="number" id="hsl-l" class="form-input" placeholder="L%" min="0" max="100">
+                    </div>
+                </div>
+                <div class="color-input-group">
+                    <label>HSV/HSB</label>
+                    <div class="color-input-row">
+                        <input type="number" id="hsv-h" class="form-input" placeholder="H" min="0" max="360">
+                        <input type="number" id="hsv-s" class="form-input" placeholder="S%" min="0" max="100">
+                        <input type="number" id="hsv-v" class="form-input" placeholder="V%" min="0" max="100">
+                    </div>
+                </div>
+            </section>
+
+            <section class="color-output-section">
+                <h3 data-i18n="tools.color.cssFormats">CSS 格式</h3>
+                <div class="css-formats">
+                    <div class="css-format">
+                        <span class="css-format-label">HEX:</span>
+                        <code id="css-hex">#FF5733</code>
+                        <button class="copy-btn" data-target="css-hex">复制</button>
+                    </div>
+                    <div class="css-format">
+                        <span class="css-format-label">RGB:</span>
+                        <code id="css-rgb">rgb(255, 87, 51)</code>
+                        <button class="copy-btn" data-target="css-rgb">复制</button>
+                    </div>
+                    <div class="css-format">
+                        <span class="css-format-label">HSL:</span>
+                        <code id="css-hsl">hsl(11, 100%, 60%)</code>
+                        <button class="copy-btn" data-target="css-hsl">复制</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="color.js"></script>
+</body>
+</html>

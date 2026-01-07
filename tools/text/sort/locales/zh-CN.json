@@ -1,0 +1,14 @@
+{
+    "title": "文本排序",
+    "description": "文本行排序",
+    "inputPlaceholder": "请输入文本，每行一项...",
+    "sortType": "排序类型",
+    "alphabetical": "字母顺序",
+    "numeric": "数字顺序",
+    "byLength": "按长度",
+    "random": "随机",
+    "reverse": "倒序",
+    "caseInsensitive": "忽略大小写",
+    "removeEmpty": "移除空行",
+    "sort": "排序"
+}

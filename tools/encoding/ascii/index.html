@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.ascii.title">ASCII 转换 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="ascii.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.ascii.title">ASCII 转换</h1>
+            <p data-i18n="tools.ascii.description">ASCII 码与字符互转</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.ascii.outputFormat">输出格式</label>
+                    <select id="format-select" class="form-select">
+                        <option value="decimal" selected data-i18n="tools.ascii.decimal">十进制</option>
+                        <option value="hex" data-i18n="tools.ascii.hex">十六进制</option>
+                        <option value="binary" data-i18n="tools.ascii.binary">二进制</option>
+                        <option value="octal" data-i18n="tools.ascii.octal">八进制</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.ascii.separator">分隔符</label>
+                    <select id="separator-select" class="form-select">
+                        <option value=" " selected data-i18n="tools.ascii.space">空格</option>
+                        <option value="," data-i18n="tools.ascii.comma">逗号</option>
+                        <option value="-" data-i18n="tools.ascii.dash">短横线</option>
+                        <option value="" data-i18n="tools.ascii.none">无</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.ascii.inputPlaceholder"
+                          placeholder="请输入文本或 ASCII 码..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="to-ascii-btn" class="btn btn--primary" data-i18n="tools.ascii.toAscii">文本 → ASCII</button>
+                <button id="to-text-btn" class="btn btn--secondary" data-i18n="tools.ascii.toText">ASCII → 文本</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="ascii.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+    "title": "进制转换",
+    "description": "二进制、八进制、十进制、十六进制互转",
+    "decimal": "十进制 (DEC)",
+    "binary": "二进制 (BIN)",
+    "octal": "八进制 (OCT)",
+    "hexadecimal": "十六进制 (HEX)",
+    "customBase": "自定义进制",
+    "inputValue": "输入值",
+    "fromBase": "源进制",
+    "toBase": "目标进制"
+}

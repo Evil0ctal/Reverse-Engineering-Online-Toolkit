@@ -1,0 +1,9 @@
+{
+    "title": "文本去重",
+    "description": "去除重复行",
+    "inputPlaceholder": "请输入文本，每行一项...",
+    "caseSensitive": "区分大小写",
+    "trimWhitespace": "去除首尾空白",
+    "keepEmpty": "保留空行",
+    "deduplicate": "去重"
+}

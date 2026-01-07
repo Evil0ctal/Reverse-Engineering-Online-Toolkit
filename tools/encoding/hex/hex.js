@@ -146,4 +146,9 @@
 
     // 导出到全局
     window.HexTool = { textToHex, hexToText };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello, REOT! 逆向工程工具箱';
+    }
 })();

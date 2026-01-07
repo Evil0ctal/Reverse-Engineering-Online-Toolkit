@@ -1,0 +1,9 @@
+{
+    "title": "Text Deduplicator",
+    "description": "Remove duplicate lines",
+    "inputPlaceholder": "Enter text, one item per line...",
+    "caseSensitive": "Case sensitive",
+    "trimWhitespace": "Trim whitespace",
+    "keepEmpty": "Keep empty lines",
+    "deduplicate": "Deduplicate"
+}

@@ -1,0 +1,11 @@
+{
+    "title": "随机字符串",
+    "description": "生成随机字符串",
+    "length": "长度",
+    "count": "数量",
+    "uppercase": "大写字母 (A-Z)",
+    "lowercase": "小写字母 (a-z)",
+    "numbers": "数字 (0-9)",
+    "symbols": "特殊字符 (!@#$...)",
+    "customChars": "自定义字符集"
+}

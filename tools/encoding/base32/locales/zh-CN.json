@@ -1,0 +1,5 @@
+{
+    "title": "Base32 编解码",
+    "description": "Base32 编码与解码转换",
+    "inputPlaceholder": "请输入要编码/解码的内容..."
+}

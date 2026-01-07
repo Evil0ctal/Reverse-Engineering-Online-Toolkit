@@ -1,0 +1,17 @@
+{
+    "title": "ASCII 转换",
+    "description": "ASCII 码与字符互转",
+    "inputPlaceholder": "请输入文本或 ASCII 码...",
+    "outputFormat": "输出格式",
+    "separator": "分隔符",
+    "decimal": "十进制",
+    "hex": "十六进制",
+    "binary": "二进制",
+    "octal": "八进制",
+    "space": "空格",
+    "comma": "逗号",
+    "dash": "短横线",
+    "none": "无",
+    "toAscii": "文本 → ASCII",
+    "toText": "ASCII → 文本"
+}

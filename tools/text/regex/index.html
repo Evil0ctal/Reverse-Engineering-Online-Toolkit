@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.regex.title">正则表达式测试 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="regex.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.regex.title">正则表达式测试</h1>
+            <p data-i18n="tools.regex.description">正则表达式在线测试与调试</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="regex-section">
+                <label data-i18n="tools.regex.pattern">正则表达式</label>
+                <div class="regex-input-wrapper">
+                    <span class="regex-delimiter">/</span>
+                    <input type="text" id="regex-input" class="form-input regex-input" placeholder="输入正则表达式...">
+                    <span class="regex-delimiter">/</span>
+                    <input type="text" id="flags-input" class="form-input flags-input" value="g" placeholder="flags">
+                </div>
+                <div class="flags-checkboxes">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="flag-g" checked>
+                        <span>g (全局)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="flag-i">
+                        <span>i (忽略大小写)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="flag-m">
+                        <span>m (多行)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="flag-s">
+                        <span>s (dotAll)</span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <label data-i18n="tools.regex.testString">测试文本</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.regex.inputPlaceholder"
+                          placeholder="请输入要测试的文本..."></textarea>
+            </section>
+
+            <section class="result-section">
+                <label data-i18n="tools.regex.matches">匹配结果</label>
+                <div id="matches-result" class="matches-container"></div>
+            </section>
+
+            <section class="highlighted-section">
+                <label data-i18n="tools.regex.highlighted">高亮显示</label>
+                <div id="highlighted-text" class="highlighted-container"></div>
+            </section>
+
+            <section class="replace-section">
+                <label data-i18n="tools.regex.replaceWith">替换为</label>
+                <input type="text" id="replace-input" class="form-input" placeholder="$1, $2...">
+                <div class="action-section">
+                    <button id="replace-btn" class="btn btn--primary" data-i18n="tools.regex.replace">替换</button>
+                    <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+                </div>
+                <textarea id="replace-result"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="regex.js"></script>
+</body>
+</html>

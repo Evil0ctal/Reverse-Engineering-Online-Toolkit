@@ -1,0 +1,11 @@
+{
+    "title": "正则表达式测试",
+    "description": "正则表达式在线测试与调试",
+    "pattern": "正则表达式",
+    "testString": "测试文本",
+    "inputPlaceholder": "请输入要测试的文本...",
+    "matches": "匹配结果",
+    "highlighted": "高亮显示",
+    "replaceWith": "替换为",
+    "replace": "替换"
+}

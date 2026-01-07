@@ -255,4 +255,17 @@
 
     // 导出到全局
     window.JWTTool = { decode, base64UrlDecode };
+
+    // 设置默认示例数据 (示例 JWT Token)
+    if (inputEl && !inputEl.value) {
+        // 这是一个示例 JWT，包含典型的 header 和 payload
+        inputEl.value = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxNzM1Njg5NjAwfQ.4S5J3Z9K8L7VxQHf6T2MnW8PcYR1gX4hN9dE3kO2aS8';
+        // 自动触发解析
+        try {
+            const result = decode(inputEl.value);
+            showResult(result);
+        } catch (e) {
+            // 忽略错误
+        }
+    }
 })();

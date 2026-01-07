@@ -184,6 +184,62 @@
             "milliseconds": "Milliseconds",
             "toTimestamp": "To Timestamp",
             "toDatetime": "To Datetime"
+        },
+        "random-string": {
+            "title": "Random String Generator",
+            "description": "Generate random strings"
+        },
+        "password": {
+            "title": "Password Generator",
+            "description": "Generate secure random passwords"
+        },
+        "base32": {
+            "title": "Base32 Encoder/Decoder",
+            "description": "Base32 encoding and decoding"
+        },
+        "base58": {
+            "title": "Base58 Encoder/Decoder",
+            "description": "Base58 encoding and decoding (Bitcoin style)"
+        },
+        "ascii": {
+            "title": "ASCII Converter",
+            "description": "Convert between ASCII codes and characters"
+        },
+        "rot13": {
+            "title": "ROT13/ROT47 Encoder",
+            "description": "ROT13 and ROT47 character rotation encoding"
+        },
+        "morse": {
+            "title": "Morse Code",
+            "description": "Morse code encoding and decoding"
+        },
+        "number-base": {
+            "title": "Number Base Converter",
+            "description": "Convert between binary, octal, decimal, and hexadecimal"
+        },
+        "color": {
+            "title": "Color Converter",
+            "description": "Convert between HEX, RGB, HSL, HSV color formats"
+        },
+        "text-statistics": {
+            "title": "Text Statistics",
+            "description": "Character, word, and line count"
+        },
+        "case-converter": {
+            "title": "Case Converter",
+            "description": "Convert between different text cases"
+        },
+        "text-dedup": {
+            "title": "Text Deduplicator",
+            "description": "Remove duplicate lines"
+        },
+        "text-sort": {
+            "title": "Text Sorter",
+            "description": "Sort text lines"
+        },
+        "regex": {
+            "title": "Regex Tester",
+            "description": "Test and debug regular expressions online"
         }
     }
 }

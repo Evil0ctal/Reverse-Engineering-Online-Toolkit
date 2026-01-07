@@ -1,0 +1,11 @@
+{
+    "title": "Regex Tester",
+    "description": "Test and debug regular expressions online",
+    "pattern": "Regular Expression",
+    "testString": "Test String",
+    "inputPlaceholder": "Enter text to test...",
+    "matches": "Matches",
+    "highlighted": "Highlighted",
+    "replaceWith": "Replace With",
+    "replace": "Replace"
+}

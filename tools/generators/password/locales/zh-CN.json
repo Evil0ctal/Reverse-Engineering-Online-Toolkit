@@ -1,0 +1,14 @@
+{
+    "title": "密码生成器",
+    "description": "生成安全的随机密码",
+    "length": "长度",
+    "uppercase": "大写字母 (A-Z)",
+    "lowercase": "小写字母 (a-z)",
+    "numbers": "数字 (0-9)",
+    "symbols": "特殊字符 (!@#$...)",
+    "noSimilar": "排除相似字符 (0O1lI)",
+    "noAmbiguous": "排除歧义字符 ({}[]())",
+    "generateNew": "生成新密码",
+    "history": "历史记录",
+    "strength": "强度"
+}

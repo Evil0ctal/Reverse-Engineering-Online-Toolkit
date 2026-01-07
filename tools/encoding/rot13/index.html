@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.rot13.title">ROT13/ROT47 编码 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.rot13.title">ROT13/ROT47 编码</h1>
+            <p data-i18n="tools.rot13.description">ROT13 和 ROT47 字符旋转编码</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.rot13.inputPlaceholder"
+                          placeholder="请输入要编码/解码的内容..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="rot13-btn" class="btn btn--primary">ROT13</button>
+                <button id="rot47-btn" class="btn btn--secondary">ROT47</button>
+                <button id="rot5-btn" class="btn btn--outline">ROT5</button>
+                <button id="rot18-btn" class="btn btn--outline">ROT18</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+
+            <section class="note-section">
+                <div class="note-card">
+                    <h3 data-i18n="tools.rot13.rotVariants">ROT 变体说明</h3>
+                    <ul>
+                        <li><strong>ROT13:</strong> <span data-i18n="tools.rot13.rot13Desc">字母旋转 13 位 (A↔N, B↔O, ...)</span></li>
+                        <li><strong>ROT47:</strong> <span data-i18n="tools.rot13.rot47Desc">ASCII 33-126 旋转 47 位</span></li>
+                        <li><strong>ROT5:</strong> <span data-i18n="tools.rot13.rot5Desc">数字旋转 5 位 (0↔5, 1↔6, ...)</span></li>
+                        <li><strong>ROT18:</strong> <span data-i18n="tools.rot13.rot18Desc">ROT13 + ROT5 组合</span></li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="rot13.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.random-string.title">随机字符串 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="random-string.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.random-string.title">随机字符串</h1>
+            <p data-i18n="tools.random-string.description">生成随机字符串</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-row">
+                    <div class="option-group">
+                        <label data-i18n="tools.random-string.length">长度</label>
+                        <input type="number" id="length" class="form-input" value="32" min="1" max="1000">
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.random-string.count">数量</label>
+                        <input type="number" id="count" class="form-input" value="1" min="1" max="100">
+                    </div>
+                </div>
+                <div class="option-row checkbox-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="uppercase" checked>
+                        <span data-i18n="tools.random-string.uppercase">大写字母 (A-Z)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="lowercase" checked>
+                        <span data-i18n="tools.random-string.lowercase">小写字母 (a-z)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="numbers" checked>
+                        <span data-i18n="tools.random-string.numbers">数字 (0-9)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="symbols">
+                        <span data-i18n="tools.random-string.symbols">特殊字符 (!@#$...)</span>
+                    </label>
+                </div>
+                <div class="option-row">
+                    <div class="option-group full-width">
+                        <label data-i18n="tools.random-string.customChars">自定义字符集</label>
+                        <input type="text" id="custom-chars" class="form-input" placeholder="留空使用上方选项">
+                    </div>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="generate-btn" class="btn btn--primary" data-i18n="common.generate">生成</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="random-string.js"></script>
+</body>
+</html>

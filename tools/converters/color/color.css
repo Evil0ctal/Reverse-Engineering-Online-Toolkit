@@ -1,0 +1,115 @@
+/**
+ * 颜色转换工具样式
+ */
+
+.color-preview-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.color-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--border-color);
+    background-color: #FF5733;
+}
+
+.color-picker {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+}
+
+.color-inputs {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.color-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.color-input-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.color-input-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.color-input-row .form-input {
+    flex: 1;
+    text-align: center;
+}
+
+.color-output-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.color-output-section h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+}
+
+.css-formats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.css-format {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.css-format-label {
+    font-weight: 500;
+    min-width: 50px;
+    color: var(--text-secondary);
+}
+
+.css-format code {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    background-color: var(--bg-input);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+.css-format .copy-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.css-format .copy-btn:hover {
+    background-color: var(--bg-hover);
+}
+
+@media (max-width: 640px) {
+    .color-input-row {
+        flex-direction: column;
+    }
+}

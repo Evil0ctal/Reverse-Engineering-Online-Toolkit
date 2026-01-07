@@ -98,4 +98,9 @@
     }
 
     window.UrlEncodeTool = { encode, decode };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'https://example.com/search?q=hello world&name=你好&emoji=🎉';
+    }
 })();

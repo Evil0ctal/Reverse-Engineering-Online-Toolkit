@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.number-base.title">进制转换 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="number-base.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.number-base.title">进制转换</h1>
+            <p data-i18n="tools.number-base.description">二进制、八进制、十进制、十六进制互转</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="converter-grid">
+                <div class="converter-item">
+                    <label data-i18n="tools.number-base.decimal">十进制 (DEC)</label>
+                    <input type="text" id="decimal" class="form-input form-input--code" placeholder="10">
+                </div>
+                <div class="converter-item">
+                    <label data-i18n="tools.number-base.binary">二进制 (BIN)</label>
+                    <input type="text" id="binary" class="form-input form-input--code" placeholder="1010">
+                </div>
+                <div class="converter-item">
+                    <label data-i18n="tools.number-base.octal">八进制 (OCT)</label>
+                    <input type="text" id="octal" class="form-input form-input--code" placeholder="12">
+                </div>
+                <div class="converter-item">
+                    <label data-i18n="tools.number-base.hexadecimal">十六进制 (HEX)</label>
+                    <input type="text" id="hexadecimal" class="form-input form-input--code" placeholder="A">
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+            </section>
+
+            <section class="custom-section">
+                <h3 data-i18n="tools.number-base.customBase">自定义进制</h3>
+                <div class="custom-row">
+                    <div class="custom-input">
+                        <label data-i18n="tools.number-base.inputValue">输入值</label>
+                        <input type="text" id="custom-input" class="form-input form-input--code" placeholder="255">
+                    </div>
+                    <div class="custom-base">
+                        <label data-i18n="tools.number-base.fromBase">源进制</label>
+                        <input type="number" id="from-base" class="form-input" value="10" min="2" max="36">
+                    </div>
+                    <div class="custom-base">
+                        <label data-i18n="tools.number-base.toBase">目标进制</label>
+                        <input type="number" id="to-base" class="form-input" value="16" min="2" max="36">
+                    </div>
+                    <div class="custom-btn">
+                        <button id="convert-btn" class="btn btn--primary" data-i18n="common.convert">转换</button>
+                    </div>
+                </div>
+                <div class="custom-output">
+                    <label data-i18n="common.output">输出</label>
+                    <input type="text" id="custom-output" class="form-input form-input--code" readonly>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="number-base.js"></script>
+</body>
+</html>

@@ -354,4 +354,9 @@
 
     // 导出到全局
     window.RSATool = { generateKeyPair, encrypt, decrypt, exportPublicKey, exportPrivateKey };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello, RSA Encryption!';
+    }
 })();

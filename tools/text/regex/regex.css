@@ -1,0 +1,151 @@
+/**
+ * 正则表达式测试工具样式
+ */
+
+.regex-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.regex-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+.regex-delimiter {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.regex-input {
+    flex: 1;
+    font-family: var(--font-mono);
+}
+
+.flags-input {
+    width: 80px;
+    font-family: var(--font-mono);
+    text-align: center;
+}
+
+.flags-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+}
+
+.result-section,
+.highlighted-section,
+.replace-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.matches-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.match-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.match-item:last-child {
+    border-bottom: none;
+}
+
+.match-index {
+    font-weight: 600;
+    color: var(--primary);
+    min-width: 30px;
+}
+
+.match-text {
+    font-family: var(--font-mono);
+    background-color: var(--bg-input);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.match-position {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.match-groups {
+    width: 100%;
+    padding-left: 40px;
+    margin-top: var(--spacing-xs);
+}
+
+.match-group {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    background-color: var(--bg-input);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    margin-right: var(--spacing-xs);
+}
+
+.no-matches {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.regex-error {
+    color: #ef4444;
+    font-family: var(--font-mono);
+}
+
+.highlighted-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    font-family: var(--font-mono);
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.regex-highlight {
+    background-color: #fef08a;
+    color: #000;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* 暗色主题高亮 */
+.dark-theme .regex-highlight {
+    background-color: #854d0e;
+    color: #fef9c3;
+}
+
+.replace-section label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+
+.replace-section .action-section {
+    margin: var(--spacing-md) 0;
+}

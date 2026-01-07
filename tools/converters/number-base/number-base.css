@@ -1,0 +1,92 @@
+/**
+ * 进制转换工具样式
+ */
+
+.converter-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.converter-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.converter-item label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-input--code {
+    font-family: var(--font-mono);
+}
+
+.custom-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.custom-section h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+}
+
+.custom-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+    margin-bottom: var(--spacing-md);
+}
+
+.custom-input {
+    flex: 2;
+    min-width: 150px;
+}
+
+.custom-base {
+    flex: 1;
+    min-width: 100px;
+}
+
+.custom-btn {
+    flex: 0 0 auto;
+}
+
+.custom-input label,
+.custom-base label,
+.custom-output label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.custom-output {
+    margin-top: var(--spacing-md);
+}
+
+@media (max-width: 640px) {
+    .converter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .custom-row {
+        flex-direction: column;
+    }
+
+    .custom-input,
+    .custom-base,
+    .custom-btn {
+        width: 100%;
+    }
+}

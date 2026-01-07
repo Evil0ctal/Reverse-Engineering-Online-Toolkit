@@ -188,4 +188,9 @@
 
     // 导出到全局
     window.HTMLEntityTool = { encode, decode };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = '<div class="test">Hello & Welcome © 2024</div>';
+    }
 })();

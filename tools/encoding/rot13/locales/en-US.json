@@ -1,0 +1,10 @@
+{
+    "title": "ROT13/ROT47 Encoder",
+    "description": "ROT13 and ROT47 character rotation encoding",
+    "inputPlaceholder": "Enter content to encode/decode...",
+    "rotVariants": "ROT Variants",
+    "rot13Desc": "Rotate letters by 13 positions (A↔N, B↔O, ...)",
+    "rot47Desc": "Rotate ASCII 33-126 by 47 positions",
+    "rot5Desc": "Rotate digits by 5 positions (0↔5, 1↔6, ...)",
+    "rot18Desc": "ROT13 + ROT5 combined"
+}

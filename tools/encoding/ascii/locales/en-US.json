@@ -1,0 +1,17 @@
+{
+    "title": "ASCII Converter",
+    "description": "Convert between ASCII codes and characters",
+    "inputPlaceholder": "Enter text or ASCII codes...",
+    "outputFormat": "Output Format",
+    "separator": "Separator",
+    "decimal": "Decimal",
+    "hex": "Hexadecimal",
+    "binary": "Binary",
+    "octal": "Octal",
+    "space": "Space",
+    "comma": "Comma",
+    "dash": "Dash",
+    "none": "None",
+    "toAscii": "Text → ASCII",
+    "toText": "ASCII → Text"
+}

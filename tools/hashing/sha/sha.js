@@ -100,4 +100,11 @@
 
     // 导出到全局
     window.SHATool = { hash };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello, World!';
+        // 触发计算
+        updateOutput();
+    }
 })();

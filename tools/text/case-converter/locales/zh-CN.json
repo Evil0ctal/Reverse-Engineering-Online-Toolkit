@@ -1,0 +1,17 @@
+{
+    "title": "大小写转换",
+    "description": "大小写、驼峰、下划线等格式转换",
+    "inputPlaceholder": "请输入要转换的文本...",
+    "uppercase": "全部大写",
+    "lowercase": "全部小写",
+    "capitalize": "首字母大写",
+    "titleCase": "标题格式",
+    "sentenceCase": "句子格式",
+    "toggleCase": "大小写反转",
+    "camelCase": "驼峰命名",
+    "pascalCase": "帕斯卡命名",
+    "snakeCase": "下划线命名",
+    "kebabCase": "短横线命名",
+    "constantCase": "常量命名",
+    "dotCase": "点分隔命名"
+}

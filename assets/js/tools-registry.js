@@ -557,6 +557,141 @@
             icon: '⏰',
             path: '/tools/generators/timestamp/',
             keywords: ['timestamp', 'unix', '时间戳', 'time']
+        },
+        {
+            id: 'random-string',
+            category: 'generators',
+            name: 'tools.random-string.title',
+            description: 'tools.random-string.description',
+            icon: '🎲',
+            path: '/tools/generators/random-string/',
+            keywords: ['random', 'string', '随机', '字符串']
+        },
+        {
+            id: 'password',
+            category: 'generators',
+            name: 'tools.password.title',
+            description: 'tools.password.description',
+            icon: '🔐',
+            path: '/tools/generators/password/',
+            keywords: ['password', '密码', 'generate', '生成'],
+            popular: true
+        },
+
+        // ========== 编码扩展 ==========
+        {
+            id: 'base32',
+            category: 'encoding',
+            name: 'tools.base32.title',
+            description: 'tools.base32.description',
+            icon: '📄',
+            path: '/tools/encoding/base32/',
+            keywords: ['base32', '编码', '解码']
+        },
+        {
+            id: 'base58',
+            category: 'encoding',
+            name: 'tools.base58.title',
+            description: 'tools.base58.description',
+            icon: '₿',
+            path: '/tools/encoding/base58/',
+            keywords: ['base58', 'bitcoin', '编码', '解码']
+        },
+        {
+            id: 'ascii',
+            category: 'encoding',
+            name: 'tools.ascii.title',
+            description: 'tools.ascii.description',
+            icon: '🔤',
+            path: '/tools/encoding/ascii/',
+            keywords: ['ascii', 'char', '字符', '码']
+        },
+        {
+            id: 'rot13',
+            category: 'encoding',
+            name: 'tools.rot13.title',
+            description: 'tools.rot13.description',
+            icon: '🔄',
+            path: '/tools/encoding/rot13/',
+            keywords: ['rot13', 'rot47', 'caesar', '凯撒']
+        },
+        {
+            id: 'morse',
+            category: 'encoding',
+            name: 'tools.morse.title',
+            description: 'tools.morse.description',
+            icon: '📡',
+            path: '/tools/encoding/morse/',
+            keywords: ['morse', 'code', '摩斯', '电码']
+        },
+
+        // ========== 数值转换 ==========
+        {
+            id: 'number-base',
+            category: 'converters',
+            name: 'tools.number-base.title',
+            description: 'tools.number-base.description',
+            icon: '🔢',
+            path: '/tools/converters/number-base/',
+            keywords: ['binary', 'hex', 'octal', '进制', '二进制', '十六进制']
+        },
+        {
+            id: 'color',
+            category: 'converters',
+            name: 'tools.color.title',
+            description: 'tools.color.description',
+            icon: '🎨',
+            path: '/tools/converters/color/',
+            keywords: ['color', 'hex', 'rgb', 'hsl', '颜色'],
+            popular: true
+        },
+
+        // ========== 文本处理 ==========
+        {
+            id: 'text-statistics',
+            category: 'text',
+            name: 'tools.text-statistics.title',
+            description: 'tools.text-statistics.description',
+            icon: '📊',
+            path: '/tools/text/statistics/',
+            keywords: ['count', 'word', 'char', '统计', '字数']
+        },
+        {
+            id: 'case-converter',
+            category: 'text',
+            name: 'tools.case-converter.title',
+            description: 'tools.case-converter.description',
+            icon: '🔠',
+            path: '/tools/text/case-converter/',
+            keywords: ['case', 'upper', 'lower', 'camel', '大小写']
+        },
+        {
+            id: 'text-dedup',
+            category: 'text',
+            name: 'tools.text-dedup.title',
+            description: 'tools.text-dedup.description',
+            icon: '🧹',
+            path: '/tools/text/dedup/',
+            keywords: ['dedup', 'duplicate', '去重', '重复']
+        },
+        {
+            id: 'text-sort',
+            category: 'text',
+            name: 'tools.text-sort.title',
+            description: 'tools.text-sort.description',
+            icon: '📝',
+            path: '/tools/text/sort/',
+            keywords: ['sort', 'order', '排序']
+        },
+        {
+            id: 'regex',
+            category: 'text',
+            name: 'tools.regex.title',
+            description: 'tools.regex.description',
+            icon: '🔍',
+            path: '/tools/text/regex/',
+            keywords: ['regex', 'regular', 'expression', '正则'],
+            popular: true
         }
     ]);
 

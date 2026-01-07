@@ -1,0 +1,9 @@
+{
+    "title": "Base58 编解码",
+    "description": "Base58 编码与解码（Bitcoin 风格）",
+    "inputPlaceholder": "请输入要编码/解码的内容...",
+    "alphabet": "字母表",
+    "bitcoin": "Bitcoin",
+    "ripple": "Ripple",
+    "flickr": "Flickr"
+}

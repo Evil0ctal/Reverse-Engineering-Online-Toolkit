@@ -1,0 +1,9 @@
+{
+    "title": "Base58 Encoder/Decoder",
+    "description": "Base58 encoding and decoding (Bitcoin style)",
+    "inputPlaceholder": "Enter content to encode/decode...",
+    "alphabet": "Alphabet",
+    "bitcoin": "Bitcoin",
+    "ripple": "Ripple",
+    "flickr": "Flickr"
+}

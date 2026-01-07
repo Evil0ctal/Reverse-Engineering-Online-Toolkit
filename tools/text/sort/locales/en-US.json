@@ -1,0 +1,14 @@
+{
+    "title": "Text Sorter",
+    "description": "Sort text lines",
+    "inputPlaceholder": "Enter text, one item per line...",
+    "sortType": "Sort Type",
+    "alphabetical": "Alphabetical",
+    "numeric": "Numeric",
+    "byLength": "By Length",
+    "random": "Random",
+    "reverse": "Reverse",
+    "caseInsensitive": "Case insensitive",
+    "removeEmpty": "Remove empty lines",
+    "sort": "Sort"
+}

@@ -693,4 +693,22 @@
         syntaxHighlight
     };
 
+    // 设置默认示例数据
+    const defaultInput = document.getElementById('input');
+    if (defaultInput && !defaultInput.value) {
+        const sampleJson = {
+            "name": "REOT",
+            "version": "1.0.0",
+            "description": "逆向工程在线工具箱",
+            "features": ["编码解码", "加密解密", "格式化"],
+            "author": {
+                "name": "Evil0ctal",
+                "github": "https://github.com/Evil0ctal"
+            },
+            "isOpenSource": true,
+            "stars": 1024
+        };
+        defaultInput.value = JSON.stringify(sampleJson, null, 2);
+    }
+
 })();

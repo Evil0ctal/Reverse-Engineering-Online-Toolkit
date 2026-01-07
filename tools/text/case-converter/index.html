@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.case-converter.title">大小写转换 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.case-converter.title">大小写转换</h1>
+            <p data-i18n="tools.case-converter.description">大小写、驼峰、下划线等格式转换</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.case-converter.inputPlaceholder"
+                          placeholder="请输入要转换的文本..."></textarea>
+            </section>
+
+            <section class="action-section action-grid">
+                <button id="uppercase-btn" class="btn btn--outline" data-i18n="tools.case-converter.uppercase">UPPERCASE</button>
+                <button id="lowercase-btn" class="btn btn--outline" data-i18n="tools.case-converter.lowercase">lowercase</button>
+                <button id="capitalize-btn" class="btn btn--outline" data-i18n="tools.case-converter.capitalize">Capitalize</button>
+                <button id="title-btn" class="btn btn--outline" data-i18n="tools.case-converter.titleCase">Title Case</button>
+                <button id="sentence-btn" class="btn btn--outline" data-i18n="tools.case-converter.sentenceCase">Sentence case</button>
+                <button id="toggle-btn" class="btn btn--outline" data-i18n="tools.case-converter.toggleCase">tOGGLE cASE</button>
+                <button id="camel-btn" class="btn btn--outline" data-i18n="tools.case-converter.camelCase">camelCase</button>
+                <button id="pascal-btn" class="btn btn--outline" data-i18n="tools.case-converter.pascalCase">PascalCase</button>
+                <button id="snake-btn" class="btn btn--outline" data-i18n="tools.case-converter.snakeCase">snake_case</button>
+                <button id="kebab-btn" class="btn btn--outline" data-i18n="tools.case-converter.kebabCase">kebab-case</button>
+                <button id="constant-btn" class="btn btn--outline" data-i18n="tools.case-converter.constantCase">CONSTANT_CASE</button>
+                <button id="dot-btn" class="btn btn--outline" data-i18n="tools.case-converter.dotCase">dot.case</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="case-converter.js"></script>
+</body>
+</html>

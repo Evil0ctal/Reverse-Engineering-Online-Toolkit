@@ -1,0 +1,11 @@
+{
+    "title": "Random String Generator",
+    "description": "Generate random strings",
+    "length": "Length",
+    "count": "Count",
+    "uppercase": "Uppercase (A-Z)",
+    "lowercase": "Lowercase (a-z)",
+    "numbers": "Numbers (0-9)",
+    "symbols": "Symbols (!@#$...)",
+    "customChars": "Custom Characters"
+}

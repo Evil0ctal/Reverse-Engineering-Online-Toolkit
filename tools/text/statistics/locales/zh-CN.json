@@ -1,0 +1,13 @@
+{
+    "title": "字符统计",
+    "description": "字符、单词、行数统计",
+    "inputPlaceholder": "请输入要统计的文本...",
+    "characters": "字符数",
+    "charactersNoSpace": "字符数(不含空格)",
+    "words": "单词数",
+    "lines": "行数",
+    "sentences": "句子数",
+    "paragraphs": "段落数",
+    "bytes": "字节数(UTF-8)",
+    "cjk": "中日韩字符"
+}

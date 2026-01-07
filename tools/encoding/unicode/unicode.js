@@ -199,4 +199,9 @@
 
     // 导出到全局
     window.UnicodeTool = { encode, decode };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello 你好 こんにちは 🎉🚀';
+    }
 })();

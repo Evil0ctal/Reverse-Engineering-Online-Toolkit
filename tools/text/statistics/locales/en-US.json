@@ -1,0 +1,13 @@
+{
+    "title": "Text Statistics",
+    "description": "Character, word, and line count",
+    "inputPlaceholder": "Enter text to analyze...",
+    "characters": "Characters",
+    "charactersNoSpace": "Characters (no spaces)",
+    "words": "Words",
+    "lines": "Lines",
+    "sentences": "Sentences",
+    "paragraphs": "Paragraphs",
+    "bytes": "Bytes (UTF-8)",
+    "cjk": "CJK Characters"
+}

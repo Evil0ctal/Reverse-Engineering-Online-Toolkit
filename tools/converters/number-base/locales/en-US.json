@@ -1,0 +1,12 @@
+{
+    "title": "Number Base Converter",
+    "description": "Convert between binary, octal, decimal, and hexadecimal",
+    "decimal": "Decimal (DEC)",
+    "binary": "Binary (BIN)",
+    "octal": "Octal (OCT)",
+    "hexadecimal": "Hexadecimal (HEX)",
+    "customBase": "Custom Base",
+    "inputValue": "Input Value",
+    "fromBase": "From Base",
+    "toBase": "To Base"
+}

@@ -1,0 +1,17 @@
+{
+    "title": "Case Converter",
+    "description": "Convert between different text cases",
+    "inputPlaceholder": "Enter text to convert...",
+    "uppercase": "UPPERCASE",
+    "lowercase": "lowercase",
+    "capitalize": "Capitalize",
+    "titleCase": "Title Case",
+    "sentenceCase": "Sentence case",
+    "toggleCase": "tOGGLE cASE",
+    "camelCase": "camelCase",
+    "pascalCase": "PascalCase",
+    "snakeCase": "snake_case",
+    "kebabCase": "kebab-case",
+    "constantCase": "CONSTANT_CASE",
+    "dotCase": "dot.case"
+}

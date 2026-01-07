@@ -1,0 +1,9 @@
+{
+    "title": "Morse Code",
+    "description": "Morse code encoding and decoding",
+    "inputPlaceholder": "Enter text or morse code...",
+    "toMorse": "Text → Morse",
+    "toText": "Morse → Text",
+    "play": "Play",
+    "hint": "Hint: Dot (.) short signal, Dash (-) long signal, letters separated by space, words separated by /"
+}

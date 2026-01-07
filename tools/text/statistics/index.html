@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.text-statistics.title">字符统计 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="text-statistics.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.text-statistics.title">字符统计</h1>
+            <p data-i18n="tools.text-statistics.description">字符、单词、行数统计</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.text-statistics.inputPlaceholder"
+                          placeholder="请输入要统计的文本..."></textarea>
+            </section>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="char-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.characters">字符数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="char-no-space">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.charactersNoSpace">字符数(不含空格)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="word-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.words">单词数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="line-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.lines">行数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sentence-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.sentences">句子数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="paragraph-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.paragraphs">段落数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="byte-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.bytes">字节数(UTF-8)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="cjk-count">0</div>
+                    <div class="stat-label" data-i18n="tools.text-statistics.cjk">中日韩字符</div>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="text-statistics.js"></script>
+</body>
+</html>

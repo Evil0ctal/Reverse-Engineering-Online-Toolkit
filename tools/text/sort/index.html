@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.text-sort.title">文本排序 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.text-sort.title">文本排序</h1>
+            <p data-i18n="tools.text-sort.description">文本行排序</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.text-sort.sortType">排序类型</label>
+                    <select id="sort-type" class="form-select">
+                        <option value="alpha" data-i18n="tools.text-sort.alphabetical">字母顺序</option>
+                        <option value="numeric" data-i18n="tools.text-sort.numeric">数字顺序</option>
+                        <option value="length" data-i18n="tools.text-sort.byLength">按长度</option>
+                        <option value="random" data-i18n="tools.text-sort.random">随机</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="reverse">
+                        <span data-i18n="tools.text-sort.reverse">倒序</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="case-insensitive">
+                        <span data-i18n="tools.text-sort.caseInsensitive">忽略大小写</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remove-empty">
+                        <span data-i18n="tools.text-sort.removeEmpty">移除空行</span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.text-sort.inputPlaceholder"
+                          placeholder="请输入文本，每行一项..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="sort-btn" class="btn btn--primary" data-i18n="tools.text-sort.sort">排序</button>
+                <button id="swap-btn" class="btn btn--outline" data-i18n="common.swap">交换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="text-sort.js"></script>
+</body>
+</html>

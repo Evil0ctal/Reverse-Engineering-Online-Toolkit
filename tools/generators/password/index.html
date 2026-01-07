@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.password.title">密码生成器 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="password.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.password.title">密码生成器</h1>
+            <p data-i18n="tools.password.description">生成安全的随机密码</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="password-display">
+                <input type="text" id="password" class="password-input" readonly>
+                <button id="refresh-btn" class="btn btn--icon" title="刷新">🔄</button>
+                <button id="copy-btn" class="btn btn--icon" title="复制">📋</button>
+            </section>
+
+            <section class="strength-meter">
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strength-fill"></div>
+                </div>
+                <span class="strength-text" id="strength-text" data-i18n="tools.password.strength">强度</span>
+            </section>
+
+            <section class="options-section">
+                <div class="option-row">
+                    <label data-i18n="tools.password.length">长度</label>
+                    <input type="range" id="length-slider" min="8" max="64" value="16">
+                    <span id="length-value">16</span>
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="uppercase" checked>
+                        <span data-i18n="tools.password.uppercase">大写字母 (A-Z)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="lowercase" checked>
+                        <span data-i18n="tools.password.lowercase">小写字母 (a-z)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="numbers" checked>
+                        <span data-i18n="tools.password.numbers">数字 (0-9)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="symbols" checked>
+                        <span data-i18n="tools.password.symbols">特殊字符 (!@#$...)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="no-similar">
+                        <span data-i18n="tools.password.noSimilar">排除相似字符 (0O1lI)</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="no-ambiguous">
+                        <span data-i18n="tools.password.noAmbiguous">排除歧义字符 ({}[]())</span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="generate-btn" class="btn btn--primary btn--lg" data-i18n="tools.password.generateNew">生成新密码</button>
+            </section>
+
+            <section class="history-section">
+                <h3 data-i18n="tools.password.history">历史记录</h3>
+                <div id="history-list" class="history-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="password.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "title": "Password Generator",
+    "description": "Generate secure random passwords",
+    "length": "Length",
+    "uppercase": "Uppercase (A-Z)",
+    "lowercase": "Lowercase (a-z)",
+    "numbers": "Numbers (0-9)",
+    "symbols": "Symbols (!@#$...)",
+    "noSimilar": "Exclude similar characters (0O1lI)",
+    "noAmbiguous": "Exclude ambiguous characters ({}[]())",
+    "generateNew": "Generate New Password",
+    "history": "History",
+    "strength": "Strength"
+}

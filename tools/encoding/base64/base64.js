@@ -191,4 +191,9 @@
         decodeUrlSafe
     };
 
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello, World! 你好，世界！🎉';
+    }
+
 })();

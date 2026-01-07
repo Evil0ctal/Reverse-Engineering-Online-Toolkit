@@ -211,4 +211,13 @@
     }
 
     window.MD5Tool = { hash, MD5 };
+
+    // 设置默认示例数据
+    if (inputEl && !inputEl.value) {
+        inputEl.value = 'Hello, World!';
+        // 触发计算
+        const result = hash(inputEl.value);
+        if (outputLowerEl) outputLowerEl.value = result;
+        if (outputUpperEl) outputUpperEl.value = result.toUpperCase();
+    }
 })();
