@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  reot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reot
+    ports:
+      - "8080:80"
+    volumes:
+      # 开发模式：挂载本地文件实现热更新
+      - ./:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

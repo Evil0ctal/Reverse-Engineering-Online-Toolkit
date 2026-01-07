@@ -229,7 +229,7 @@ Reverse-Engineering-Online-Toolkit/
 ├── 📁 tools/                        # 工具模块目录
 │   ├── 📁 encoding/                 # 编码工具
 │   │   ├── 📄 base64/
-│   │   │   ├── 📄 index.html        # 工具页面
+│   │   │   ├── 📄 base64.html       # 工具页面（以工具ID命名）
 │   │   │   ├── 📄 base64.js         # 核心逻辑
 │   │   │   ├── 📄 base64.css        # 工具样式
 │   │   │   ├── 📄 README.md         # 工具说明
@@ -298,7 +298,9 @@ Reverse-Engineering-Online-Toolkit/
 
 直接访问：[https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit](https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit)
 
-### 本地运行
+### 本地开发（推荐使用 Docker）
+
+由于本项目是 SPA（单页应用），需要服务器支持路由重定向。推荐使用 Docker 进行本地开发：
 
 ```bash
 # 克隆仓库
@@ -307,27 +309,36 @@ git clone https://github.com/Evil0ctal/Reverse-Engineering-Online-Toolkit.git
 # 进入项目目录
 cd Reverse-Engineering-Online-Toolkit
 
-# 使用任意 HTTP 服务器启动
-# 方式一：使用 Python
-python -m http.server 8080
-
-# 方式二：使用 Node.js
-npx serve
-
-# 方式三：使用 PHP
-php -S localhost:8080
+# 使用 Docker Compose 启动（推荐，支持热更新）
+docker-compose up -d
 
 # 然后访问 http://localhost:8080
 ```
 
-### Docker 部署
+**其他方式**（需要 SPA 路由支持）：
+
+```bash
+# 方式一：使用 Node.js serve（带 SPA 支持）
+npx serve -s -l 8080
+
+# 方式二：使用 Docker 直接运行
+docker build -t reot:latest .
+docker run -d -p 8080:80 reot:latest
+```
+
+> ⚠️ **注意**：简单的 HTTP 服务器（如 `python -m http.server`）不支持 SPA 路由，直接访问工具页面 URL 会导致 404 错误。
+
+### Docker 生产部署
 
 ```bash
 # 构建镜像
 docker build -t reot:latest .
 
 # 运行容器
-docker run -d -p 80:80 reot:latest
+docker run -d -p 80:80 --name reot reot:latest
+
+# 或使用 Docker Compose
+docker-compose up -d
 ```
 
 ---
@@ -367,64 +378,52 @@ mkdir -p tools/encoding/my-tool
 
 ```
 tools/encoding/my-tool/
-├── 📄 index.html        # 工具的 HTML 页面
+├── 📄 my-tool.html      # 工具的 HTML 页面（以工具ID命名）
 ├── 📄 my-tool.js        # 工具的核心逻辑
 ├── 📄 my-tool.css       # 工具的样式（可选）
-└── 📄 README.md         # 工具的说明文档
+├── 📄 README.md         # 工具的说明文档
+└── 📁 locales/          # 工具专属国际化（可选）
+    ├── 📄 zh-CN.json    # 中文翻译
+    └── 📄 en-US.json    # 英文翻译
 ```
 
 #### 4. 实现工具
 
-**index.html 模板：**
+**my-tool.html 模板：**
+
+> 注意：工具 HTML 文件只需要包含 `.tool-container` 片段，由主框架动态加载。
 
 ```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="tools.my-tool.title">我的工具 - REOT</title>
-    <link rel="stylesheet" href="../../../assets/css/main.css">
-    <link rel="stylesheet" href="my-tool.css">
-</head>
-<body>
-    <div class="tool-container">
-        <!-- 工具头部 -->
-        <header class="tool-header">
-            <h1 data-i18n="tools.my-tool.title">我的工具</h1>
-            <p data-i18n="tools.my-tool.description">工具描述</p>
-        </header>
+<div class="tool-container">
+    <!-- 工具头部 -->
+    <header class="tool-header">
+        <h1 data-i18n="tools.my-tool.title">我的工具</h1>
+        <p data-i18n="tools.my-tool.description">工具描述</p>
+    </header>
 
-        <!-- 工具主体 -->
-        <main class="tool-main">
-            <!-- 输入区域 -->
-            <section class="input-section">
-                <label data-i18n="common.input">输入</label>
-                <textarea id="input" placeholder="请输入内容..."></textarea>
-            </section>
+    <!-- 工具主体 -->
+    <main class="tool-main">
+        <!-- 输入区域 -->
+        <section class="input-section">
+            <label data-i18n="common.input">输入</label>
+            <textarea id="input" data-i18n-placeholder="tools.my-tool.placeholder"></textarea>
+        </section>
 
-            <!-- 操作按钮 -->
-            <section class="action-section">
-                <button id="encode-btn" data-i18n="common.encode">编码</button>
-                <button id="decode-btn" data-i18n="common.decode">解码</button>
-                <button id="clear-btn" data-i18n="common.clear">清除</button>
-                <button id="copy-btn" data-i18n="common.copy">复制结果</button>
-            </section>
+        <!-- 操作按钮 -->
+        <section class="action-section">
+            <button id="encode-btn" class="btn btn--primary" data-i18n="common.encode">编码</button>
+            <button id="decode-btn" class="btn btn--primary" data-i18n="common.decode">解码</button>
+            <button id="clear-btn" class="btn btn--secondary" data-i18n="common.clear">清除</button>
+            <button id="copy-btn" class="btn btn--secondary" data-i18n="common.copy">复制结果</button>
+        </section>
 
-            <!-- 输出区域 -->
-            <section class="output-section">
-                <label data-i18n="common.output">输出</label>
-                <textarea id="output" readonly></textarea>
-            </section>
-        </main>
-    </div>
-
-    <!-- 引入脚本 -->
-    <script src="../../../assets/js/i18n.js"></script>
-    <script src="../../../assets/js/utils.js"></script>
-    <script src="my-tool.js"></script>
-</body>
-</html>
+        <!-- 输出区域 -->
+        <section class="output-section">
+            <label data-i18n="common.output">输出</label>
+            <textarea id="output" readonly></textarea>
+        </section>
+    </main>
+</div>
 ```
 
 **my-tool.js 模板：**

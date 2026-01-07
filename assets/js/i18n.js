@@ -27,14 +27,22 @@
         for (const script of scripts) {
             const src = script.getAttribute('src');
             if (src && src.includes('assets/js/i18n.js')) {
-                // 移除 assets/js/i18n.js 得到基础路径
-                const basePath = src.replace(/assets\/js\/i18n\.js.*$/, '');
-                if (basePath.startsWith('http')) {
-                    return basePath.replace(/\/$/, '');
+                // 如果是绝对路径
+                if (src.startsWith('http')) {
+                    return src.replace(/assets\/js\/i18n\.js.*$/, '').replace(/\/$/, '');
                 }
-                // 相对路径转绝对路径
-                const url = new URL(basePath, window.location.href);
-                return url.href.replace(/\/$/, '');
+                // 相对路径 - 使用 origin + 路径前缀
+                const origin = window.location.origin;
+                const pathname = window.location.pathname;
+
+                // 检测 GitHub Pages 子目录
+                if (window.location.hostname.endsWith('github.io')) {
+                    const repoName = pathname.split('/')[1];
+                    if (repoName) {
+                        return `${origin}/${repoName}`;
+                    }
+                }
+                return origin;
             }
         }
 
