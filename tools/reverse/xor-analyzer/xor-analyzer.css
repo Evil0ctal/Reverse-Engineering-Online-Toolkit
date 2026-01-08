@@ -103,6 +103,16 @@
     margin-bottom: 1.5rem;
 }
 
+/* XOR 提示 */
+.xor-hint {
+    margin: 0 0 1rem 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+}
+
 /* 输出区域 */
 .output-section {
     margin-top: 1.5rem;
@@ -183,6 +193,138 @@
     opacity: 1;
 }
 
+/* 多字节暴力破解结果 */
+.multibruteforce-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.multibruteforce-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.multibruteforce-item.best {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.multibruteforce-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.multibruteforce-rank {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.multibruteforce-item.best .multibruteforce-rank {
+    color: #10b981;
+}
+
+.multibruteforce-info {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.multibruteforce-info strong {
+    color: var(--text-primary);
+}
+
+.multibruteforce-key {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.multibruteforce-key label {
+    min-width: 80px;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.multibruteforce-key code {
+    flex: 1;
+    padding: 0.375rem 0.5rem;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--primary);
+    word-break: break-all;
+}
+
+.multibruteforce-decrypted {
+    margin-top: 0.75rem;
+}
+
+.multibruteforce-decrypted label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+}
+
+.multibruteforce-decrypted .decrypted-text {
+    margin: 0;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.multibruteforce-decrypted .copy-btn {
+    margin-top: 0.5rem;
+}
+
+.multibruteforce-warning {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    color: #b45309;
+    font-size: 0.875rem;
+}
+
+[data-theme="dark"] .multibruteforce-warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.multibruteforce-item.matched {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.match-badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    margin-left: 0.5rem;
+    background: #10b981;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+}
+
 /* 密钥长度检测图表 */
 .keydetect-chart {
     padding: 1rem;
@@ -236,6 +378,21 @@
     font-size: 0.8125rem;
     color: var(--text-muted);
     font-style: italic;
+}
+
+.keydetect-warning {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    color: #b45309;
+    font-size: 0.875rem;
+}
+
+[data-theme="dark"] .keydetect-warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
 }
 
 /* 说明区域 */

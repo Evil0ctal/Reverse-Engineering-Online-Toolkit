@@ -99,38 +99,47 @@
 /* 图表容器 */
 .chart-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
+    gap: 3px;
     padding: 1rem;
+    padding-bottom: 0.5rem;
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
     margin-bottom: 1.5rem;
-    min-height: 150px;
-    align-items: flex-end;
+    min-height: 160px;
+    overflow-x: auto;
 }
 
 .chart-bar {
-    flex: 1;
-    min-width: 20px;
-    max-width: 40px;
+    flex: 0 0 auto;
+    width: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
+    min-height: 140px;
 }
 
 .chart-bar-fill {
     width: 100%;
-    background: var(--primary);
-    border-radius: 2px 2px 0 0;
-    transition: height 0.3s;
-    min-height: 2px;
+    background: #6366f1;
+    border-radius: 3px 3px 0 0;
+    transition: all 0.2s ease;
+    min-height: 3px;
+}
+
+.chart-bar:hover .chart-bar-fill {
+    background: #4f46e5;
+    transform: scaleX(1.1);
 }
 
 .chart-bar-label {
     margin-top: 4px;
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
     color: var(--text-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* 频率表格 */

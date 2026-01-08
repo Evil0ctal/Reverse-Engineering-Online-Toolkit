@@ -192,41 +192,196 @@
     }
 
     /**
-     * 密钥长度检测（使用汉明距离）
+     * 密钥长度检测（使用多种方法综合评分）
      */
     function detectKeyLength(ciphertext, maxKeyLength = 20) {
         const results = [];
+        const dataLen = ciphertext.length;
 
-        for (let keyLen = 1; keyLen <= Math.min(maxKeyLength, Math.floor(ciphertext.length / 2)); keyLen++) {
-            let totalDistance = 0;
-            let comparisons = 0;
+        for (let keyLen = 1; keyLen <= Math.min(maxKeyLength, Math.floor(dataLen / 2)); keyLen++) {
+            // 方法1: 汉明距离（比较所有可能的块对）
+            let hammingScore = 0;
+            let hammingComparisons = 0;
+            const numBlocks = Math.floor(dataLen / keyLen);
 
-            // 比较多个块
-            const numBlocks = Math.floor(ciphertext.length / keyLen);
-            for (let i = 0; i < Math.min(numBlocks - 1, 4); i++) {
-                const block1 = ciphertext.slice(i * keyLen, (i + 1) * keyLen);
-                const block2 = ciphertext.slice((i + 1) * keyLen, (i + 2) * keyLen);
+            // 比较所有块对，而不仅仅是相邻块
+            for (let i = 0; i < numBlocks; i++) {
+                for (let j = i + 1; j < numBlocks; j++) {
+                    const block1 = ciphertext.slice(i * keyLen, (i + 1) * keyLen);
+                    const block2 = ciphertext.slice(j * keyLen, (j + 1) * keyLen);
 
-                if (block1.length === block2.length && block1.length === keyLen) {
-                    totalDistance += hammingDistance(block1, block2);
-                    comparisons++;
+                    if (block1.length === keyLen && block2.length === keyLen) {
+                        hammingScore += hammingDistance(block1, block2);
+                        hammingComparisons++;
+                    }
                 }
             }
 
-            if (comparisons > 0) {
-                // 归一化汉明距离
-                const normalizedDistance = totalDistance / comparisons / keyLen;
-                results.push({
-                    keyLength: keyLen,
-                    distance: normalizedDistance
-                });
+            // 方法2: 重合指数 (Index of Coincidence) - 对每个密钥位置计算
+            let iocScore = 0;
+            for (let pos = 0; pos < keyLen; pos++) {
+                // 提取该位置的所有字节
+                const column = [];
+                for (let i = pos; i < dataLen; i += keyLen) {
+                    column.push(ciphertext[i]);
+                }
+
+                if (column.length > 1) {
+                    // 计算该列的重合指数
+                    const freq = new Array(256).fill(0);
+                    column.forEach(b => freq[b]++);
+
+                    let sum = 0;
+                    for (let f of freq) {
+                        sum += f * (f - 1);
+                    }
+                    const n = column.length;
+                    const ioc = sum / (n * (n - 1) || 1);
+                    iocScore += ioc;
+                }
             }
+            iocScore /= keyLen;
+
+            // 方法3: 检查重复模式
+            let repeatScore = 0;
+            for (let i = 0; i < dataLen - keyLen; i++) {
+                if (ciphertext[i] === ciphertext[i + keyLen]) {
+                    repeatScore++;
+                }
+            }
+            repeatScore /= (dataLen - keyLen) || 1;
+
+            // 综合评分
+            // 汉明距离归一化（越小越好）
+            const normalizedHamming = hammingComparisons > 0
+                ? hammingScore / hammingComparisons / keyLen
+                : 10;
+
+            // IoC 归一化（英文文本的 IoC 约为 0.067，随机数据约为 0.0385）
+            // IoC 越高越好，所以我们用 1 - 归一化的 IoC
+            const iocFactor = 1 - (iocScore * 10);
+
+            // 重复分数（越高越好），转换为越低越好
+            const repeatFactor = 1 - repeatScore;
+
+            // 综合分数（越低越好）
+            // 对短数据，更依赖 IoC 和重复模式
+            const confidence = Math.min(1, numBlocks / 4); // 置信度基于块数
+            const combinedScore = normalizedHamming * confidence +
+                                  iocFactor * (1 - confidence * 0.5) +
+                                  repeatFactor * 0.3;
+
+            results.push({
+                keyLength: keyLen,
+                distance: combinedScore,
+                hammingDist: normalizedHamming,
+                ioc: iocScore,
+                repeatRatio: repeatScore,
+                blocks: numBlocks,
+                confidence: confidence
+            });
         }
 
-        // 按距离升序排序（距离越小越可能是正确的密钥长度）
+        // 按综合分数升序排序
         results.sort((a, b) => a.distance - b.distance);
 
         return results;
+    }
+
+    /**
+     * 多字节 XOR 暴力破解
+     * 基于密钥长度，将密文分成多列，对每列进行单字节暴力破解
+     * @param {Uint8Array} ciphertext - 密文
+     * @param {number} keyLength - 密钥长度
+     * @param {string} knownPlaintext - 已知明文（可选）
+     * @returns {Object} - 破解结果
+     */
+    function bruteforceMultiByteXor(ciphertext, keyLength, knownPlaintext = '') {
+        // 将密文按密钥长度分成多列
+        const columns = [];
+        for (let i = 0; i < keyLength; i++) {
+            const column = [];
+            for (let j = i; j < ciphertext.length; j += keyLength) {
+                column.push(ciphertext[j]);
+            }
+            columns.push(new Uint8Array(column));
+        }
+
+        // 对每列进行单字节暴力破解
+        const keyBytes = [];
+        const columnResults = [];
+
+        for (let i = 0; i < columns.length; i++) {
+            const results = bruteforceSingleByteXor(columns[i], '');
+            // 取得分最高的结果作为该位置的密钥字节
+            if (results.length > 0) {
+                keyBytes.push(results[0].key);
+                // 保存前几个候选结果供用户参考
+                columnResults.push(results.slice(0, 5));
+            } else {
+                keyBytes.push(0);
+                columnResults.push([]);
+            }
+        }
+
+        const recoveredKey = new Uint8Array(keyBytes);
+        const decrypted = xor(ciphertext, recoveredKey);
+        const text = bytesToText(decrypted);
+
+        // 如果有已知明文，检查是否匹配
+        const matchesKnown = !knownPlaintext || text.includes(knownPlaintext);
+
+        // 计算整体可读性得分
+        const score = calculateReadabilityScore(decrypted);
+
+        return {
+            key: recoveredKey,
+            keyHex: bytesToHex(recoveredKey),
+            keyText: bytesToText(recoveredKey),
+            decrypted: decrypted,
+            text: text,
+            score: score,
+            matchesKnown: matchesKnown,
+            columnResults: columnResults
+        };
+    }
+
+    /**
+     * 尝试多个密钥长度进行多字节暴力破解
+     * @param {Uint8Array} ciphertext - 密文
+     * @param {Array<number>} keyLengths - 要尝试的密钥长度数组
+     * @param {string} knownPlaintext - 已知明文（可选）
+     * @returns {Array<Object>} - 按得分排序的破解结果
+     */
+    function bruteforceMultipleLengths(ciphertext, keyLengths, knownPlaintext = '') {
+        const matchedResults = [];
+        const allResults = [];
+
+        for (const keyLen of keyLengths) {
+            if (keyLen < 1 || keyLen > ciphertext.length) continue;
+
+            const result = bruteforceMultiByteXor(ciphertext, keyLen, knownPlaintext);
+            result.keyLength = keyLen;
+
+            allResults.push(result);
+
+            // 如果匹配已知明文，添加到匹配列表
+            if (result.matchesKnown) {
+                matchedResults.push(result);
+            }
+        }
+
+        // 按得分降序排序
+        allResults.sort((a, b) => b.score - a.score);
+        matchedResults.sort((a, b) => b.score - a.score);
+
+        // 如果有已知明文且有匹配结果，优先返回匹配的
+        // 否则返回所有结果（让用户看到最佳猜测）
+        if (knownPlaintext && matchedResults.length > 0) {
+            return matchedResults;
+        }
+
+        return allResults;
     }
 
     /**
@@ -334,19 +489,34 @@
         // 渲染图表
         const container = document.getElementById('keydetect-chart');
         const resultSection = document.getElementById('keydetect-result');
+        const hintEl = document.querySelector('#keydetect-result .hint');
 
         if (!container || !resultSection) return;
+
+        // 短数据警告
+        const dataLen = ciphertext.length;
+        let warningHtml = '';
+        if (dataLen < 50) {
+            warningHtml = `
+                <div class="keydetect-warning">
+                    ⚠️ 数据较短（${dataLen} 字节），检测结果可能不准确。建议使用至少 50+ 字节的数据以获得更可靠的结果。
+                </div>
+            `;
+        }
 
         // 获取最大和最小距离用于归一化
         const maxDistance = Math.max(...results.map(r => r.distance));
         const minDistance = Math.min(...results.map(r => r.distance));
 
-        container.innerHTML = results.slice(0, 15).map((r, index) => {
+        container.innerHTML = warningHtml + results.slice(0, 15).map((r, index) => {
             const barWidth = 100 - ((r.distance - minDistance) / (maxDistance - minDistance) * 80);
             const isLikely = index < 3;
 
+            // 显示详细信息
+            const detailTitle = `汉明距离: ${r.hammingDist.toFixed(4)}\n重合指数: ${r.ioc.toFixed(4)}\n重复率: ${(r.repeatRatio * 100).toFixed(1)}%\n完整块数: ${r.blocks}`;
+
             return `
-                <div class="keydetect-bar">
+                <div class="keydetect-bar" title="${detailTitle}">
                     <span class="keydetect-label">长度 ${r.keyLength}</span>
                     <div class="keydetect-bar-container">
                         <div class="keydetect-bar-fill ${isLikely ? 'likely' : ''}" style="width: ${barWidth}%"></div>
@@ -355,6 +525,107 @@
                 </div>
             `;
         }).join('');
+
+        // 更新提示文本
+        if (hintEl) {
+            hintEl.innerHTML = '提示：综合得分越低越可能是正确的密钥长度。将鼠标悬停在条形图上查看详细指标。';
+        }
+
+        resultSection.style.display = 'block';
+    }
+
+    /**
+     * 执行多字节暴力破解
+     */
+    function doMultiBruteforce() {
+        const input = document.getElementById('multibruteforce-input')?.value.trim();
+        const knownPlaintext = document.getElementById('multi-known-plaintext')?.value || '';
+        const keyLengthInput = document.getElementById('multi-key-length')?.value.trim();
+        const autoDetect = document.getElementById('auto-detect-length')?.checked;
+
+        if (!input) throw new Error('请输入密文');
+
+        const ciphertext = hexToBytes(input);
+
+        // 确定要尝试的密钥长度
+        let keyLengths = [];
+
+        if (autoDetect) {
+            // 自动检测前5个最可能的密钥长度
+            const detected = detectKeyLength(ciphertext, 20);
+            keyLengths = detected.slice(0, 5).map(r => r.keyLength);
+        } else if (keyLengthInput) {
+            // 解析用户输入的密钥长度（支持逗号分隔的多个值）
+            keyLengths = keyLengthInput.split(/[,，\s]+/)
+                .map(s => parseInt(s.trim(), 10))
+                .filter(n => !isNaN(n) && n > 0);
+        }
+
+        if (keyLengths.length === 0) {
+            throw new Error('请指定密钥长度或启用自动检测');
+        }
+
+        // 执行多字节暴力破解
+        const results = bruteforceMultipleLengths(ciphertext, keyLengths, knownPlaintext);
+
+        if (results.length === 0) {
+            throw new Error('无法生成结果，请检查输入');
+        }
+
+        // 渲染结果
+        const container = document.getElementById('multibruteforce-list');
+        const resultSection = document.getElementById('multibruteforce-result');
+
+        if (!container || !resultSection) return;
+
+        // 检查是否有匹配已知明文的结果
+        const hasMatch = knownPlaintext && results.some(r => r.matchesKnown);
+        let warningHtml = '';
+
+        if (knownPlaintext && !hasMatch) {
+            warningHtml = `
+                <div class="multibruteforce-warning">
+                    ⚠️ 未找到包含已知明文 "${escapeHtml(knownPlaintext)}" 的结果。
+                    以下是基于可读性评分的最佳猜测。数据较短时算法准确性有限，建议手动尝试不同的密钥长度。
+                </div>
+            `;
+        }
+
+        if (ciphertext.length < 30) {
+            warningHtml += `
+                <div class="multibruteforce-warning">
+                    ⚠️ 数据较短（${ciphertext.length} 字节），暴力破解结果可能不准确。
+                </div>
+            `;
+        }
+
+        container.innerHTML = warningHtml + results.map((r, index) => `
+            <div class="multibruteforce-item ${index === 0 ? 'best' : ''} ${r.matchesKnown ? 'matched' : ''}">
+                <div class="multibruteforce-header">
+                    <span class="multibruteforce-rank">#${index + 1}</span>
+                    <span class="multibruteforce-info">
+                        密钥长度: <strong>${r.keyLength}</strong>
+                        | 得分: <strong>${r.score.toFixed(1)}</strong>
+                        ${r.matchesKnown ? '<span class="match-badge">✓ 匹配已知明文</span>' : ''}
+                    </span>
+                </div>
+                <div class="multibruteforce-key">
+                    <label>密钥 (Hex):</label>
+                    <code class="key-hex">${r.keyHex}</code>
+                    <button class="btn btn--sm btn--outline copy-btn" data-copy="${r.keyHex}">复制</button>
+                </div>
+                <div class="multibruteforce-key">
+                    <label>密钥 (Text):</label>
+                    <code class="key-text">${escapeHtml(r.keyText)}</code>
+                    <button class="btn btn--sm btn--outline copy-btn" data-copy="${escapeHtml(r.keyText)}">复制</button>
+                </div>
+                <div class="multibruteforce-decrypted">
+                    <label>解密结果:</label>
+                    <pre class="decrypted-text">${escapeHtml(truncate(r.text, 500))}</pre>
+                    <button class="btn btn--sm btn--outline copy-btn" data-copy="${escapeHtml(r.text)}">复制全文</button>
+                </div>
+            </div>
+        `).join('');
 
         resultSection.style.display = 'block';
     }
@@ -434,6 +705,16 @@
             }
         }
 
+        // 多字节暴力破解按钮
+        if (target.id === 'multibruteforce-btn' || target.closest('#multibruteforce-btn')) {
+            try {
+                doMultiBruteforce();
+                REOT.utils?.showNotification('多字节暴力破解完成', 'success');
+            } catch (error) {
+                REOT.utils?.showNotification(error.message, 'error');
+            }
+        }
+
         // 清除按钮
         if (target.id === 'clear-encrypt-btn' || target.closest('#clear-encrypt-btn')) {
             const dataInput = document.getElementById('data-input');
@@ -464,6 +745,14 @@
     });
 
     // 导出工具函数
-    window.XorAnalyzer = { xor, bruteforceSingleByteXor, detectKeyLength, hexToBytes, bytesToHex };
+    window.XorAnalyzer = {
+        xor,
+        bruteforceSingleByteXor,
+        bruteforceMultiByteXor,
+        bruteforceMultipleLengths,
+        detectKeyLength,
+        hexToBytes,
+        bytesToHex
+    };
 
 })();

@@ -29,6 +29,7 @@
                 <div class="mode-tabs">
                     <button class="mode-tab active" data-mode="encrypt" data-i18n="tools.xor-analyzer.encryptDecrypt">加密/解密</button>
                     <button class="mode-tab" data-mode="bruteforce" data-i18n="tools.xor-analyzer.bruteforce">单字节暴力破解</button>
+                    <button class="mode-tab" data-mode="multibruteforce" data-i18n="tools.xor-analyzer.multiBruteforce">多字节暴力破解</button>
                     <button class="mode-tab" data-mode="keydetect" data-i18n="tools.xor-analyzer.keyDetect">密钥长度检测</button>
                 </div>
             </section>
@@ -79,9 +80,10 @@
                 </section>
 
                 <section class="action-section">
-                    <button id="xor-btn" class="btn btn--primary" data-i18n="tools.xor-analyzer.xorApply">应用 XOR</button>
+                    <button id="xor-btn" class="btn btn--primary" data-i18n="tools.xor-analyzer.xorApply">应用 XOR（加密/解密）</button>
                     <button id="clear-encrypt-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
                 </section>
+                <p class="xor-hint">💡 XOR 是对称操作：使用相同密钥对数据进行两次 XOR 运算会还原原始数据，因此加密和解密使用同一按钮。</p>
 
                 <section class="output-section" id="encrypt-output-section" style="display: none;">
                     <label data-i18n="common.output">输出</label>
@@ -124,6 +126,60 @@
                     <h3 data-i18n="tools.xor-analyzer.possibleResults">可能的结果（按可读性排序）</h3>
                     <div class="bruteforce-list" id="bruteforce-list">
                         <!-- 动态生成 -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- 多字节暴力破解模式 -->
+            <div class="mode-content" id="mode-multibruteforce" style="display: none;">
+                <section class="input-section">
+                    <label data-i18n="tools.xor-analyzer.ciphertext">密文（十六进制）</label>
+                    <textarea id="multibruteforce-input"
+                              class="form-textarea form-input--mono"
+                              rows="4"
+                              placeholder="输入十六进制密文..."></textarea>
+                </section>
+
+                <section class="options-section">
+                    <div class="option-row">
+                        <div class="option-group">
+                            <label class="form-checkbox">
+                                <input type="checkbox" id="auto-detect-length" checked>
+                                <span data-i18n="tools.xor-analyzer.autoDetectLength">自动检测密钥长度</span>
+                            </label>
+                        </div>
+                        <div class="option-group">
+                            <label data-i18n="tools.xor-analyzer.keyLengthManual">手动指定密钥长度</label>
+                            <input type="text" id="multi-key-length"
+                                   class="form-input"
+                                   placeholder="如: 4 或 2,3,4,5">
+                        </div>
+                    </div>
+                    <div class="option-row">
+                        <div class="option-group" style="flex: 1;">
+                            <label data-i18n="tools.xor-analyzer.knownPlaintext">已知明文（可选）</label>
+                            <input type="text" id="multi-known-plaintext"
+                                   class="form-input form-input--mono"
+                                   placeholder="如果知道部分明文内容...">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="action-section">
+                    <button id="multibruteforce-btn" class="btn btn--primary" data-i18n="tools.xor-analyzer.startMultiBruteforce">开始多字节暴力破解</button>
+                </section>
+
+                <section class="result-section" id="multibruteforce-result" style="display: none;">
+                    <h3 data-i18n="tools.xor-analyzer.multiResults">破解结果（按可读性排序）</h3>
+                    <div class="multibruteforce-list" id="multibruteforce-list">
+                        <!-- 动态生成 -->
+                    </div>
+                </section>
+
+                <section class="info-section">
+                    <div class="info-box">
+                        <h4 data-i18n="tools.xor-analyzer.multiBruteforceInfo">多字节暴力破解说明</h4>
+                        <p data-i18n="tools.xor-analyzer.multiBruteforceDesc">此功能通过分析密文的统计特性来破解多字节重复密钥的 XOR 加密。算法将密文按密钥长度分组，对每个位置独立进行单字节暴力破解，然后组合得到完整密钥。对于较长且具有足够统计特征的密文效果最好。</p>
                     </div>
                 </section>
             </div>

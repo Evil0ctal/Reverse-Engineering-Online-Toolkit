@@ -8,17 +8,26 @@
 (function() {
     'use strict';
 
-    // DOM 元素
-    const inputEl = document.getElementById('input');
-    const outputEl = document.getElementById('output');
-    const formatEl = document.getElementById('format-select');
-    const uppercaseEl = document.getElementById('uppercase');
-    const encodeAllEl = document.getElementById('encode-all');
-    const encodeBtnEl = document.getElementById('encode-btn');
-    const decodeBtnEl = document.getElementById('decode-btn');
-    const swapBtnEl = document.getElementById('swap-btn');
-    const clearBtnEl = document.getElementById('clear-btn');
-    const copyBtnEl = document.getElementById('copy-btn');
+    /**
+     * 检查当前是否在 Unicode 工具页面
+     */
+    function isUnicodeToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/encoding/unicode');
+    }
+
+    /**
+     * 获取 DOM 元素
+     */
+    function getElements() {
+        return {
+            input: document.getElementById('input'),
+            output: document.getElementById('output'),
+            format: document.getElementById('format-select'),
+            uppercase: document.getElementById('uppercase'),
+            encodeAll: document.getElementById('encode-all')
+        };
+    }
 
     /**
      * Unicode 编码
@@ -44,8 +53,9 @@
             if (needsEncode) {
                 let encoded;
 
+                // format 值从 HTML select 获取，如 "\u", "\x", "&#", "&#x", "U+"
                 switch (format) {
-                    case '\\u':
+                    case '\\u':  // JS 字符串 \u
                         // \uXXXX 格式（处理代理对）
                         if (code > 0xFFFF) {
                             // 需要两个代理对
@@ -57,7 +67,7 @@
                         }
                         break;
 
-                    case '\\x':
+                    case '\\x':  // JS 字符串 \x
                         // \xXX 格式（仅适用于 0-255）
                         if (code <= 255) {
                             encoded = `\\x${code.toString(16).padStart(2, '0')}`;
@@ -143,65 +153,91 @@
      * 获取当前选项
      */
     function getOptions() {
+        const els = getElements();
         return {
-            format: formatEl?.value || '\\u',
-            uppercase: uppercaseEl?.checked || false,
-            encodeAll: encodeAllEl?.checked || false
+            format: els.format?.value || '\\u',
+            uppercase: els.uppercase?.checked || false,
+            encodeAll: els.encodeAll?.checked || false
         };
     }
 
-    // 事件监听
-    if (encodeBtnEl) {
-        encodeBtnEl.addEventListener('click', () => {
-            try {
-                const result = encode(inputEl.value, getOptions());
-                outputEl.value = result;
-            } catch (error) {
-                outputEl.value = `错误: ${error.message}`;
+    /**
+     * 执行编码
+     */
+    function doEncode() {
+        const els = getElements();
+        if (!els.input || !els.output) return;
+
+        try {
+            const result = encode(els.input.value, getOptions());
+            els.output.value = result;
+            REOT.utils?.showNotification('编码完成', 'success');
+        } catch (error) {
+            els.output.value = `错误: ${error.message}`;
+            REOT.utils?.showNotification(error.message, 'error');
+        }
+    }
+
+    /**
+     * 执行解码
+     */
+    function doDecode() {
+        const els = getElements();
+        if (!els.input || !els.output) return;
+
+        try {
+            const result = decode(els.input.value);
+            els.output.value = result;
+            REOT.utils?.showNotification('解码完成', 'success');
+        } catch (error) {
+            els.output.value = `错误: ${error.message}`;
+            REOT.utils?.showNotification(error.message, 'error');
+        }
+    }
+
+    // 事件委托
+    document.addEventListener('click', async (e) => {
+        if (!isUnicodeToolActive()) return;
+
+        const target = e.target;
+        const els = getElements();
+
+        // 编码按钮
+        if (target.id === 'encode-btn' || target.closest('#encode-btn')) {
+            doEncode();
+        }
+
+        // 解码按钮
+        if (target.id === 'decode-btn' || target.closest('#decode-btn')) {
+            doDecode();
+        }
+
+        // 交换按钮
+        if (target.id === 'swap-btn' || target.closest('#swap-btn')) {
+            if (els.input && els.output) {
+                const temp = els.input.value;
+                els.input.value = els.output.value;
+                els.output.value = temp;
             }
-        });
-    }
+        }
 
-    if (decodeBtnEl) {
-        decodeBtnEl.addEventListener('click', () => {
-            try {
-                const result = decode(inputEl.value);
-                outputEl.value = result;
-            } catch (error) {
-                outputEl.value = `错误: ${error.message}`;
+        // 清除按钮
+        if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
+            if (els.input) els.input.value = '';
+            if (els.output) els.output.value = '';
+        }
+
+        // 复制按钮
+        if (target.id === 'copy-btn' || target.closest('#copy-btn')) {
+            if (els.output?.value) {
+                const success = await REOT.utils?.copyToClipboard(els.output.value);
+                if (success) {
+                    REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
+                }
             }
-        });
-    }
-
-    if (swapBtnEl) {
-        swapBtnEl.addEventListener('click', () => {
-            const temp = inputEl.value;
-            inputEl.value = outputEl.value;
-            outputEl.value = temp;
-        });
-    }
-
-    if (clearBtnEl) {
-        clearBtnEl.addEventListener('click', () => {
-            inputEl.value = '';
-            outputEl.value = '';
-        });
-    }
-
-    if (copyBtnEl) {
-        copyBtnEl.addEventListener('click', async () => {
-            const success = await REOT.utils?.copyToClipboard(outputEl.value);
-            if (success) {
-                REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
-            }
-        });
-    }
+        }
+    });
 
     // 导出到全局
     window.UnicodeTool = { encode, decode };
-
-    // 设置默认示例数据
-    if (inputEl && !inputEl.value) {
-        inputEl.value = 'Hello 你好 こんにちは 🎉🚀';
-    }
 })();

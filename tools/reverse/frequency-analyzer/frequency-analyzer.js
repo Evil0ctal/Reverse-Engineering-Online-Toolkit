@@ -189,10 +189,11 @@
         const maxPercentage = items.length > 0 ? items[0].percentage : 0;
 
         container.innerHTML = items.map(item => {
-            const height = (item.percentage / maxPercentage * 120) || 2;
+            // 计算柱状条高度（最大 110px）
+            const height = maxPercentage > 0 ? Math.max(4, Math.round(item.percentage / maxPercentage * 110)) : 4;
             return `
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: ${height}px"></div>
+                <div class="chart-bar" title="${displayChar(item.char)}: ${item.count} 次 (${item.frequency}%)">
+                    <div class="chart-bar-fill" style="height: ${height}px;"></div>
                     <span class="chart-bar-label">${escapeHtml(displayChar(item.char))}</span>
                 </div>
             `;
