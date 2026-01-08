@@ -510,20 +510,121 @@ fetchData('https://api.example.com/data')
     .catch(err => console.error(err));`;
     }
 
+    // 编辑器实例
+    let inputEditor = null;
+    let outputEditor = null;
+
+    /**
+     * 获取输入内容
+     */
+    function getInputValue() {
+        if (inputEditor) {
+            return inputEditor.getValue();
+        }
+        return document.getElementById('input')?.value || '';
+    }
+
+    /**
+     * 设置输入内容
+     */
+    function setInputValue(value) {
+        if (inputEditor) {
+            inputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('input');
+            if (el) el.value = value;
+        }
+    }
+
+    /**
+     * 设置输出内容
+     */
+    function setOutputValue(value) {
+        if (outputEditor) {
+            outputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('output');
+            if (el) el.value = value;
+        }
+    }
+
+    /**
+     * 获取输出内容
+     */
+    function getOutputValue() {
+        if (outputEditor) {
+            return outputEditor.getValue();
+        }
+        return document.getElementById('output')?.value || '';
+    }
+
+    /**
+     * 初始化代码编辑器
+     */
+    async function initEditors() {
+        if (!REOT.CodeEditor) {
+            console.warn('CodeEditor not available, using textarea fallback');
+            // 显示 textarea
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            // 隐藏编辑器容器
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+            return;
+        }
+
+        try {
+            // 检测主题
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
+            // 创建输入编辑器
+            inputEditor = await REOT.CodeEditor.create('#input-editor', {
+                language: 'javascript',
+                value: '',
+                readOnly: false,
+                theme: theme,
+                placeholder: '请输入 JavaScript 代码...'
+            });
+
+            // 创建输出编辑器（只读）
+            outputEditor = await REOT.CodeEditor.create('#output-editor', {
+                language: 'javascript',
+                value: '',
+                readOnly: true,
+                theme: theme
+            });
+
+            console.log('JavaScript editors initialized');
+        } catch (error) {
+            console.error('Failed to initialize editors:', error);
+            // 回退到 textarea
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+        }
+    }
+
     // 事件处理
     document.addEventListener('click', async (e) => {
         if (!isJsToolActive()) return;
 
         const target = e.target;
-        const inputEl = document.getElementById('input');
-        const outputEl = document.getElementById('output');
 
         // 格式化按钮
         if (target.id === 'format-btn' || target.closest('#format-btn')) {
             try {
                 const options = getOptions();
-                const result = formatJs(inputEl?.value || '', options);
-                if (outputEl) outputEl.value = result;
+                const result = formatJs(getInputValue(), options);
+                setOutputValue(result);
                 REOT.utils?.showNotification('格式化成功', 'success');
             } catch (error) {
                 REOT.utils?.showNotification('格式化失败: ' + error.message, 'error');
@@ -533,8 +634,8 @@ fetchData('https://api.example.com/data')
         // 压缩按钮
         if (target.id === 'minify-btn' || target.closest('#minify-btn')) {
             try {
-                const result = minifyJs(inputEl?.value || '');
-                if (outputEl) outputEl.value = result;
+                const result = minifyJs(getInputValue());
+                setOutputValue(result);
                 REOT.utils?.showNotification('压缩成功', 'success');
             } catch (error) {
                 REOT.utils?.showNotification('压缩失败: ' + error.message, 'error');
@@ -543,14 +644,15 @@ fetchData('https://api.example.com/data')
 
         // 清除按钮
         if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
-            if (inputEl) inputEl.value = '';
-            if (outputEl) outputEl.value = '';
+            setInputValue('');
+            setOutputValue('');
         }
 
         // 复制按钮
         if (target.id === 'copy-btn' || target.closest('#copy-btn')) {
-            if (outputEl?.value) {
-                const success = await REOT.utils?.copyToClipboard(outputEl.value);
+            const value = getOutputValue();
+            if (value) {
+                const success = await REOT.utils?.copyToClipboard(value);
                 if (success) {
                     REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
                 }
@@ -559,7 +661,27 @@ fetchData('https://api.example.com/data')
 
         // 加载示例
         if (target.id === 'example-btn' || target.closest('#example-btn')) {
-            if (inputEl) inputEl.value = loadExample();
+            setInputValue(loadExample());
+        }
+    });
+
+    // 页面加载时初始化编辑器
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (isJsToolActive()) {
+                initEditors();
+            }
+        });
+    } else {
+        if (isJsToolActive()) {
+            initEditors();
+        }
+    }
+
+    // 监听路由变化重新初始化
+    window.addEventListener('routeChange', () => {
+        if (isJsToolActive() && !inputEditor) {
+            initEditors();
         }
     });
 

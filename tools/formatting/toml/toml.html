@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../../../assets/css/main.css">
     <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
     <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="../../../assets/css/code-editor.css">
     <link rel="stylesheet" href="toml.css">
 </head>
 <body>
@@ -46,10 +47,12 @@
                     <label data-i18n="common.input">输入</label>
                     <button id="example-btn" class="btn btn--sm btn--outline" data-i18n="tools.toml.loadExample">加载示例</button>
                 </div>
+                <div id="input-editor" class="code-editor-container code-editor-container--code"></div>
                 <textarea id="input"
                           class="form-input form-textarea form-textarea--code"
                           data-i18n-placeholder="tools.toml.inputPlaceholder"
-                          placeholder="请输入 TOML 或 JSON..."></textarea>
+                          placeholder="请输入 TOML 或 JSON..."
+                          style="display: none;"></textarea>
             </section>
 
             <!-- 操作按钮 -->
@@ -65,9 +68,11 @@
             <!-- 输出区域 -->
             <section class="output-section">
                 <label data-i18n="common.output">输出</label>
+                <div id="output-editor" class="code-editor-container code-editor-container--code"></div>
                 <textarea id="output"
                           class="form-input form-textarea form-textarea--code"
-                          readonly></textarea>
+                          readonly
+                          style="display: none;"></textarea>
             </section>
 
             <!-- 验证结果 -->
@@ -87,6 +92,7 @@
 
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
+    <script src="../../../assets/js/code-editor.js"></script>
     <script src="toml.js"></script>
 </body>
 </html>

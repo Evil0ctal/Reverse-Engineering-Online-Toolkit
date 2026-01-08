@@ -1,0 +1,215 @@
+/**
+ * CodeMirror 编辑器样式
+ * @description 代码编辑器组件样式
+ */
+
+/* 编辑器容器 */
+.code-editor-container {
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--input-bg, #fff);
+    min-height: 200px;
+}
+
+.code-editor-container--code {
+    min-height: 300px;
+}
+
+/* CodeMirror 编辑器根元素 */
+.code-editor-container .cm-editor {
+    height: 100%;
+    min-height: inherit;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.code-editor-container .cm-editor.cm-focused {
+    outline: none;
+}
+
+/* 滚动区域 */
+.code-editor-container .cm-scroller {
+    overflow: auto;
+    min-height: inherit;
+}
+
+/* 内容区域 */
+.code-editor-container .cm-content {
+    padding: 12px 0;
+    min-height: inherit;
+}
+
+/* 行号 */
+.code-editor-container .cm-gutters {
+    background: var(--bg-secondary, #f8f9fa);
+    border-right: 1px solid var(--border-color, #e0e0e0);
+    color: var(--text-muted, #999);
+}
+
+.code-editor-container .cm-lineNumbers .cm-gutterElement {
+    padding: 0 12px 0 8px;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* 当前行高亮 */
+.code-editor-container .cm-activeLine {
+    background: var(--highlight-bg, rgba(0, 0, 0, 0.04));
+}
+
+.code-editor-container .cm-activeLineGutter {
+    background: var(--highlight-bg, rgba(0, 0, 0, 0.04));
+}
+
+/* 选中文本 */
+.code-editor-container .cm-selectionBackground {
+    background: var(--selection-bg, rgba(59, 130, 246, 0.2)) !important;
+}
+
+.code-editor-container .cm-editor.cm-focused .cm-selectionBackground {
+    background: var(--selection-bg-focus, rgba(59, 130, 246, 0.3)) !important;
+}
+
+/* 匹配括号 */
+.code-editor-container .cm-matchingBracket {
+    background: var(--bracket-match-bg, rgba(59, 130, 246, 0.2));
+    outline: 1px solid var(--bracket-match-border, rgba(59, 130, 246, 0.5));
+}
+
+/* 折叠标记 */
+.code-editor-container .cm-foldGutter .cm-gutterElement {
+    padding: 0 4px;
+    cursor: pointer;
+    color: var(--text-muted, #999);
+}
+
+.code-editor-container .cm-foldGutter .cm-gutterElement:hover {
+    color: var(--primary-color, #3b82f6);
+}
+
+/* 占位符 */
+.code-editor-container .cm-placeholder {
+    color: var(--text-muted, #999);
+    font-style: italic;
+}
+
+/* 光标 */
+.code-editor-container .cm-cursor {
+    border-left: 2px solid var(--cursor-color, #3b82f6);
+}
+
+/* 搜索匹配 */
+.code-editor-container .cm-searchMatch {
+    background: var(--search-match-bg, rgba(255, 213, 0, 0.4));
+}
+
+.code-editor-container .cm-searchMatch.cm-searchMatch-selected {
+    background: var(--search-match-selected-bg, rgba(255, 150, 0, 0.4));
+}
+
+/* 只读状态 */
+.code-editor-container.readonly .cm-editor {
+    background: var(--bg-secondary, #f8f9fa);
+}
+
+.code-editor-container.readonly .cm-content {
+    cursor: default;
+}
+
+/* ========== 暗色主题 ========== */
+[data-theme="dark"] .code-editor-container {
+    border-color: var(--border-color, #374151);
+    background: var(--input-bg, #1f2937);
+}
+
+[data-theme="dark"] .code-editor-container .cm-gutters {
+    background: var(--bg-secondary, #111827);
+    border-color: var(--border-color, #374151);
+    color: var(--text-muted, #6b7280);
+}
+
+[data-theme="dark"] .code-editor-container .cm-activeLine {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .code-editor-container .cm-activeLineGutter {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ========== 语法高亮颜色 - 浅色主题 ========== */
+.code-editor-container .cm-editor {
+    --syntax-keyword: #d73a49;
+    --syntax-string: #22863a;
+    --syntax-number: #005cc5;
+    --syntax-comment: #6a737d;
+    --syntax-function: #6f42c1;
+    --syntax-variable: #24292e;
+    --syntax-property: #005cc5;
+    --syntax-operator: #d73a49;
+    --syntax-tag: #22863a;
+    --syntax-attribute: #6f42c1;
+    --syntax-type: #d73a49;
+}
+
+/* 浅色主题语法高亮 */
+.code-editor-container .tok-keyword { color: var(--syntax-keyword); }
+.code-editor-container .tok-string { color: var(--syntax-string); }
+.code-editor-container .tok-string2 { color: var(--syntax-string); }
+.code-editor-container .tok-number { color: var(--syntax-number); }
+.code-editor-container .tok-comment { color: var(--syntax-comment); font-style: italic; }
+.code-editor-container .tok-variableName { color: var(--syntax-variable); }
+.code-editor-container .tok-definition { color: var(--syntax-function); }
+.code-editor-container .tok-propertyName { color: var(--syntax-property); }
+.code-editor-container .tok-operator { color: var(--syntax-operator); }
+.code-editor-container .tok-tagName { color: var(--syntax-tag); }
+.code-editor-container .tok-attributeName { color: var(--syntax-attribute); }
+.code-editor-container .tok-typeName { color: var(--syntax-type); }
+.code-editor-container .tok-bool { color: var(--syntax-keyword); }
+.code-editor-container .tok-null { color: var(--syntax-keyword); }
+.code-editor-container .tok-punctuation { color: var(--syntax-variable); }
+.code-editor-container .tok-meta { color: var(--syntax-comment); }
+.code-editor-container .tok-atom { color: var(--syntax-number); }
+
+/* ========== 语法高亮颜色 - 暗色主题 ========== */
+[data-theme="dark"] .code-editor-container .cm-editor {
+    --syntax-keyword: #ff7b72;
+    --syntax-string: #a5d6ff;
+    --syntax-number: #79c0ff;
+    --syntax-comment: #8b949e;
+    --syntax-function: #d2a8ff;
+    --syntax-variable: #c9d1d9;
+    --syntax-property: #79c0ff;
+    --syntax-operator: #ff7b72;
+    --syntax-tag: #7ee787;
+    --syntax-attribute: #d2a8ff;
+    --syntax-type: #ff7b72;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+    .code-editor-container {
+        min-height: 150px;
+    }
+
+    .code-editor-container .cm-editor {
+        font-size: 13px;
+    }
+
+    .code-editor-container .cm-lineNumbers .cm-gutterElement {
+        padding: 0 8px 0 4px;
+        min-width: 32px;
+    }
+}
+
+/* ========== 打印样式 ========== */
+@media print {
+    .code-editor-container {
+        border: 1px solid #ccc;
+    }
+
+    .code-editor-container .cm-gutters {
+        background: #f5f5f5;
+    }
+}

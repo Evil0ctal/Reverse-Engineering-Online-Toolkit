@@ -472,21 +472,98 @@ sku = 284758393
 color = "gray"`;
     }
 
+    // 编辑器实例
+    let inputEditor = null;
+    let outputEditor = null;
+    let currentOutputLang = 'toml'; // 跟踪输出语言类型
+
+    function getInputValue() {
+        if (inputEditor) return inputEditor.getValue();
+        return document.getElementById('input')?.value || '';
+    }
+
+    function setInputValue(value) {
+        if (inputEditor) {
+            inputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('input');
+            if (el) el.value = value;
+        }
+    }
+
+    function setOutputValue(value) {
+        if (outputEditor) {
+            outputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('output');
+            if (el) el.value = value;
+        }
+    }
+
+    function getOutputValue() {
+        if (outputEditor) return outputEditor.getValue();
+        return document.getElementById('output')?.value || '';
+    }
+
+    async function initEditors() {
+        if (!REOT.CodeEditor) {
+            console.warn('CodeEditor not available, using textarea fallback');
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+            return;
+        }
+
+        try {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
+            // TOML 没有官方 CodeMirror 支持，使用 json 作为回退
+            inputEditor = await REOT.CodeEditor.create('#input-editor', {
+                language: 'json',
+                value: '',
+                readOnly: false,
+                theme: theme,
+                placeholder: '请输入 TOML 或 JSON...'
+            });
+
+            outputEditor = await REOT.CodeEditor.create('#output-editor', {
+                language: 'json',
+                value: '',
+                readOnly: true,
+                theme: theme
+            });
+
+            console.log('TOML editors initialized');
+        } catch (error) {
+            console.error('Failed to initialize editors:', error);
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+        }
+    }
+
     // 事件处理
     document.addEventListener('click', async (e) => {
         if (!isTomlToolActive()) return;
 
         const target = e.target;
-        const inputEl = document.getElementById('input');
-        const outputEl = document.getElementById('output');
         const validationSection = document.getElementById('validation-section');
         const validationResult = document.getElementById('validation-result');
 
-        // 格式化按钮
         if (target.id === 'format-btn' || target.closest('#format-btn')) {
             try {
-                const result = formatToml(inputEl?.value || '');
-                if (outputEl) outputEl.value = result;
+                const result = formatToml(getInputValue());
+                setOutputValue(result);
                 if (validationSection) validationSection.style.display = 'none';
                 REOT.utils?.showNotification('格式化成功', 'success');
             } catch (error) {
@@ -494,9 +571,8 @@ color = "gray"`;
             }
         }
 
-        // 验证按钮
         if (target.id === 'validate-btn' || target.closest('#validate-btn')) {
-            const result = validateToml(inputEl?.value || '');
+            const result = validateToml(getInputValue());
             if (validationSection && validationResult) {
                 validationSection.style.display = 'block';
                 validationResult.className = `validation-result ${result.valid ? 'success' : 'error'}`;
@@ -506,11 +582,10 @@ color = "gray"`;
             }
         }
 
-        // TOML 转 JSON
         if (target.id === 'to-json-btn' || target.closest('#to-json-btn')) {
             try {
-                const result = tomlToJson(inputEl?.value || '');
-                if (outputEl) outputEl.value = result;
+                const result = tomlToJson(getInputValue());
+                setOutputValue(result);
                 if (validationSection) validationSection.style.display = 'none';
                 REOT.utils?.showNotification('转换成功', 'success');
             } catch (error) {
@@ -518,11 +593,10 @@ color = "gray"`;
             }
         }
 
-        // JSON 转 TOML
         if (target.id === 'from-json-btn' || target.closest('#from-json-btn')) {
             try {
-                const result = jsonToToml(inputEl?.value || '');
-                if (outputEl) outputEl.value = result;
+                const result = jsonToToml(getInputValue());
+                setOutputValue(result);
                 if (validationSection) validationSection.style.display = 'none';
                 REOT.utils?.showNotification('转换成功', 'success');
             } catch (error) {
@@ -530,27 +604,39 @@ color = "gray"`;
             }
         }
 
-        // 清除按钮
         if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
-            if (inputEl) inputEl.value = '';
-            if (outputEl) outputEl.value = '';
+            setInputValue('');
+            setOutputValue('');
             if (validationSection) validationSection.style.display = 'none';
         }
 
-        // 复制按钮
         if (target.id === 'copy-btn' || target.closest('#copy-btn')) {
-            if (outputEl?.value) {
-                const success = await REOT.utils?.copyToClipboard(outputEl.value);
+            const value = getOutputValue();
+            if (value) {
+                const success = await REOT.utils?.copyToClipboard(value);
                 if (success) {
                     REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
                 }
             }
         }
 
-        // 加载示例
         if (target.id === 'example-btn' || target.closest('#example-btn')) {
-            if (inputEl) inputEl.value = loadExample();
+            setInputValue(loadExample());
         }
+    });
+
+    // 页面加载时初始化编辑器
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (isTomlToolActive()) initEditors();
+        });
+    } else {
+        if (isTomlToolActive()) initEditors();
+    }
+
+    // 监听路由变化重新初始化
+    window.addEventListener('routeChange', () => {
+        if (isTomlToolActive() && !inputEditor) initEditors();
     });
 
     // 导出工具函数

@@ -419,57 +419,143 @@ INSERT INTO logs (user_id, action, timestamp) VALUES (1, 'login', NOW());
 UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE id = 1;`;
     }
 
+    // 编辑器实例
+    let inputEditor = null;
+    let outputEditor = null;
+
+    function getInputValue() {
+        if (inputEditor) return inputEditor.getValue();
+        return document.getElementById('input')?.value || '';
+    }
+
+    function setInputValue(value) {
+        if (inputEditor) {
+            inputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('input');
+            if (el) el.value = value;
+        }
+    }
+
+    function setOutputValue(value) {
+        if (outputEditor) {
+            outputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('output');
+            if (el) el.value = value;
+        }
+    }
+
+    function getOutputValue() {
+        if (outputEditor) return outputEditor.getValue();
+        return document.getElementById('output')?.value || '';
+    }
+
+    async function initEditors() {
+        if (!REOT.CodeEditor) {
+            console.warn('CodeEditor not available, using textarea fallback');
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+            return;
+        }
+
+        try {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
+            inputEditor = await REOT.CodeEditor.create('#input-editor', {
+                language: 'sql',
+                value: '',
+                readOnly: false,
+                theme: theme,
+                placeholder: '请输入 SQL 语句...'
+            });
+
+            outputEditor = await REOT.CodeEditor.create('#output-editor', {
+                language: 'sql',
+                value: '',
+                readOnly: true,
+                theme: theme
+            });
+
+            console.log('SQL editors initialized');
+        } catch (error) {
+            console.error('Failed to initialize editors:', error);
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+        }
+    }
+
     // 事件处理
     document.addEventListener('click', async (e) => {
         if (!isSqlToolActive()) return;
 
         const target = e.target;
-        const inputEl = document.getElementById('input');
-        const outputEl = document.getElementById('output');
 
-        // 格式化按钮
         if (target.id === 'format-btn' || target.closest('#format-btn')) {
             try {
                 const options = getOptions();
-                const result = formatSql(inputEl?.value || '', options);
-                if (outputEl) outputEl.value = result;
+                const result = formatSql(getInputValue(), options);
+                setOutputValue(result);
                 REOT.utils?.showNotification('格式化成功', 'success');
             } catch (error) {
                 REOT.utils?.showNotification('格式化失败: ' + error.message, 'error');
             }
         }
 
-        // 压缩按钮
         if (target.id === 'minify-btn' || target.closest('#minify-btn')) {
             try {
-                const result = minifySql(inputEl?.value || '');
-                if (outputEl) outputEl.value = result;
+                const result = minifySql(getInputValue());
+                setOutputValue(result);
                 REOT.utils?.showNotification('压缩成功', 'success');
             } catch (error) {
                 REOT.utils?.showNotification('压缩失败: ' + error.message, 'error');
             }
         }
 
-        // 清除按钮
         if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
-            if (inputEl) inputEl.value = '';
-            if (outputEl) outputEl.value = '';
+            setInputValue('');
+            setOutputValue('');
         }
 
-        // 复制按钮
         if (target.id === 'copy-btn' || target.closest('#copy-btn')) {
-            if (outputEl?.value) {
-                const success = await REOT.utils?.copyToClipboard(outputEl.value);
+            const value = getOutputValue();
+            if (value) {
+                const success = await REOT.utils?.copyToClipboard(value);
                 if (success) {
                     REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
                 }
             }
         }
 
-        // 加载示例
         if (target.id === 'example-btn' || target.closest('#example-btn')) {
-            if (inputEl) inputEl.value = loadExample();
+            setInputValue(loadExample());
         }
+    });
+
+    // 页面加载时初始化编辑器
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (isSqlToolActive()) initEditors();
+        });
+    } else {
+        if (isSqlToolActive()) initEditors();
+    }
+
+    // 监听路由变化重新初始化
+    window.addEventListener('routeChange', () => {
+        if (isSqlToolActive() && !inputEditor) initEditors();
     });
 
     // 导出工具函数

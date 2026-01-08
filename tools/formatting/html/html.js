@@ -452,57 +452,143 @@
 </html>`;
     }
 
+    // 编辑器实例
+    let inputEditor = null;
+    let outputEditor = null;
+
+    function getInputValue() {
+        if (inputEditor) return inputEditor.getValue();
+        return document.getElementById('input')?.value || '';
+    }
+
+    function setInputValue(value) {
+        if (inputEditor) {
+            inputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('input');
+            if (el) el.value = value;
+        }
+    }
+
+    function setOutputValue(value) {
+        if (outputEditor) {
+            outputEditor.setValue(value);
+        } else {
+            const el = document.getElementById('output');
+            if (el) el.value = value;
+        }
+    }
+
+    function getOutputValue() {
+        if (outputEditor) return outputEditor.getValue();
+        return document.getElementById('output')?.value || '';
+    }
+
+    async function initEditors() {
+        if (!REOT.CodeEditor) {
+            console.warn('CodeEditor not available, using textarea fallback');
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+            return;
+        }
+
+        try {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
+            inputEditor = await REOT.CodeEditor.create('#input-editor', {
+                language: 'html',
+                value: '',
+                readOnly: false,
+                theme: theme,
+                placeholder: '请输入 HTML 代码...'
+            });
+
+            outputEditor = await REOT.CodeEditor.create('#output-editor', {
+                language: 'html',
+                value: '',
+                readOnly: true,
+                theme: theme
+            });
+
+            console.log('HTML editors initialized');
+        } catch (error) {
+            console.error('Failed to initialize editors:', error);
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+            if (inputEl) inputEl.style.display = '';
+            if (outputEl) outputEl.style.display = '';
+            const inputContainer = document.getElementById('input-editor');
+            const outputContainer = document.getElementById('output-editor');
+            if (inputContainer) inputContainer.style.display = 'none';
+            if (outputContainer) outputContainer.style.display = 'none';
+        }
+    }
+
     // 事件处理
     document.addEventListener('click', async (e) => {
         if (!isHtmlToolActive()) return;
 
         const target = e.target;
-        const inputEl = document.getElementById('input');
-        const outputEl = document.getElementById('output');
 
-        // 格式化按钮
         if (target.id === 'format-btn' || target.closest('#format-btn')) {
             try {
                 const options = getOptions();
-                const result = formatHtml(inputEl?.value || '', options);
-                if (outputEl) outputEl.value = result;
+                const result = formatHtml(getInputValue(), options);
+                setOutputValue(result);
                 REOT.utils?.showNotification('格式化成功', 'success');
             } catch (error) {
                 REOT.utils?.showNotification('格式化失败: ' + error.message, 'error');
             }
         }
 
-        // 压缩按钮
         if (target.id === 'minify-btn' || target.closest('#minify-btn')) {
             try {
-                const result = minifyHtml(inputEl?.value || '');
-                if (outputEl) outputEl.value = result;
+                const result = minifyHtml(getInputValue());
+                setOutputValue(result);
                 REOT.utils?.showNotification('压缩成功', 'success');
             } catch (error) {
                 REOT.utils?.showNotification('压缩失败: ' + error.message, 'error');
             }
         }
 
-        // 清除按钮
         if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
-            if (inputEl) inputEl.value = '';
-            if (outputEl) outputEl.value = '';
+            setInputValue('');
+            setOutputValue('');
         }
 
-        // 复制按钮
         if (target.id === 'copy-btn' || target.closest('#copy-btn')) {
-            if (outputEl?.value) {
-                const success = await REOT.utils?.copyToClipboard(outputEl.value);
+            const value = getOutputValue();
+            if (value) {
+                const success = await REOT.utils?.copyToClipboard(value);
                 if (success) {
                     REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
                 }
             }
         }
 
-        // 加载示例
         if (target.id === 'example-btn' || target.closest('#example-btn')) {
-            if (inputEl) inputEl.value = loadExample();
+            setInputValue(loadExample());
         }
+    });
+
+    // 页面加载时初始化编辑器
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (isHtmlToolActive()) initEditors();
+        });
+    } else {
+        if (isHtmlToolActive()) initEditors();
+    }
+
+    // 监听路由变化重新初始化
+    window.addEventListener('routeChange', () => {
+        if (isHtmlToolActive() && !inputEditor) initEditors();
     });
 
     // 导出工具函数
