@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.frequency-analyzer.title">频率分析 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="frequency-analyzer.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.frequency-analyzer.title">频率分析</h1>
+            <p data-i18n="tools.frequency-analyzer.description">字符和字节频率分析（密码学分析）</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 模式选择 -->
+            <section class="options-section">
+                <div class="option-row">
+                    <div class="option-group">
+                        <label data-i18n="tools.frequency-analyzer.analysisMode">分析模式</label>
+                        <select id="analysis-mode" class="form-select">
+                            <option value="char" selected>字符频率</option>
+                            <option value="byte">字节频率</option>
+                            <option value="ngram">N-gram 分析</option>
+                        </select>
+                    </div>
+                    <div class="option-group" id="ngram-size-group" style="display: none;">
+                        <label>N-gram 大小</label>
+                        <select id="ngram-size" class="form-select">
+                            <option value="2" selected>2 (Bigram)</option>
+                            <option value="3">3 (Trigram)</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.frequency-analyzer.caseSensitive">区分大小写</label>
+                        <select id="case-sensitive" class="form-select">
+                            <option value="no" selected>否</option>
+                            <option value="yes">是</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-textarea form-input--mono"
+                          rows="6"
+                          placeholder="输入要分析的文本或十六进制数据..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="analyze-btn" class="btn btn--primary" data-i18n="tools.frequency-analyzer.analyze">分析</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="compare-english-btn" class="btn btn--outline" data-i18n="tools.frequency-analyzer.compareEnglish">对比英语</button>
+            </section>
+
+            <!-- 结果区域 -->
+            <section class="result-section" id="result-section" style="display: none;">
+                <div class="result-header">
+                    <h3 data-i18n="common.result">结果</h3>
+                    <div class="result-stats">
+                        <span data-i18n="tools.frequency-analyzer.totalChars">总字符数</span>: <span id="total-chars">0</span>
+                        <span data-i18n="tools.frequency-analyzer.uniqueChars">唯一字符</span>: <span id="unique-chars">0</span>
+                    </div>
+                </div>
+
+                <!-- 频率图表 -->
+                <div class="chart-container" id="chart-container">
+                    <!-- 动态生成 -->
+                </div>
+
+                <!-- 频率表格 -->
+                <div class="table-container">
+                    <table class="freq-table" id="freq-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="tools.frequency-analyzer.character">字符</th>
+                                <th data-i18n="tools.frequency-analyzer.count">次数</th>
+                                <th data-i18n="tools.frequency-analyzer.frequency">频率</th>
+                                <th data-i18n="tools.frequency-analyzer.bar">分布</th>
+                            </tr>
+                        </thead>
+                        <tbody id="freq-tbody">
+                            <!-- 动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 英语对比（可选） -->
+                <div class="comparison-section" id="comparison-section" style="display: none;">
+                    <h4 data-i18n="tools.frequency-analyzer.englishComparison">与英语字母频率对比</h4>
+                    <div class="comparison-chart" id="comparison-chart">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 说明 -->
+            <section class="info-section">
+                <div class="info-box">
+                    <h4 data-i18n="tools.frequency-analyzer.aboutTitle">关于频率分析</h4>
+                    <p data-i18n="tools.frequency-analyzer.aboutDesc">频率分析是密码学中的重要技术，通过分析密文中字符出现的频率来破解简单的替换密码。在英语中，字母 'E' 出现频率最高（约12.7%），其次是 'T'、'A'、'O' 等。通过将密文字符频率与已知语言频率进行对比，可以推测出替换规则。</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="frequency-analyzer.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+    "tools.frequency-analyzer.title": "频率分析",
+    "tools.frequency-analyzer.description": "字符和字节频率分析（密码学分析）",
+    "tools.frequency-analyzer.analysisMode": "分析模式",
+    "tools.frequency-analyzer.caseSensitive": "区分大小写",
+    "tools.frequency-analyzer.analyze": "分析",
+    "tools.frequency-analyzer.compareEnglish": "对比英语",
+    "tools.frequency-analyzer.totalChars": "总字符数",
+    "tools.frequency-analyzer.uniqueChars": "唯一字符",
+    "tools.frequency-analyzer.character": "字符",
+    "tools.frequency-analyzer.count": "次数",
+    "tools.frequency-analyzer.frequency": "频率",
+    "tools.frequency-analyzer.bar": "分布",
+    "tools.frequency-analyzer.englishComparison": "与英语字母频率对比",
+    "tools.frequency-analyzer.aboutTitle": "关于频率分析",
+    "tools.frequency-analyzer.aboutDesc": "频率分析是密码学中的重要技术，通过分析密文中字符出现的频率来破解简单的替换密码。在英语中，字母 'E' 出现频率最高（约12.7%），其次是 'T'、'A'、'O' 等。通过将密文字符频率与已知语言频率进行对比，可以推测出替换规则。"
+}

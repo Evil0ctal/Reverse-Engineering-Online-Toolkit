@@ -1,0 +1,21 @@
+{
+    "tools.strings-extractor.title": "Strings Extractor",
+    "tools.strings-extractor.description": "Extract readable strings from binary data",
+    "tools.strings-extractor.minLength": "Min Length",
+    "tools.strings-extractor.encoding": "Encoding",
+    "tools.strings-extractor.charSet": "Character Set",
+    "tools.strings-extractor.printable": "Printable",
+    "tools.strings-extractor.alphanumeric": "Alphanumeric",
+    "tools.strings-extractor.custom": "Custom",
+    "tools.strings-extractor.customChars": "Custom Characters",
+    "tools.strings-extractor.dropFile": "Drop file here or click to upload",
+    "tools.strings-extractor.hexInput": "Or enter hexadecimal data",
+    "tools.strings-extractor.hexPlaceholder": "48 65 6C 6C 6F 20 57 6F 72 6C 64...",
+    "tools.strings-extractor.extract": "Extract Strings",
+    "tools.strings-extractor.stringsFound": "strings found",
+    "tools.strings-extractor.filterPlaceholder": "Filter strings...",
+    "tools.strings-extractor.showOffset": "Show Offset",
+    "tools.strings-extractor.showHex": "Show Hex",
+    "tools.strings-extractor.aboutTitle": "About Strings Extractor",
+    "tools.strings-extractor.aboutDesc": "The strings extractor tool can extract readable text strings from binary files or data. It is commonly used in reverse engineering to analyze executables, firmware, or other binary data to discover text information such as URLs, file paths, error messages, etc."
+}

@@ -967,6 +967,44 @@
             icon: '🔢',
             path: '/tools/converters/ieee754/',
             keywords: ['ieee', '754', 'float', 'double', 'floating', 'point', '浮点数', '单精度', '双精度']
+        },
+
+        // ========== 逆向专用工具 ==========
+        {
+            id: 'strings-extractor',
+            category: 'reverse',
+            name: 'tools.strings-extractor.title',
+            description: 'tools.strings-extractor.description',
+            icon: '📜',
+            path: '/tools/reverse/strings-extractor/',
+            keywords: ['strings', 'extract', 'binary', 'ascii', 'utf', '字符串', '提取', '二进制']
+        },
+        {
+            id: 'xor-analyzer',
+            category: 'reverse',
+            name: 'tools.xor-analyzer.title',
+            description: 'tools.xor-analyzer.description',
+            icon: '⊕',
+            path: '/tools/reverse/xor-analyzer/',
+            keywords: ['xor', 'cipher', 'bruteforce', 'key', '异或', '加密', '解密', '破解']
+        },
+        {
+            id: 'frequency-analyzer',
+            category: 'reverse',
+            name: 'tools.frequency-analyzer.title',
+            description: 'tools.frequency-analyzer.description',
+            icon: '📊',
+            path: '/tools/reverse/frequency-analyzer/',
+            keywords: ['frequency', 'analysis', 'cipher', 'crypto', '频率', '分析', '密码']
+        },
+        {
+            id: 'offset-calculator',
+            category: 'reverse',
+            name: 'tools.offset-calculator.title',
+            description: 'tools.offset-calculator.description',
+            icon: '🧮',
+            path: '/tools/reverse/offset-calculator/',
+            keywords: ['offset', 'address', 'rva', 'va', 'pe', '偏移', '地址', '内存']
         }
     ]);
 

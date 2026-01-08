@@ -1,0 +1,21 @@
+{
+    "tools.strings-extractor.title": "字符串提取",
+    "tools.strings-extractor.description": "从二进制数据中提取可读字符串",
+    "tools.strings-extractor.minLength": "最小长度",
+    "tools.strings-extractor.encoding": "编码",
+    "tools.strings-extractor.charSet": "字符集",
+    "tools.strings-extractor.printable": "可打印字符",
+    "tools.strings-extractor.alphanumeric": "字母数字",
+    "tools.strings-extractor.custom": "自定义",
+    "tools.strings-extractor.customChars": "自定义字符",
+    "tools.strings-extractor.dropFile": "拖拽文件到此处或点击上传",
+    "tools.strings-extractor.hexInput": "或输入十六进制数据",
+    "tools.strings-extractor.hexPlaceholder": "48 65 6C 6C 6F 20 57 6F 72 6C 64...",
+    "tools.strings-extractor.extract": "提取字符串",
+    "tools.strings-extractor.stringsFound": "个字符串",
+    "tools.strings-extractor.filterPlaceholder": "过滤字符串...",
+    "tools.strings-extractor.showOffset": "显示偏移",
+    "tools.strings-extractor.showHex": "显示十六进制",
+    "tools.strings-extractor.aboutTitle": "关于字符串提取",
+    "tools.strings-extractor.aboutDesc": "字符串提取工具可以从二进制文件或数据中提取可读的文本字符串。这在逆向工程中常用于分析可执行文件、固件或其他二进制数据，发现其中的文本信息如 URL、文件路径、错误消息等。"
+}

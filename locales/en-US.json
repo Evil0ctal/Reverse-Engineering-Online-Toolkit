@@ -377,6 +377,22 @@
             "formula": "Formula",
             "aboutIEEE754": "About IEEE 754",
             "aboutDesc": "IEEE 754 is the international standard for floating-point arithmetic, defining the binary representation format for floating-point numbers. Single precision (float32) uses 1 sign bit, 8 exponent bits, and 23 mantissa bits; double precision (float64) uses 1 sign bit, 11 exponent bits, and 52 mantissa bits."
+        },
+        "strings-extractor": {
+            "title": "Strings Extractor",
+            "description": "Extract readable strings from binary files"
+        },
+        "xor-analyzer": {
+            "title": "XOR Analyzer",
+            "description": "XOR encryption/decryption, brute-force and key length detection"
+        },
+        "frequency-analyzer": {
+            "title": "Frequency Analyzer",
+            "description": "Character, byte and N-gram frequency analysis"
+        },
+        "offset-calculator": {
+            "title": "Offset Calculator",
+            "description": "Memory address offset calculation and conversion"
         }
     }
 }

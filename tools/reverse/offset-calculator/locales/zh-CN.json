@@ -1,0 +1,21 @@
+{
+    "tools.offset-calculator.title": "偏移计算器",
+    "tools.offset-calculator.description": "内存地址偏移计算与转换",
+    "tools.offset-calculator.basicCalc": "基本偏移计算",
+    "tools.offset-calculator.baseAddress": "基址",
+    "tools.offset-calculator.offset": "偏移",
+    "tools.offset-calculator.result": "结果",
+    "tools.offset-calculator.calculate": "计算",
+    "tools.offset-calculator.rvaConversion": "RVA / 文件偏移转换",
+    "tools.offset-calculator.imageBase": "镜像基址 (ImageBase)",
+    "tools.offset-calculator.sectionRva": "节 RVA (Section RVA)",
+    "tools.offset-calculator.sectionRawOffset": "节文件偏移 (Raw Offset)",
+    "tools.offset-calculator.inputValue": "输入值",
+    "tools.offset-calculator.inputType": "输入类型",
+    "tools.offset-calculator.convert": "转换",
+    "tools.offset-calculator.formatConversion": "地址格式转换",
+    "tools.offset-calculator.addressInput": "地址输入",
+    "tools.offset-calculator.bitWidth": "位宽",
+    "tools.offset-calculator.aboutTitle": "关于偏移计算",
+    "tools.offset-calculator.aboutDesc": "偏移计算器用于逆向工程中的地址计算。VA（虚拟地址）是进程内存中的实际地址；RVA（相对虚拟地址）是相对于镜像基址的偏移；文件偏移是数据在 PE/ELF 文件中的位置。转换公式：RVA = VA - ImageBase; Raw = RVA - SectionRVA + SectionRawOffset"
+}

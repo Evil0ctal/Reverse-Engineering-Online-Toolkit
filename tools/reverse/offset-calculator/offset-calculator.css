@@ -1,0 +1,192 @@
+/**
+ * 偏移计算器工具样式
+ */
+
+/* 计算区域 */
+.calc-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.calc-section h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 计算行 */
+.calc-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.rva-row,
+.format-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calc-group {
+    flex: 1;
+    min-width: 120px;
+}
+
+.calc-group.flex-2 {
+    flex: 2;
+}
+
+.calc-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.calc-operator {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 0.5rem;
+}
+
+.calc-operator .form-select {
+    width: 60px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.calc-equals {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* 操作按钮 */
+.action-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* RVA 结果 */
+.rva-results,
+.format-results {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+}
+
+.rva-result-item,
+.format-result-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.rva-result-item:last-child,
+.format-result-item:last-child {
+    border-bottom: none;
+}
+
+.rva-label,
+.format-label {
+    min-width: 180px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.rva-value,
+.format-value {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--primary);
+    word-break: break-all;
+}
+
+/* 说明区域 */
+.info-section {
+    margin-top: 2rem;
+}
+
+.info-box {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.info-box h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.info-box p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .calc-row,
+    .rva-row,
+    .format-row {
+        flex-direction: column;
+    }
+
+    .calc-operator,
+    .calc-equals {
+        justify-content: center;
+        padding: 0.5rem 0;
+    }
+
+    .calc-operator .form-select {
+        width: 100%;
+    }
+
+    .action-section {
+        flex-direction: column;
+    }
+
+    .action-section .btn {
+        width: 100%;
+    }
+
+    .rva-result-item,
+    .format-result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .rva-label,
+    .format-label {
+        min-width: auto;
+    }
+
+    .rva-result-item .copy-btn,
+    .format-result-item .copy-btn {
+        align-self: flex-end;
+    }
+}

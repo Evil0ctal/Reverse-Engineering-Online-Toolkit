@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.offset-calculator.title">偏移计算器 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="offset-calculator.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.offset-calculator.title">偏移计算器</h1>
+            <p data-i18n="tools.offset-calculator.description">内存地址偏移计算与转换</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 基本计算 -->
+            <section class="calc-section">
+                <h3 data-i18n="tools.offset-calculator.basicCalc">基本偏移计算</h3>
+                <div class="calc-row">
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.baseAddress">基址</label>
+                        <input type="text" id="base-address"
+                               class="form-input form-input--mono"
+                               placeholder="0x400000">
+                    </div>
+                    <div class="calc-operator">
+                        <select id="calc-operator" class="form-select">
+                            <option value="add">+</option>
+                            <option value="sub">-</option>
+                        </select>
+                    </div>
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.offset">偏移</label>
+                        <input type="text" id="offset-value"
+                               class="form-input form-input--mono"
+                               placeholder="0x1000">
+                    </div>
+                    <div class="calc-equals">=</div>
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.result">结果</label>
+                        <input type="text" id="calc-result"
+                               class="form-input form-input--mono"
+                               readonly>
+                    </div>
+                </div>
+                <div class="action-section">
+                    <button id="calc-btn" class="btn btn--primary" data-i18n="tools.offset-calculator.calculate">计算</button>
+                </div>
+            </section>
+
+            <!-- RVA 转换 -->
+            <section class="calc-section">
+                <h3 data-i18n="tools.offset-calculator.rvaConversion">RVA / 文件偏移转换</h3>
+                <div class="rva-row">
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.imageBase">镜像基址 (ImageBase)</label>
+                        <input type="text" id="image-base"
+                               class="form-input form-input--mono"
+                               placeholder="0x400000"
+                               value="0x400000">
+                    </div>
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.sectionRva">节 RVA (Section RVA)</label>
+                        <input type="text" id="section-rva"
+                               class="form-input form-input--mono"
+                               placeholder="0x1000"
+                               value="0x1000">
+                    </div>
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.sectionRawOffset">节文件偏移 (Raw Offset)</label>
+                        <input type="text" id="section-raw"
+                               class="form-input form-input--mono"
+                               placeholder="0x400"
+                               value="0x400">
+                    </div>
+                </div>
+                <div class="rva-row">
+                    <div class="calc-group flex-2">
+                        <label data-i18n="tools.offset-calculator.inputValue">输入值</label>
+                        <input type="text" id="rva-input"
+                               class="form-input form-input--mono"
+                               placeholder="输入 VA、RVA 或文件偏移...">
+                    </div>
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.inputType">输入类型</label>
+                        <select id="rva-input-type" class="form-select">
+                            <option value="va">虚拟地址 (VA)</option>
+                            <option value="rva">相对虚拟地址 (RVA)</option>
+                            <option value="raw">文件偏移 (Raw)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="action-section">
+                    <button id="rva-convert-btn" class="btn btn--primary" data-i18n="tools.offset-calculator.convert">转换</button>
+                </div>
+                <div class="rva-results" id="rva-results" style="display: none;">
+                    <div class="rva-result-item">
+                        <span class="rva-label">VA (虚拟地址)</span>
+                        <span class="rva-value" id="result-va">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="result-va">复制</button>
+                    </div>
+                    <div class="rva-result-item">
+                        <span class="rva-label">RVA (相对虚拟地址)</span>
+                        <span class="rva-value" id="result-rva">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="result-rva">复制</button>
+                    </div>
+                    <div class="rva-result-item">
+                        <span class="rva-label">Raw (文件偏移)</span>
+                        <span class="rva-value" id="result-raw">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="result-raw">复制</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 地址格式转换 -->
+            <section class="calc-section">
+                <h3 data-i18n="tools.offset-calculator.formatConversion">地址格式转换</h3>
+                <div class="format-row">
+                    <div class="calc-group flex-2">
+                        <label data-i18n="tools.offset-calculator.addressInput">地址输入</label>
+                        <input type="text" id="format-input"
+                               class="form-input form-input--mono"
+                               placeholder="输入任意格式的地址...">
+                    </div>
+                    <div class="calc-group">
+                        <label data-i18n="tools.offset-calculator.bitWidth">位宽</label>
+                        <select id="bit-width" class="form-select">
+                            <option value="32">32 位</option>
+                            <option value="64" selected>64 位</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="action-section">
+                    <button id="format-convert-btn" class="btn btn--primary" data-i18n="tools.offset-calculator.convert">转换</button>
+                </div>
+                <div class="format-results" id="format-results" style="display: none;">
+                    <div class="format-result-item">
+                        <span class="format-label">十六进制 (Hex)</span>
+                        <span class="format-value" id="format-hex">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="format-hex">复制</button>
+                    </div>
+                    <div class="format-result-item">
+                        <span class="format-label">十进制 (Decimal)</span>
+                        <span class="format-value" id="format-dec">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="format-dec">复制</button>
+                    </div>
+                    <div class="format-result-item">
+                        <span class="format-label">八进制 (Octal)</span>
+                        <span class="format-value" id="format-oct">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="format-oct">复制</button>
+                    </div>
+                    <div class="format-result-item">
+                        <span class="format-label">二进制 (Binary)</span>
+                        <span class="format-value" id="format-bin">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="format-bin">复制</button>
+                    </div>
+                    <div class="format-result-item">
+                        <span class="format-label">小端字节序 (LE)</span>
+                        <span class="format-value" id="format-le">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="format-le">复制</button>
+                    </div>
+                    <div class="format-result-item">
+                        <span class="format-label">大端字节序 (BE)</span>
+                        <span class="format-value" id="format-be">-</span>
+                        <button class="btn btn--sm btn--outline copy-btn" data-target="format-be">复制</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 说明 -->
+            <section class="info-section">
+                <div class="info-box">
+                    <h4 data-i18n="tools.offset-calculator.aboutTitle">关于偏移计算</h4>
+                    <p data-i18n="tools.offset-calculator.aboutDesc">偏移计算器用于逆向工程中的地址计算。VA（虚拟地址）是进程内存中的实际地址；RVA（相对虚拟地址）是相对于镜像基址的偏移；文件偏移是数据在 PE/ELF 文件中的位置。转换公式：RVA = VA - ImageBase; Raw = RVA - SectionRVA + SectionRawOffset</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="offset-calculator.js"></script>
+</body>
+</html>

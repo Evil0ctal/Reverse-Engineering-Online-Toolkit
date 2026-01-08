@@ -1,0 +1,17 @@
+{
+    "tools.frequency-analyzer.title": "Frequency Analyzer",
+    "tools.frequency-analyzer.description": "Character and byte frequency analysis (cryptanalysis)",
+    "tools.frequency-analyzer.analysisMode": "Analysis Mode",
+    "tools.frequency-analyzer.caseSensitive": "Case Sensitive",
+    "tools.frequency-analyzer.analyze": "Analyze",
+    "tools.frequency-analyzer.compareEnglish": "Compare with English",
+    "tools.frequency-analyzer.totalChars": "Total Characters",
+    "tools.frequency-analyzer.uniqueChars": "Unique Characters",
+    "tools.frequency-analyzer.character": "Character",
+    "tools.frequency-analyzer.count": "Count",
+    "tools.frequency-analyzer.frequency": "Frequency",
+    "tools.frequency-analyzer.bar": "Distribution",
+    "tools.frequency-analyzer.englishComparison": "Comparison with English Letter Frequency",
+    "tools.frequency-analyzer.aboutTitle": "About Frequency Analysis",
+    "tools.frequency-analyzer.aboutDesc": "Frequency analysis is an important technique in cryptography that breaks simple substitution ciphers by analyzing character frequencies in ciphertext. In English, 'E' appears most frequently (about 12.7%), followed by 'T', 'A', 'O', etc. By comparing ciphertext character frequencies with known language frequencies, substitution rules can be deduced."
+}

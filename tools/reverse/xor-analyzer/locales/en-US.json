@@ -1,0 +1,23 @@
+{
+    "tools.xor-analyzer.title": "XOR Analyzer",
+    "tools.xor-analyzer.description": "XOR encryption analysis and decryption tool",
+    "tools.xor-analyzer.encryptDecrypt": "Encrypt/Decrypt",
+    "tools.xor-analyzer.bruteforce": "Single-byte Bruteforce",
+    "tools.xor-analyzer.keyDetect": "Key Length Detection",
+    "tools.xor-analyzer.inputFormat": "Input Format",
+    "tools.xor-analyzer.keyFormat": "Key Format",
+    "tools.xor-analyzer.outputFormat": "Output Format",
+    "tools.xor-analyzer.data": "Data",
+    "tools.xor-analyzer.key": "Key",
+    "tools.xor-analyzer.xorApply": "Apply XOR",
+    "tools.xor-analyzer.ciphertext": "Ciphertext (Hex)",
+    "tools.xor-analyzer.knownPlaintext": "Known Plaintext (Optional)",
+    "tools.xor-analyzer.startBruteforce": "Start Bruteforce",
+    "tools.xor-analyzer.possibleResults": "Possible Results (sorted by readability)",
+    "tools.xor-analyzer.maxKeyLength": "Max Key Length",
+    "tools.xor-analyzer.detectKeyLength": "Detect Key Length",
+    "tools.xor-analyzer.keyLengthResults": "Key Length Analysis (Hamming Distance)",
+    "tools.xor-analyzer.keyLengthHint": "Hint: Lower Hamming distance indicates higher probability",
+    "tools.xor-analyzer.aboutTitle": "About XOR Encryption",
+    "tools.xor-analyzer.aboutDesc": "XOR (exclusive or) is a simple encryption method commonly found in malware and simple data obfuscation. XORing data with the same key twice restores the original data, so encryption and decryption use the same operation."
+}

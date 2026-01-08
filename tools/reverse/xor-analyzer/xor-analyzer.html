@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.xor-analyzer.title">XOR 分析 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="xor-analyzer.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.xor-analyzer.title">XOR 分析</h1>
+            <p data-i18n="tools.xor-analyzer.description">XOR 加密分析与解密工具</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 模式选择 -->
+            <section class="mode-section">
+                <div class="mode-tabs">
+                    <button class="mode-tab active" data-mode="encrypt" data-i18n="tools.xor-analyzer.encryptDecrypt">加密/解密</button>
+                    <button class="mode-tab" data-mode="bruteforce" data-i18n="tools.xor-analyzer.bruteforce">单字节暴力破解</button>
+                    <button class="mode-tab" data-mode="keydetect" data-i18n="tools.xor-analyzer.keyDetect">密钥长度检测</button>
+                </div>
+            </section>
+
+            <!-- 加密/解密模式 -->
+            <div class="mode-content" id="mode-encrypt">
+                <section class="options-section">
+                    <div class="option-row">
+                        <div class="option-group">
+                            <label data-i18n="tools.xor-analyzer.inputFormat">输入格式</label>
+                            <select id="input-format" class="form-select">
+                                <option value="hex" selected>十六进制</option>
+                                <option value="text">文本</option>
+                                <option value="base64">Base64</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label data-i18n="tools.xor-analyzer.keyFormat">密钥格式</label>
+                            <select id="key-format" class="form-select">
+                                <option value="hex" selected>十六进制</option>
+                                <option value="text">文本</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label data-i18n="tools.xor-analyzer.outputFormat">输出格式</label>
+                            <select id="output-format" class="form-select">
+                                <option value="hex">十六进制</option>
+                                <option value="text" selected>文本</option>
+                                <option value="base64">Base64</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="input-section">
+                    <label data-i18n="tools.xor-analyzer.data">数据</label>
+                    <textarea id="data-input"
+                              class="form-textarea form-input--mono"
+                              rows="4"
+                              placeholder="输入要加密/解密的数据..."></textarea>
+                </section>
+
+                <section class="input-section">
+                    <label data-i18n="tools.xor-analyzer.key">密钥</label>
+                    <input type="text" id="key-input"
+                           class="form-input form-input--mono"
+                           placeholder="输入 XOR 密钥...">
+                </section>
+
+                <section class="action-section">
+                    <button id="xor-btn" class="btn btn--primary" data-i18n="tools.xor-analyzer.xorApply">应用 XOR</button>
+                    <button id="clear-encrypt-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                </section>
+
+                <section class="output-section" id="encrypt-output-section" style="display: none;">
+                    <label data-i18n="common.output">输出</label>
+                    <textarea id="xor-output"
+                              class="form-textarea form-input--mono"
+                              rows="4"
+                              readonly></textarea>
+                    <button class="btn btn--sm btn--outline copy-btn" data-target="xor-output" style="margin-top: 0.5rem;">
+                        <span data-i18n="common.copy">复制</span>
+                    </button>
+                </section>
+            </div>
+
+            <!-- 暴力破解模式 -->
+            <div class="mode-content" id="mode-bruteforce" style="display: none;">
+                <section class="input-section">
+                    <label data-i18n="tools.xor-analyzer.ciphertext">密文（十六进制）</label>
+                    <textarea id="bruteforce-input"
+                              class="form-textarea form-input--mono"
+                              rows="4"
+                              placeholder="输入十六进制密文..."></textarea>
+                </section>
+
+                <section class="options-section">
+                    <div class="option-row">
+                        <div class="option-group">
+                            <label data-i18n="tools.xor-analyzer.knownPlaintext">已知明文（可选）</label>
+                            <input type="text" id="known-plaintext"
+                                   class="form-input form-input--mono"
+                                   placeholder="如果知道部分明文内容...">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="action-section">
+                    <button id="bruteforce-btn" class="btn btn--primary" data-i18n="tools.xor-analyzer.startBruteforce">开始暴力破解</button>
+                </section>
+
+                <section class="result-section" id="bruteforce-result" style="display: none;">
+                    <h3 data-i18n="tools.xor-analyzer.possibleResults">可能的结果（按可读性排序）</h3>
+                    <div class="bruteforce-list" id="bruteforce-list">
+                        <!-- 动态生成 -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- 密钥长度检测模式 -->
+            <div class="mode-content" id="mode-keydetect" style="display: none;">
+                <section class="input-section">
+                    <label data-i18n="tools.xor-analyzer.ciphertext">密文（十六进制）</label>
+                    <textarea id="keydetect-input"
+                              class="form-textarea form-input--mono"
+                              rows="4"
+                              placeholder="输入十六进制密文..."></textarea>
+                </section>
+
+                <section class="options-section">
+                    <div class="option-row">
+                        <div class="option-group">
+                            <label data-i18n="tools.xor-analyzer.maxKeyLength">最大密钥长度</label>
+                            <input type="number" id="max-key-length"
+                                   class="form-input"
+                                   value="20" min="1" max="50">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="action-section">
+                    <button id="keydetect-btn" class="btn btn--primary" data-i18n="tools.xor-analyzer.detectKeyLength">检测密钥长度</button>
+                </section>
+
+                <section class="result-section" id="keydetect-result" style="display: none;">
+                    <h3 data-i18n="tools.xor-analyzer.keyLengthResults">密钥长度分析（汉明距离）</h3>
+                    <div class="keydetect-chart" id="keydetect-chart">
+                        <!-- 动态生成 -->
+                    </div>
+                    <p class="hint" data-i18n="tools.xor-analyzer.keyLengthHint">提示：汉明距离越小，该密钥长度的可能性越大</p>
+                </section>
+            </div>
+
+            <!-- 说明 -->
+            <section class="info-section">
+                <div class="info-box">
+                    <h4 data-i18n="tools.xor-analyzer.aboutTitle">关于 XOR 加密</h4>
+                    <p data-i18n="tools.xor-analyzer.aboutDesc">XOR（异或）是一种简单的加密方式，常见于恶意软件和简单的数据混淆。相同的数据与密钥进行两次 XOR 运算会还原原始数据，因此加密和解密使用相同的操作。</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="xor-analyzer.js"></script>
+</body>
+</html>

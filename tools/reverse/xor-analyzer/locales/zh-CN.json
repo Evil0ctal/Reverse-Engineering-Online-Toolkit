@@ -1,0 +1,23 @@
+{
+    "tools.xor-analyzer.title": "XOR 分析",
+    "tools.xor-analyzer.description": "XOR 加密分析与解密工具",
+    "tools.xor-analyzer.encryptDecrypt": "加密/解密",
+    "tools.xor-analyzer.bruteforce": "单字节暴力破解",
+    "tools.xor-analyzer.keyDetect": "密钥长度检测",
+    "tools.xor-analyzer.inputFormat": "输入格式",
+    "tools.xor-analyzer.keyFormat": "密钥格式",
+    "tools.xor-analyzer.outputFormat": "输出格式",
+    "tools.xor-analyzer.data": "数据",
+    "tools.xor-analyzer.key": "密钥",
+    "tools.xor-analyzer.xorApply": "应用 XOR",
+    "tools.xor-analyzer.ciphertext": "密文（十六进制）",
+    "tools.xor-analyzer.knownPlaintext": "已知明文（可选）",
+    "tools.xor-analyzer.startBruteforce": "开始暴力破解",
+    "tools.xor-analyzer.possibleResults": "可能的结果（按可读性排序）",
+    "tools.xor-analyzer.maxKeyLength": "最大密钥长度",
+    "tools.xor-analyzer.detectKeyLength": "检测密钥长度",
+    "tools.xor-analyzer.keyLengthResults": "密钥长度分析（汉明距离）",
+    "tools.xor-analyzer.keyLengthHint": "提示：汉明距离越小，该密钥长度的可能性越大",
+    "tools.xor-analyzer.aboutTitle": "关于 XOR 加密",
+    "tools.xor-analyzer.aboutDesc": "XOR（异或）是一种简单的加密方式，常见于恶意软件和简单的数据混淆。相同的数据与密钥进行两次 XOR 运算会还原原始数据，因此加密和解密使用相同的操作。"
+}

@@ -377,6 +377,22 @@
             "formula": "计算公式",
             "aboutIEEE754": "关于 IEEE 754",
             "aboutDesc": "IEEE 754 是浮点数运算的国际标准，定义了浮点数的二进制表示格式。单精度 (float32) 使用 1 位符号、8 位指数、23 位尾数；双精度 (float64) 使用 1 位符号、11 位指数、52 位尾数。"
+        },
+        "strings-extractor": {
+            "title": "字符串提取",
+            "description": "从二进制文件中提取可读字符串"
+        },
+        "xor-analyzer": {
+            "title": "XOR 分析",
+            "description": "XOR 加解密、暴力破解与密钥长度检测"
+        },
+        "frequency-analyzer": {
+            "title": "频率分析",
+            "description": "字符、字节和 N-gram 频率分析"
+        },
+        "offset-calculator": {
+            "title": "偏移计算器",
+            "description": "内存地址偏移计算与转换"
         }
     }
 }

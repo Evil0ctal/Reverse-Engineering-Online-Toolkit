@@ -1,0 +1,300 @@
+/**
+ * XOR 分析工具样式
+ */
+
+/* 模式选择 */
+.mode-section {
+    margin-bottom: 1.5rem;
+}
+
+.mode-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.mode-tab {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+}
+
+.mode-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+.mode-tab.active {
+    color: var(--primary);
+    background: var(--bg-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 选项区域 */
+.options-section {
+    margin-bottom: 1.5rem;
+}
+
+.option-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.option-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+.option-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* 输入区域 */
+.input-section {
+    margin-bottom: 1.5rem;
+}
+
+.input-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    resize: vertical;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* 操作按钮 */
+.action-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* 输出区域 */
+.output-section {
+    margin-top: 1.5rem;
+}
+
+.output-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* 暴力破解结果 */
+.result-section h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.bruteforce-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.bruteforce-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s;
+}
+
+.bruteforce-item:last-child {
+    border-bottom: none;
+}
+
+.bruteforce-item:hover {
+    background: var(--bg-secondary);
+}
+
+.bruteforce-key {
+    min-width: 60px;
+    padding: 0.25rem 0.5rem;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+}
+
+.bruteforce-result {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.bruteforce-score {
+    min-width: 50px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.bruteforce-item .copy-btn {
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.bruteforce-item:hover .copy-btn {
+    opacity: 1;
+}
+
+/* 密钥长度检测图表 */
+.keydetect-chart {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+.keydetect-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.keydetect-label {
+    min-width: 80px;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+}
+
+.keydetect-bar-container {
+    flex: 1;
+    height: 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.keydetect-bar-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: var(--radius-sm);
+    transition: width 0.3s;
+}
+
+.keydetect-bar-fill.likely {
+    background: #10b981;
+}
+
+.keydetect-value {
+    min-width: 60px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* 说明区域 */
+.info-section {
+    margin-top: 2rem;
+}
+
+.info-box {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.info-box h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.info-box p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .mode-tabs {
+        flex-direction: column;
+    }
+
+    .mode-tab {
+        width: 100%;
+    }
+
+    .option-row {
+        flex-direction: column;
+    }
+
+    .action-section {
+        flex-direction: column;
+    }
+
+    .action-section .btn {
+        width: 100%;
+    }
+
+    .bruteforce-item {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .bruteforce-key {
+        align-self: flex-start;
+    }
+
+    .bruteforce-score {
+        align-self: flex-end;
+    }
+}

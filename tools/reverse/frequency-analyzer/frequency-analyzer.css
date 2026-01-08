@@ -1,0 +1,343 @@
+/**
+ * 频率分析工具样式
+ */
+
+/* 选项区域 */
+.options-section {
+    margin-bottom: 1.5rem;
+}
+
+.option-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.option-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+.option-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* 输入区域 */
+.input-section {
+    margin-bottom: 1.5rem;
+}
+
+.input-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    resize: vertical;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* 操作按钮 */
+.action-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* 结果区域 */
+.result-section {
+    margin-top: 1.5rem;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.result-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.result-stats {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.result-stats span:nth-child(2),
+.result-stats span:nth-child(4) {
+    font-weight: 600;
+    color: var(--primary);
+    margin-right: 1rem;
+}
+
+/* 图表容器 */
+.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    min-height: 150px;
+    align-items: flex-end;
+}
+
+.chart-bar {
+    flex: 1;
+    min-width: 20px;
+    max-width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chart-bar-fill {
+    width: 100%;
+    background: var(--primary);
+    border-radius: 2px 2px 0 0;
+    transition: height 0.3s;
+    min-height: 2px;
+}
+
+.chart-bar-label {
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--text-secondary);
+}
+
+/* 频率表格 */
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.freq-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.freq-table th,
+.freq-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.freq-table th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-tertiary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.freq-table td {
+    font-size: 0.875rem;
+}
+
+.freq-table tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+.freq-table .char-cell {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.freq-table .count-cell {
+    font-family: var(--font-mono);
+}
+
+.freq-table .freq-cell {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+.freq-table .bar-cell {
+    width: 200px;
+}
+
+.freq-bar {
+    height: 16px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.freq-bar-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+/* 对比图表 */
+.comparison-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.comparison-section h4 {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.comparison-chart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.comparison-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    min-width: 40px;
+}
+
+.comparison-char {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.comparison-bars {
+    display: flex;
+    gap: 2px;
+    margin-top: 0.25rem;
+}
+
+.comparison-bar {
+    width: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 1px;
+}
+
+.comparison-bar.input {
+    background: var(--primary);
+}
+
+.comparison-bar.english {
+    background: #10b981;
+}
+
+.comparison-diff {
+    font-size: 0.625rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.comparison-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.legend-color.input {
+    background: var(--primary);
+}
+
+.legend-color.english {
+    background: #10b981;
+}
+
+/* 说明区域 */
+.info-section {
+    margin-top: 2rem;
+}
+
+.info-box {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.info-box h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.info-box p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .option-row {
+        flex-direction: column;
+    }
+
+    .action-section {
+        flex-direction: column;
+    }
+
+    .action-section .btn {
+        width: 100%;
+    }
+
+    .chart-bar {
+        min-width: 15px;
+    }
+
+    .freq-table .bar-cell {
+        display: none;
+    }
+}

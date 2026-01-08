@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.strings-extractor.title">字符串提取 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="strings-extractor.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.strings-extractor.title">字符串提取</h1>
+            <p data-i18n="tools.strings-extractor.description">从二进制数据中提取可读字符串</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-row">
+                    <div class="option-group">
+                        <label data-i18n="tools.strings-extractor.minLength">最小长度</label>
+                        <input type="number" id="min-length" class="form-input" value="4" min="1" max="100">
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.strings-extractor.encoding">编码</label>
+                        <select id="encoding" class="form-select">
+                            <option value="ascii" selected>ASCII</option>
+                            <option value="utf8">UTF-8</option>
+                            <option value="utf16le">UTF-16 LE</option>
+                            <option value="utf16be">UTF-16 BE</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label data-i18n="tools.strings-extractor.charSet">字符集</label>
+                        <select id="char-set" class="form-select">
+                            <option value="printable" selected data-i18n="tools.strings-extractor.printable">可打印字符</option>
+                            <option value="alphanumeric" data-i18n="tools.strings-extractor.alphanumeric">字母数字</option>
+                            <option value="custom" data-i18n="tools.strings-extractor.custom">自定义</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="option-row" id="custom-charset-row" style="display: none;">
+                    <div class="option-group" style="flex: 1;">
+                        <label data-i18n="tools.strings-extractor.customChars">自定义字符</label>
+                        <input type="text" id="custom-chars" class="form-input form-input--mono"
+                               value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-."
+                               placeholder="输入允许的字符...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 文件上传 -->
+            <section class="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📁</div>
+                    <p data-i18n="tools.strings-extractor.dropFile">拖拽文件到此处或点击上传</p>
+                    <input type="file" id="file-input" hidden>
+                </div>
+                <div class="file-info" id="file-info" style="display: none;">
+                    <span class="file-name" id="file-name"></span>
+                    <span class="file-size" id="file-size"></span>
+                    <button class="btn btn--sm btn--outline" id="clear-file-btn">✕</button>
+                </div>
+            </section>
+
+            <!-- 或者输入十六进制 -->
+            <section class="input-section">
+                <label data-i18n="tools.strings-extractor.hexInput">或输入十六进制数据</label>
+                <textarea id="hex-input"
+                          class="form-textarea form-input--mono"
+                          rows="4"
+                          data-i18n-placeholder="tools.strings-extractor.hexPlaceholder"
+                          placeholder="48 65 6C 6C 6F 20 57 6F 72 6C 64..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="extract-btn" class="btn btn--primary" data-i18n="tools.strings-extractor.extract">提取字符串</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="download-btn" class="btn btn--outline" data-i18n="common.download" disabled>下载结果</button>
+            </section>
+
+            <!-- 结果区域 -->
+            <section class="result-section" id="result-section" style="display: none;">
+                <div class="result-header">
+                    <h3 data-i18n="common.result">结果</h3>
+                    <div class="result-stats">
+                        <span id="string-count">0</span> <span data-i18n="tools.strings-extractor.stringsFound">个字符串</span>
+                    </div>
+                </div>
+
+                <!-- 过滤器 -->
+                <div class="filter-section">
+                    <input type="text" id="filter-input" class="form-input"
+                           data-i18n-placeholder="tools.strings-extractor.filterPlaceholder"
+                           placeholder="过滤字符串...">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-offset">
+                        <span data-i18n="tools.strings-extractor.showOffset">显示偏移</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-hex">
+                        <span data-i18n="tools.strings-extractor.showHex">显示十六进制</span>
+                    </label>
+                </div>
+
+                <!-- 字符串列表 -->
+                <div class="strings-list" id="strings-list">
+                    <!-- 动态生成 -->
+                </div>
+            </section>
+
+            <!-- 说明 -->
+            <section class="info-section">
+                <div class="info-box">
+                    <h4 data-i18n="tools.strings-extractor.aboutTitle">关于字符串提取</h4>
+                    <p data-i18n="tools.strings-extractor.aboutDesc">字符串提取工具可以从二进制文件或数据中提取可读的文本字符串。这在逆向工程中常用于分析可执行文件、固件或其他二进制数据，发现其中的文本信息如 URL、文件路径、错误消息等。</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="strings-extractor.js"></script>
+</body>
+</html>

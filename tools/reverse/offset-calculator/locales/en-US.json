@@ -1,0 +1,21 @@
+{
+    "tools.offset-calculator.title": "Offset Calculator",
+    "tools.offset-calculator.description": "Memory address offset calculation and conversion",
+    "tools.offset-calculator.basicCalc": "Basic Offset Calculation",
+    "tools.offset-calculator.baseAddress": "Base Address",
+    "tools.offset-calculator.offset": "Offset",
+    "tools.offset-calculator.result": "Result",
+    "tools.offset-calculator.calculate": "Calculate",
+    "tools.offset-calculator.rvaConversion": "RVA / File Offset Conversion",
+    "tools.offset-calculator.imageBase": "Image Base",
+    "tools.offset-calculator.sectionRva": "Section RVA",
+    "tools.offset-calculator.sectionRawOffset": "Section Raw Offset",
+    "tools.offset-calculator.inputValue": "Input Value",
+    "tools.offset-calculator.inputType": "Input Type",
+    "tools.offset-calculator.convert": "Convert",
+    "tools.offset-calculator.formatConversion": "Address Format Conversion",
+    "tools.offset-calculator.addressInput": "Address Input",
+    "tools.offset-calculator.bitWidth": "Bit Width",
+    "tools.offset-calculator.aboutTitle": "About Offset Calculator",
+    "tools.offset-calculator.aboutDesc": "The offset calculator is used for address calculations in reverse engineering. VA (Virtual Address) is the actual address in process memory; RVA (Relative Virtual Address) is the offset relative to the image base; File Offset is the position of data in PE/ELF files. Formulas: RVA = VA - ImageBase; Raw = RVA - SectionRVA + SectionRawOffset"
+}
