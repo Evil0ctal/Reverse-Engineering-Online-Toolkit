@@ -2,6 +2,21 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <!-- 动态设置 base href 以支持不同部署环境 -->
+    <script>
+        (function() {
+            var base = document.createElement('base');
+            if (window.location.hostname.endsWith('github.io')) {
+                // GitHub Pages: /repo-name/
+                var repoName = window.location.pathname.split('/')[1];
+                base.href = '/' + repoName + '/';
+            } else {
+                // 本地开发 / Docker 部署: /
+                base.href = '/';
+            }
+            document.head.appendChild(base);
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="REOT - 纯前端逆向工程在线工具箱，提供编码解码、加密解密、哈希计算等功能">
     <meta name="keywords" content="逆向工程,在线工具,编码解码,加密解密,Base64,MD5,SHA,AES,RSA">
