@@ -1,0 +1,16 @@
+{
+    "tools.blowfish.title": "Blowfish Encryption",
+    "tools.blowfish.description": "Blowfish symmetric encryption and decryption",
+    "tools.blowfish.mode": "Mode",
+    "tools.blowfish.padding": "Padding",
+    "tools.blowfish.outputFormat": "Output Format",
+    "tools.blowfish.key": "Key",
+    "tools.blowfish.keyPlaceholder": "Enter key...",
+    "tools.blowfish.keyHint": "Key length 4-56 bytes, 16 bytes recommended",
+    "tools.blowfish.iv": "IV Vector",
+    "tools.blowfish.ivPlaceholder": "Enter IV vector...",
+    "tools.blowfish.ivHint": "Requires 8 bytes (64 bit)",
+    "tools.blowfish.inputPlaceholder": "Enter content to encrypt/decrypt...",
+    "tools.blowfish.aboutTitle": "About Blowfish",
+    "tools.blowfish.aboutDesc": "Blowfish is a symmetric-key block cipher designed by Bruce Schneier in 1993. It uses a 64-bit block size and a variable-length key from 32 to 448 bits. Blowfish is unpatented and license-free, widely used in various security applications."
+}

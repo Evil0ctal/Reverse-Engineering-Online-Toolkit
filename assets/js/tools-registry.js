@@ -1005,6 +1005,17 @@
             icon: '🧮',
             path: '/tools/reverse/offset-calculator/',
             keywords: ['offset', 'address', 'rva', 'va', 'pe', '偏移', '地址', '内存']
+        },
+
+        // ========== 加密工具（新增） ==========
+        {
+            id: 'blowfish',
+            category: 'encryption',
+            name: 'tools.blowfish.title',
+            description: 'tools.blowfish.description',
+            icon: '🐡',
+            path: '/tools/encryption/blowfish/',
+            keywords: ['blowfish', 'cipher', 'encrypt', 'decrypt', '加密', '解密', '对称']
         }
     ]);
 

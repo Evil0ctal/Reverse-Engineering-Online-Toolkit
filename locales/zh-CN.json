@@ -393,6 +393,10 @@
         "offset-calculator": {
             "title": "偏移计算器",
             "description": "内存地址偏移计算与转换"
+        },
+        "blowfish": {
+            "title": "Blowfish 加解密",
+            "description": "Blowfish 对称加密与解密"
         }
     }
 }

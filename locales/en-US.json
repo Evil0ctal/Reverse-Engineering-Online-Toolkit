@@ -393,6 +393,10 @@
         "offset-calculator": {
             "title": "Offset Calculator",
             "description": "Memory address offset calculation and conversion"
+        },
+        "blowfish": {
+            "title": "Blowfish Encryption",
+            "description": "Blowfish symmetric encryption and decryption"
         }
     }
 }
