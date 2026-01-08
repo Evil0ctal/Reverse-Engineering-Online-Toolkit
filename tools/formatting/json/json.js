@@ -593,8 +593,17 @@
     // ==================== 事件绑定 ====================
     // 使用事件委托来处理 SPA 动态加载的元素
 
+    // 检查当前是否在 JSON 工具页面
+    function isJsonToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/formatting/json');
+    }
+
     // 主要的事件委托处理器
     document.addEventListener('click', (e) => {
+        // 只在 JSON 工具页面处理事件
+        if (!isJsonToolActive()) return;
+
         const target = e.target;
 
         // 格式化按钮

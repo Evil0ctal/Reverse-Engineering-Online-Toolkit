@@ -1,0 +1,19 @@
+{
+    "title": "Cookie 解析器",
+    "description": "解析和格式化 Cookie 字符串，支持编辑和导出",
+    "inputPlaceholder": "请输入 Cookie 字符串（格式：name=value; name2=value2）",
+    "parse": "解析",
+    "getBrowser": "获取浏览器 Cookie",
+    "toString": "转为字符串",
+    "parsedCookies": "解析结果",
+    "addCookie": "添加",
+    "exportJson": "导出 JSON",
+    "name": "名称",
+    "value": "值",
+    "decodedValue": "解码值",
+    "actions": "操作",
+    "delete": "删除",
+    "totalCookies": "Cookie 数量",
+    "totalSize": "总大小",
+    "cookieString": "Cookie 字符串"
+}

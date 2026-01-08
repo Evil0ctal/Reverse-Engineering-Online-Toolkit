@@ -9,13 +9,13 @@
     <title data-i18n="site.title">REOT - 逆向工程在线工具箱</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link rel="apple-touch-icon" href="assets/images/logo.svg">
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/images/logo.svg">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/themes/light.css" id="theme-light">
-    <link rel="stylesheet" href="assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="/assets/css/themes/dark.css" id="theme-dark">
 </head>
 <body>
     <div id="app" class="app-container">
@@ -26,7 +26,7 @@
                     <span class="hamburger"></span>
                 </button>
                 <a href="/" class="logo" data-route="/">
-                    <img src="assets/images/logo.svg" alt="REOT Logo" class="logo-image">
+                    <img src="/assets/images/logo.svg" alt="REOT Logo" class="logo-image">
                     <span class="logo-text" data-i18n="site.name">REOT</span>
                 </a>
             </div>
@@ -291,6 +291,15 @@
     <!-- SPA 重定向处理（支持本地开发和 GitHub Pages） -->
     <script>
         (function() {
+            // 检查 URL 查询参数中的 path 重定向（工具页面直接访问时使用）
+            var urlParams = new URLSearchParams(window.location.search);
+            var pathParam = urlParams.get('path');
+            if (pathParam) {
+                window.__REDIRECT_PATH__ = decodeURIComponent(pathParam);
+                // 清除 URL 中的查询参数
+                window.history.replaceState({}, '', window.location.pathname);
+                return;
+            }
             // 检查工具页面重定向
             var redirect = sessionStorage.getItem('spa_redirect');
             if (redirect) {
@@ -310,10 +319,10 @@
     </script>
 
     <!-- Scripts -->
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/i18n.js"></script>
-    <script src="assets/js/router.js"></script>
-    <script src="assets/js/tools-registry.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/router.js"></script>
+    <script src="/assets/js/tools-registry.js"></script>
+    <script src="/assets/js/main.js"></script>
 </body>
 </html>

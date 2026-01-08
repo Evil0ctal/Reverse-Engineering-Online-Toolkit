@@ -1,0 +1,127 @@
+/**
+ * XML 格式化工具样式
+ */
+
+.xml-highlighted-output {
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 200px;
+    max-height: 500px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.xml-highlighted-output pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 语法高亮颜色 */
+.xml-declaration {
+    color: var(--color-info);
+}
+
+.xml-comment {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.xml-cdata {
+    color: var(--color-warning);
+}
+
+.xml-tag {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.xml-attr-name {
+    color: var(--color-success);
+}
+
+.xml-attr-equals {
+    color: var(--text-secondary);
+}
+
+.xml-attr-value {
+    color: var(--color-warning);
+}
+
+.xml-bracket {
+    color: var(--text-secondary);
+}
+
+.xml-error {
+    color: var(--color-error);
+    padding: 12px;
+    background: rgba(var(--color-error-rgb), 0.1);
+    border-radius: 4px;
+    white-space: pre-wrap;
+}
+
+/* 验证结果 */
+.validation-section {
+    margin-top: 20px;
+}
+
+.validation-result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.validation-result.valid {
+    background: rgba(var(--color-success-rgb), 0.1);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+}
+
+.validation-result.invalid {
+    background: rgba(var(--color-error-rgb), 0.1);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
+
+.validation-icon {
+    font-size: 18px;
+}
+
+.validation-message {
+    flex: 1;
+    word-break: break-word;
+}
+
+/* 暗色主题调整 */
+[data-theme="dark"] .xml-highlighted-output {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .xml-tag {
+    color: #7dd3fc;
+}
+
+[data-theme="dark"] .xml-attr-name {
+    color: #86efac;
+}
+
+[data-theme="dark"] .xml-attr-value {
+    color: #fcd34d;
+}
+
+[data-theme="dark"] .xml-comment {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .xml-declaration {
+    color: #c084fc;
+}

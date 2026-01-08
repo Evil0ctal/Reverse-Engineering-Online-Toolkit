@@ -181,22 +181,24 @@
         };
     }
 
-    // DOM 元素
-    const inputText = document.getElementById('input-text');
-    const inputType = document.getElementById('input-type');
-    const crcType = document.getElementById('crc-type');
-    const calcBtn = document.getElementById('calc-btn');
-    const clearBtn = document.getElementById('clear-btn');
-    const resultSection = document.getElementById('result-section');
-    const resultGrid = document.getElementById('result-grid');
-
     /**
      * 执行计算
      */
     function calculate() {
+        const inputText = document.getElementById('input-text');
+        const inputType = document.getElementById('input-type');
+        const crcType = document.getElementById('crc-type');
+        const resultSection = document.getElementById('result-section');
+        const resultGrid = document.getElementById('result-grid');
+
+        if (!inputText || !resultSection || !resultGrid) {
+            return;
+        }
+
         const text = inputText.value;
         if (!text) {
             resultSection.style.display = 'none';
+            REOT.utils?.showNotification('请输入要计算的数据', 'warning');
             return;
         }
 
@@ -213,72 +215,105 @@
             const crc = calculateCRC(data, algorithm);
             const formatted = formatCRC(crc, params.width);
 
-            const t = window.REOT?.i18n?.t || (key => key.split('.').pop());
-            const yes = t('tools.crc.yes');
-            const no = t('tools.crc.no');
-            const copyText = t('common.copy');
+            // 安全的翻译函数
+            const t = (key) => {
+                try {
+                    return window.REOT?.i18n?.t(key) || key.split('.').pop();
+                } catch (e) {
+                    return key.split('.').pop();
+                }
+            };
+            const yes = t('tools.crc.yes') || '是';
+            const no = t('tools.crc.no') || '否';
+            const copyText = t('common.copy') || '复制';
 
             resultGrid.innerHTML = `
                 <div class="result-item">
-                    <div class="result-label">${t('tools.crc.decimal')}</div>
+                    <div class="result-label">${t('tools.crc.decimal') || '十进制'}</div>
                     <div class="result-value">
                         <code>${formatted.decimal}</code>
-                        <button class="copy-btn" onclick="navigator.clipboard.writeText('${formatted.decimal}')">${copyText}</button>
+                        <button class="copy-btn" data-copy="${formatted.decimal}">${copyText}</button>
                     </div>
                 </div>
                 <div class="result-item">
-                    <div class="result-label">${t('tools.crc.hexUpper')}</div>
+                    <div class="result-label">${t('tools.crc.hexUpper') || '十六进制 (大写)'}</div>
                     <div class="result-value">
                         <code>0x${formatted.hex}</code>
-                        <button class="copy-btn" onclick="navigator.clipboard.writeText('0x${formatted.hex}')">${copyText}</button>
+                        <button class="copy-btn" data-copy="0x${formatted.hex}">${copyText}</button>
                     </div>
                 </div>
                 <div class="result-item">
-                    <div class="result-label">${t('tools.crc.hexLower')}</div>
+                    <div class="result-label">${t('tools.crc.hexLower') || '十六进制 (小写)'}</div>
                     <div class="result-value">
                         <code>0x${formatted.hexLower}</code>
-                        <button class="copy-btn" onclick="navigator.clipboard.writeText('0x${formatted.hexLower}')">${copyText}</button>
+                        <button class="copy-btn" data-copy="0x${formatted.hexLower}">${copyText}</button>
                     </div>
                 </div>
                 <div class="result-item">
-                    <div class="result-label">${t('tools.crc.binary')}</div>
+                    <div class="result-label">${t('tools.crc.binary') || '二进制'}</div>
                     <div class="result-value">
                         <code>${formatted.binary}</code>
-                        <button class="copy-btn" onclick="navigator.clipboard.writeText('${formatted.binary}')">${copyText}</button>
+                        <button class="copy-btn" data-copy="${formatted.binary}">${copyText}</button>
                     </div>
                 </div>
                 <div class="crc-info">
-                    <h4>${t('tools.crc.algorithmParams')} (${params.name})</h4>
+                    <h4>${t('tools.crc.algorithmParams') || '算法参数'} (${params.name})</h4>
                     <table>
-                        <tr><td>${t('tools.crc.width')}</td><td>${params.width} bits</td></tr>
-                        <tr><td>${t('tools.crc.polynomial')}</td><td>0x${params.poly.toString(16).toUpperCase()}</td></tr>
-                        <tr><td>${t('tools.crc.initValue')}</td><td>0x${params.init.toString(16).toUpperCase()}</td></tr>
-                        <tr><td>${t('tools.crc.inputReflect')}</td><td>${params.refIn ? yes : no}</td></tr>
-                        <tr><td>${t('tools.crc.outputReflect')}</td><td>${params.refOut ? yes : no}</td></tr>
-                        <tr><td>${t('tools.crc.outputXor')}</td><td>0x${params.xorOut.toString(16).toUpperCase()}</td></tr>
+                        <tr><td>${t('tools.crc.width') || '位宽'}</td><td>${params.width} bits</td></tr>
+                        <tr><td>${t('tools.crc.polynomial') || '多项式'}</td><td>0x${params.poly.toString(16).toUpperCase()}</td></tr>
+                        <tr><td>${t('tools.crc.initValue') || '初始值'}</td><td>0x${params.init.toString(16).toUpperCase()}</td></tr>
+                        <tr><td>${t('tools.crc.inputReflect') || '输入反转'}</td><td>${params.refIn ? yes : no}</td></tr>
+                        <tr><td>${t('tools.crc.outputReflect') || '输出反转'}</td><td>${params.refOut ? yes : no}</td></tr>
+                        <tr><td>${t('tools.crc.outputXor') || '输出异或'}</td><td>0x${params.xorOut.toString(16).toUpperCase()}</td></tr>
                     </table>
                 </div>
             `;
 
             resultSection.style.display = 'block';
+            REOT.utils?.showNotification('计算完成', 'success');
         } catch (e) {
-            const t = window.REOT?.i18n?.t || (key => key.split('.').pop());
-            alert(t('tools.crc.calcFailed') + ': ' + e.message);
+            REOT.utils?.showNotification('计算失败: ' + e.message, 'error');
         }
     }
 
-    // 事件监听
-    calcBtn.addEventListener('click', calculate);
+    /**
+     * 复制到剪贴板
+     */
+    async function copyToClipboard(text) {
+        const success = await REOT.utils?.copyToClipboard(text);
+        if (success) {
+            REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
+        }
+    }
 
-    clearBtn.addEventListener('click', () => {
-        inputText.value = '';
-        resultSection.style.display = 'none';
+    // 使用事件委托处理点击事件
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+
+        // 计算按钮
+        if (target.id === 'calc-btn' || target.closest('#calc-btn')) {
+            calculate();
+        }
+
+        // 清除按钮
+        if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
+            const inputText = document.getElementById('input-text');
+            const resultSection = document.getElementById('result-section');
+            if (inputText) inputText.value = '';
+            if (resultSection) resultSection.style.display = 'none';
+        }
+
+        // 复制按钮
+        const copyBtn = target.closest('.copy-btn');
+        if (copyBtn && copyBtn.dataset.copy) {
+            copyToClipboard(copyBtn.dataset.copy);
+        }
     });
 
-    // 默认示例
-    if (!inputText.value) {
-        inputText.value = 'Hello, World!';
-        calculate();
+    // 设置默认示例数据
+    const defaultInput = document.getElementById('input-text');
+    if (defaultInput && !defaultInput.value) {
+        defaultInput.value = 'Hello, World!';
     }
 
     // 导出到全局

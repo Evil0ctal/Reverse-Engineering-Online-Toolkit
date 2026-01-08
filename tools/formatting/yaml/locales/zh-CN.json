@@ -1,0 +1,18 @@
+{
+    "title": "YAML 格式化",
+    "description": "YAML 格式化、验证，支持 YAML 与 JSON 互转",
+    "inputPlaceholder": "请输入 YAML 或 JSON...",
+    "indent": "缩进",
+    "spaces2": "2 空格",
+    "spaces4": "4 空格",
+    "lineWidth": "行宽",
+    "unlimited": "不限制",
+    "sortKeys": "排序键名",
+    "validate": "校验",
+    "toJson": "转为 JSON",
+    "fromJson": "JSON 转 YAML",
+    "validationResult": "验证结果",
+    "validYaml": "YAML 格式正确",
+    "invalidYaml": "YAML 格式错误",
+    "emptyInput": "输入为空"
+}

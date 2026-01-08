@@ -16,38 +16,18 @@
      * @returns {string}
      */
     function getBasePath() {
-        // 检查是否有 <base> 标签
-        const baseTag = document.querySelector('base');
-        if (baseTag) {
-            return baseTag.href.replace(/\/$/, '');
-        }
+        const origin = window.location.origin;
 
-        // 从当前脚本路径推断基础路径
-        const scripts = document.querySelectorAll('script[src]');
-        for (const script of scripts) {
-            const src = script.getAttribute('src');
-            if (src && src.includes('assets/js/i18n.js')) {
-                // 如果是绝对路径
-                if (src.startsWith('http')) {
-                    return src.replace(/assets\/js\/i18n\.js.*$/, '').replace(/\/$/, '');
-                }
-                // 相对路径 - 使用 origin + 路径前缀
-                const origin = window.location.origin;
-                const pathname = window.location.pathname;
-
-                // 检测 GitHub Pages 子目录
-                if (window.location.hostname.endsWith('github.io')) {
-                    const repoName = pathname.split('/')[1];
-                    if (repoName) {
-                        return `${origin}/${repoName}`;
-                    }
-                }
-                return origin;
+        // 检测 GitHub Pages 子目录 (如 /Reverse-Engineering-Online-Toolkit/)
+        if (window.location.hostname.endsWith('github.io')) {
+            const repoName = window.location.pathname.split('/')[1];
+            if (repoName) {
+                return `${origin}/${repoName}`;
             }
         }
 
-        // 默认使用当前origin
-        return window.location.origin;
+        // 本地开发 / Docker 部署 - 直接使用 origin
+        return origin;
     }
 
     /**
@@ -322,13 +302,20 @@
          * @returns {string}
          */
         t(key, params = {}) {
-            const locale = this.locales[this.currentLocale] || {};
-            let text = this.getNestedValue(locale, key);
+            // 确保 this 上下文正确（防止 this 丢失的情况）
+            const self = this && this.locales ? this : REOT.i18n;
+            if (!self || !self.locales) {
+                // i18n 尚未初始化，返回 key 的最后部分作为默认值
+                return key.split('.').pop();
+            }
+
+            const locale = self.locales[self.currentLocale] || {};
+            let text = self.getNestedValue(locale, key);
 
             if (text === undefined) {
                 // 尝试从默认语言获取
-                const defaultLocale = this.locales['zh-CN'] || this.getDefaultLocale('zh-CN');
-                text = this.getNestedValue(defaultLocale, key);
+                const defaultLocale = self.locales['zh-CN'] || self.getDefaultLocale('zh-CN');
+                text = self.getNestedValue(defaultLocale, key);
             }
 
             if (text === undefined) {

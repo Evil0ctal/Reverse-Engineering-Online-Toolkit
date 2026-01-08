@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.yaml.title">YAML 格式化 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="yaml.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.yaml.title">YAML 格式化</h1>
+            <p data-i18n="tools.yaml.description">YAML 格式化、验证，支持 YAML 与 JSON 互转</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.yaml.indent">缩进</label>
+                    <select id="indent-select" class="form-select">
+                        <option value="2" selected data-i18n="tools.yaml.spaces2">2 空格</option>
+                        <option value="4" data-i18n="tools.yaml.spaces4">4 空格</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.yaml.lineWidth">行宽</label>
+                    <select id="line-width" class="form-select">
+                        <option value="80">80</option>
+                        <option value="120" selected>120</option>
+                        <option value="-1" data-i18n="tools.yaml.unlimited">不限制</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="sort-keys">
+                        <span data-i18n="tools.yaml.sortKeys">排序键名</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.yaml.inputPlaceholder"
+                          placeholder="请输入 YAML 或 JSON..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="format-btn" class="btn btn--primary" data-i18n="common.format">格式化</button>
+                <button id="validate-btn" class="btn btn--secondary" data-i18n="tools.yaml.validate">校验</button>
+                <button id="to-json-btn" class="btn btn--secondary" data-i18n="tools.yaml.toJson">转为 JSON</button>
+                <button id="from-json-btn" class="btn btn--secondary" data-i18n="tools.yaml.fromJson">JSON 转 YAML</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <div id="highlighted-output" class="yaml-highlighted-output"></div>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly
+                          style="display: none;"></textarea>
+            </section>
+
+            <!-- 验证结果 -->
+            <section class="validation-section" id="validation-section" style="display: none;">
+                <label data-i18n="tools.yaml.validationResult">验证结果</label>
+                <div id="validation-result" class="validation-result"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- js-yaml library -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="yaml.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "title": "GZIP Compression",
+    "description": "GZIP compression and decompression for text and files",
+    "inputPlaceholder": "Enter content to compress/decompress...",
+    "compress": "Compress",
+    "decompress": "Decompress",
+    "compressionLevel": "Compression Level",
+    "outputFormat": "Output Format",
+    "uploadFile": "Upload File",
+    "originalSize": "Original Size",
+    "compressedSize": "Compressed Size",
+    "ratio": "Compression Ratio",
+    "fastest": "Fastest",
+    "balanced": "Balanced",
+    "best": "Best"
+}

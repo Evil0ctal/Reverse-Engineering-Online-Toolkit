@@ -1,0 +1,23 @@
+{
+    "title": "User-Agent Parser",
+    "description": "Parse User-Agent strings to identify browser, OS, and device information",
+    "inputPlaceholder": "Enter User-Agent string...",
+    "parse": "Parse",
+    "getBrowser": "Get Current Browser",
+    "parsedResult": "Parse Result",
+    "browser": "Browser",
+    "os": "Operating System",
+    "device": "Device",
+    "other": "Other",
+    "name": "Name",
+    "version": "Version",
+    "engine": "Engine",
+    "platform": "Platform",
+    "type": "Type",
+    "vendor": "Vendor",
+    "model": "Model",
+    "isBot": "Is Bot",
+    "isMobile": "Is Mobile",
+    "cpu": "CPU Architecture",
+    "jsonOutput": "JSON Output"
+}

@@ -1,0 +1,327 @@
+/**
+ * Cookie 解析器工具
+ * @description 解析和格式化 Cookie 字符串
+ * @author Evil0ctal
+ * @license Apache-2.0
+ */
+
+(function() {
+    'use strict';
+
+    let cookies = [];
+
+    /**
+     * 解析 Cookie 字符串
+     */
+    function parseCookieString(cookieString) {
+        if (!cookieString.trim()) {
+            return [];
+        }
+
+        const result = [];
+        const pairs = cookieString.split(';');
+
+        for (const pair of pairs) {
+            const trimmed = pair.trim();
+            if (!trimmed) continue;
+
+            const equalsIndex = trimmed.indexOf('=');
+            if (equalsIndex === -1) {
+                // 没有等号的情况
+                result.push({
+                    name: trimmed,
+                    value: '',
+                    decoded: ''
+                });
+            } else {
+                const name = trimmed.substring(0, equalsIndex).trim();
+                const value = trimmed.substring(equalsIndex + 1).trim();
+
+                let decoded = value;
+                try {
+                    decoded = decodeURIComponent(value);
+                } catch (e) {
+                    // 解码失败，使用原值
+                }
+
+                result.push({
+                    name,
+                    value,
+                    decoded
+                });
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 将 Cookie 数组转为字符串
+     */
+    function cookiesToString(cookies) {
+        return cookies
+            .map(c => `${c.name}=${c.value}`)
+            .join('; ');
+    }
+
+    /**
+     * 格式化文件大小
+     */
+    function formatSize(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    /**
+     * 渲染 Cookie 表格
+     */
+    function renderCookieTable() {
+        const tbody = document.getElementById('cookie-tbody');
+        const tableSection = document.getElementById('table-section');
+        const statsSection = document.getElementById('stats-section');
+        const cookieCount = document.getElementById('cookie-count');
+        const totalSize = document.getElementById('total-size');
+
+        if (!tbody) return;
+
+        if (cookies.length === 0) {
+            tableSection.style.display = 'none';
+            statsSection.style.display = 'none';
+            return;
+        }
+
+        tableSection.style.display = 'block';
+        statsSection.style.display = 'block';
+
+        // 渲染表格行
+        tbody.innerHTML = cookies.map((cookie, index) => `
+            <tr data-index="${index}">
+                <td>
+                    <input type="text" class="cookie-name" value="${escapeHtml(cookie.name)}" data-field="name">
+                </td>
+                <td>
+                    <input type="text" class="cookie-value" value="${escapeHtml(cookie.value)}" data-field="value">
+                </td>
+                <td class="decoded-value" title="${escapeHtml(cookie.decoded)}">
+                    ${escapeHtml(truncate(cookie.decoded, 50))}
+                </td>
+                <td>
+                    <button class="btn btn--sm btn--outline copy-cookie-btn" data-index="${index}">
+                        <span data-i18n="common.copy">复制</span>
+                    </button>
+                    <button class="btn btn--sm btn--outline delete-cookie-btn" data-index="${index}">
+                        <span data-i18n="tools.cookie-parser.delete">删除</span>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+        // 更新统计信息
+        const totalBytes = cookies.reduce((sum, c) => sum + c.name.length + c.value.length + 1, 0);
+        cookieCount.textContent = cookies.length;
+        totalSize.textContent = formatSize(totalBytes);
+    }
+
+    /**
+     * 转义 HTML
+     */
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /**
+     * 截断字符串
+     */
+    function truncate(str, length) {
+        if (str.length <= length) return str;
+        return str.substring(0, length) + '...';
+    }
+
+    /**
+     * 复制到剪贴板
+     */
+    async function copyToClipboard(text) {
+        const success = await REOT.utils?.copyToClipboard(text);
+        if (success) {
+            REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
+        }
+    }
+
+    /**
+     * 获取浏览器 Cookie
+     */
+    function getBrowserCookies() {
+        const input = document.getElementById('input');
+        if (document.cookie) {
+            if (input) {
+                input.value = document.cookie;
+            }
+            REOT.utils?.showNotification('已获取当前页面的 Cookie', 'success');
+        } else {
+            REOT.utils?.showNotification('当前页面没有 Cookie', 'warning');
+        }
+    }
+
+    // 事件委托处理器
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+
+        // 解析按钮
+        if (target.id === 'parse-btn' || target.closest('#parse-btn')) {
+            const input = document.getElementById('input');
+            if (!input.value.trim()) {
+                REOT.utils?.showNotification('请输入 Cookie 字符串', 'warning');
+                return;
+            }
+
+            cookies = parseCookieString(input.value);
+            renderCookieTable();
+
+            if (cookies.length > 0) {
+                REOT.utils?.showNotification(`成功解析 ${cookies.length} 个 Cookie`, 'success');
+            } else {
+                REOT.utils?.showNotification('未找到有效的 Cookie', 'warning');
+            }
+        }
+
+        // 获取浏览器 Cookie
+        if (target.id === 'get-browser-btn' || target.closest('#get-browser-btn')) {
+            getBrowserCookies();
+        }
+
+        // 转为字符串
+        if (target.id === 'to-string-btn' || target.closest('#to-string-btn')) {
+            if (cookies.length === 0) {
+                REOT.utils?.showNotification('请先解析 Cookie', 'warning');
+                return;
+            }
+
+            const stringOutput = document.getElementById('string-output');
+            const stringSection = document.getElementById('string-output-section');
+
+            if (stringOutput && stringSection) {
+                stringOutput.value = cookiesToString(cookies);
+                stringSection.style.display = 'block';
+            }
+        }
+
+        // 清除按钮
+        if (target.id === 'clear-btn' || target.closest('#clear-btn')) {
+            const input = document.getElementById('input');
+            const stringOutput = document.getElementById('string-output');
+            const tableSection = document.getElementById('table-section');
+            const statsSection = document.getElementById('stats-section');
+            const stringSection = document.getElementById('string-output-section');
+
+            if (input) input.value = '';
+            if (stringOutput) stringOutput.value = '';
+            if (tableSection) tableSection.style.display = 'none';
+            if (statsSection) statsSection.style.display = 'none';
+            if (stringSection) stringSection.style.display = 'none';
+            cookies = [];
+        }
+
+        // 复制按钮
+        if (target.id === 'copy-btn' || target.closest('#copy-btn')) {
+            const stringOutput = document.getElementById('string-output');
+            const input = document.getElementById('input');
+
+            if (stringOutput && stringOutput.value) {
+                copyToClipboard(stringOutput.value);
+            } else if (cookies.length > 0) {
+                copyToClipboard(cookiesToString(cookies));
+            } else if (input && input.value) {
+                copyToClipboard(input.value);
+            }
+        }
+
+        // 添加 Cookie
+        if (target.id === 'add-cookie-btn' || target.closest('#add-cookie-btn')) {
+            cookies.push({
+                name: 'new_cookie',
+                value: 'value',
+                decoded: 'value'
+            });
+            renderCookieTable();
+        }
+
+        // 导出 JSON
+        if (target.id === 'export-json-btn' || target.closest('#export-json-btn')) {
+            if (cookies.length === 0) {
+                REOT.utils?.showNotification('没有可导出的 Cookie', 'warning');
+                return;
+            }
+
+            const json = JSON.stringify(cookies, null, 2);
+            copyToClipboard(json);
+            REOT.utils?.showNotification('JSON 已复制到剪贴板', 'success');
+        }
+
+        // 复制单个 Cookie
+        const copyCookieBtn = target.closest('.copy-cookie-btn');
+        if (copyCookieBtn) {
+            const index = parseInt(copyCookieBtn.dataset.index, 10);
+            const cookie = cookies[index];
+            if (cookie) {
+                copyToClipboard(`${cookie.name}=${cookie.value}`);
+            }
+        }
+
+        // 删除 Cookie
+        const deleteCookieBtn = target.closest('.delete-cookie-btn');
+        if (deleteCookieBtn) {
+            const index = parseInt(deleteCookieBtn.dataset.index, 10);
+            cookies.splice(index, 1);
+            renderCookieTable();
+        }
+    });
+
+    // 监听输入框变化（编辑 Cookie）
+    document.addEventListener('input', (e) => {
+        const target = e.target;
+
+        if (target.classList.contains('cookie-name') || target.classList.contains('cookie-value')) {
+            const row = target.closest('tr');
+            if (!row) return;
+
+            const index = parseInt(row.dataset.index, 10);
+            const field = target.dataset.field;
+
+            if (cookies[index] && field) {
+                cookies[index][field] = target.value;
+
+                // 更新解码值
+                if (field === 'value') {
+                    try {
+                        cookies[index].decoded = decodeURIComponent(target.value);
+                    } catch (e) {
+                        cookies[index].decoded = target.value;
+                    }
+                    const decodedCell = row.querySelector('.decoded-value');
+                    if (decodedCell) {
+                        decodedCell.textContent = truncate(cookies[index].decoded, 50);
+                        decodedCell.title = cookies[index].decoded;
+                    }
+                }
+            }
+        }
+    });
+
+    // 导出工具函数
+    window.CookieParserTool = {
+        parse: parseCookieString,
+        toString: cookiesToString
+    };
+
+    // 设置默认示例数据
+    const defaultInput = document.getElementById('input');
+    if (defaultInput && !defaultInput.value) {
+        defaultInput.value = 'session_id=abc123xyz; user_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9; theme=dark; language=zh-CN; _ga=GA1.2.1234567890.1234567890; remember_me=true; last_visit=2024-01-01T12%3A00%3A00Z';
+    }
+
+})();

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.cookie-parser.title">Cookie 解析器 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="cookie-parser.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.cookie-parser.title">Cookie 解析器</h1>
+            <p data-i18n="tools.cookie-parser.description">解析和格式化 Cookie 字符串，支持编辑和导出</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.cookie-parser.inputPlaceholder"
+                          placeholder="请输入 Cookie 字符串..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="parse-btn" class="btn btn--primary" data-i18n="tools.cookie-parser.parse">解析</button>
+                <button id="get-browser-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.getBrowser">获取浏览器 Cookie</button>
+                <button id="to-string-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toString">转为字符串</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制</button>
+            </section>
+
+            <!-- 解析结果表格 -->
+            <section class="output-section" id="table-section" style="display: none;">
+                <div class="table-header">
+                    <label data-i18n="tools.cookie-parser.parsedCookies">解析结果</label>
+                    <div class="table-actions">
+                        <button id="add-cookie-btn" class="btn btn--sm btn--outline" data-i18n="tools.cookie-parser.addCookie">添加</button>
+                        <button id="export-json-btn" class="btn btn--sm btn--outline" data-i18n="tools.cookie-parser.exportJson">导出 JSON</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="cookie-table" class="cookie-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="tools.cookie-parser.name">名称</th>
+                                <th data-i18n="tools.cookie-parser.value">值</th>
+                                <th data-i18n="tools.cookie-parser.decodedValue">解码值</th>
+                                <th data-i18n="tools.cookie-parser.actions">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cookie-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 统计信息 -->
+            <section class="stats-section" id="stats-section" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.cookie-parser.totalCookies">Cookie 数量</span>
+                        <span class="stat-value" id="cookie-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.cookie-parser.totalSize">总大小</span>
+                        <span class="stat-value" id="total-size">0 B</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 字符串输出 -->
+            <section class="output-section" id="string-output-section" style="display: none;">
+                <label data-i18n="tools.cookie-parser.cookieString">Cookie 字符串</label>
+                <textarea id="string-output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="cookie-parser.js"></script>
+</body>
+</html>

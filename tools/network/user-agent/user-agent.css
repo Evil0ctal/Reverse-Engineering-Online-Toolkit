@@ -1,0 +1,95 @@
+/**
+ * User-Agent 解析器样式
+ */
+
+/* 结果网格 */
+.ua-result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* 卡片 */
+.ua-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ua-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ua-card-icon {
+    font-size: 1.5em;
+}
+
+.ua-card-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.ua-card-body {
+    padding: 16px;
+}
+
+/* 信息行 */
+.ua-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ua-info-row:last-child {
+    border-bottom: none;
+}
+
+.ua-label {
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+.ua-value {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+}
+
+/* JSON 输出 */
+.json-output-section {
+    margin-top: 20px;
+}
+
+.json-output-section label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.json-output-section textarea {
+    height: 200px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .ua-result-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .ua-card {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .ua-card-header {
+    background: var(--bg-secondary);
+}

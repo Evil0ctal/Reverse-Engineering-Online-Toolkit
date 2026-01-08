@@ -1,0 +1,16 @@
+{
+    "title": "Hex 查看器",
+    "description": "查看文件或文本的十六进制表示",
+    "inputPlaceholder": "请输入文本或上传文件...",
+    "uploadFile": "上传文件",
+    "bytesPerLine": "每行字节数",
+    "showAscii": "显示 ASCII",
+    "uppercase": "大写",
+    "view": "查看",
+    "hexView": "十六进制视图",
+    "fileSize": "文件大小",
+    "totalBytes": "总字节数",
+    "magicNumber": "文件类型",
+    "search": "搜索",
+    "searchPlaceholder": "搜索 Hex 或 ASCII..."
+}

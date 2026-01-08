@@ -1,0 +1,10 @@
+{
+    "title": "SHA-3 Hash",
+    "description": "Calculate SHA3-224, SHA3-256, SHA3-384, SHA3-512 hash values",
+    "inputPlaceholder": "Enter content to hash...",
+    "algorithm": "Algorithm",
+    "outputFormat": "Output Format",
+    "uploadFile": "Upload File",
+    "hashAll": "Hash All",
+    "allHashes": "All Hashes"
+}

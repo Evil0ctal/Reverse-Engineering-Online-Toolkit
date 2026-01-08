@@ -1,0 +1,15 @@
+{
+    "title": "XML 格式化",
+    "description": "XML 格式化、压缩、校验工具",
+    "inputPlaceholder": "请输入 XML...",
+    "indent": "缩进",
+    "spaces2": "2 空格",
+    "spaces4": "4 空格",
+    "preserveComments": "保留注释",
+    "preserveCDATA": "保留 CDATA",
+    "validate": "校验",
+    "validationResult": "验证结果",
+    "validXml": "XML 格式正确",
+    "invalidXml": "XML 格式错误",
+    "emptyInput": "输入为空"
+}

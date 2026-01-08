@@ -284,6 +284,34 @@
         "barcode-scanner": {
             "title": "Barcode Scanner",
             "description": "Scan QR codes and various barcodes"
+        },
+        "xml": {
+            "title": "XML Formatter",
+            "description": "XML formatting, minification, and validation tool"
+        },
+        "yaml": {
+            "title": "YAML Formatter",
+            "description": "YAML formatting, validation, and JSON conversion"
+        },
+        "gzip": {
+            "title": "GZIP Compression",
+            "description": "GZIP compression and decompression for text and files"
+        },
+        "sha3": {
+            "title": "SHA-3 Hash",
+            "description": "Calculate SHA3-224, SHA3-256, SHA3-384, SHA3-512 hash values"
+        },
+        "cookie-parser": {
+            "title": "Cookie Parser",
+            "description": "Parse and format Cookie strings with editing and export support"
+        },
+        "user-agent": {
+            "title": "User-Agent Parser",
+            "description": "Parse User-Agent strings to identify browser, OS, and device information"
+        },
+        "hex-viewer": {
+            "title": "Hex Viewer",
+            "description": "View hexadecimal representation of files or text"
         }
     }
 }

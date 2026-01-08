@@ -1,0 +1,19 @@
+{
+    "title": "Cookie Parser",
+    "description": "Parse and format Cookie strings with editing and export support",
+    "inputPlaceholder": "Enter Cookie string (format: name=value; name2=value2)",
+    "parse": "Parse",
+    "getBrowser": "Get Browser Cookies",
+    "toString": "To String",
+    "parsedCookies": "Parsed Cookies",
+    "addCookie": "Add",
+    "exportJson": "Export JSON",
+    "name": "Name",
+    "value": "Value",
+    "decodedValue": "Decoded Value",
+    "actions": "Actions",
+    "delete": "Delete",
+    "totalCookies": "Total Cookies",
+    "totalSize": "Total Size",
+    "cookieString": "Cookie String"
+}

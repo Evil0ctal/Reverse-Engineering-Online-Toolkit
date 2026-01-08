@@ -1,0 +1,115 @@
+/**
+ * SHA-3 哈希工具样式
+ */
+
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.input-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.file-upload-btn {
+    cursor: pointer;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.file-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.file-size {
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+/* 哈希输出 */
+.hash-output {
+    display: flex;
+    gap: 8px;
+}
+
+.hash-output input {
+    flex: 1;
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+}
+
+/* 所有哈希列表 */
+.hash-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hash-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.hash-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.hash-algorithm {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.hash-value {
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 0.9em;
+    word-break: break-all;
+    color: var(--text-secondary);
+    padding: 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+}
+
+/* 响应式 */
+@media (max-width: 600px) {
+    .input-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .hash-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .file-info {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .hash-item {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .hash-value {
+    background: var(--bg-secondary);
+}

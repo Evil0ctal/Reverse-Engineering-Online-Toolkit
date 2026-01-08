@@ -284,6 +284,34 @@
         "barcode-scanner": {
             "title": "条码扫描器",
             "description": "扫描QR码和各种条形码"
+        },
+        "xml": {
+            "title": "XML 格式化",
+            "description": "XML 格式化、压缩、校验工具"
+        },
+        "yaml": {
+            "title": "YAML 格式化",
+            "description": "YAML 格式化、验证，支持 YAML 与 JSON 互转"
+        },
+        "gzip": {
+            "title": "GZIP 压缩",
+            "description": "GZIP 压缩与解压，支持文本和文件"
+        },
+        "sha3": {
+            "title": "SHA-3 哈希",
+            "description": "计算 SHA3-224, SHA3-256, SHA3-384, SHA3-512 哈希值"
+        },
+        "cookie-parser": {
+            "title": "Cookie 解析器",
+            "description": "解析和格式化 Cookie 字符串，支持编辑和导出"
+        },
+        "user-agent": {
+            "title": "User-Agent 解析器",
+            "description": "解析 User-Agent 字符串，识别浏览器、操作系统和设备信息"
+        },
+        "hex-viewer": {
+            "title": "Hex 查看器",
+            "description": "查看文件或文本的十六进制表示"
         }
     }
 }

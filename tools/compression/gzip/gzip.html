@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.gzip.title">GZIP 压缩 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="gzip.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.gzip.title">GZIP 压缩</h1>
+            <p data-i18n="tools.gzip.description">GZIP 压缩与解压，支持文本和文件</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.gzip.compressionLevel">压缩级别</label>
+                    <select id="compression-level" class="form-select">
+                        <option value="1">1 (最快)</option>
+                        <option value="5">5 (平衡)</option>
+                        <option value="9" selected>9 (最佳)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.gzip.outputFormat">输出格式</label>
+                    <select id="output-format" class="form-select">
+                        <option value="base64" selected>Base64</option>
+                        <option value="hex">Hex</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" style="display: none;">
+                            <span data-i18n="tools.gzip.uploadFile">上传文件</span>
+                        </label>
+                    </div>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.gzip.inputPlaceholder"
+                          placeholder="请输入要压缩/解压的内容..."></textarea>
+                <div id="file-info" class="file-info" style="display: none;"></div>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="compress-btn" class="btn btn--primary" data-i18n="tools.gzip.compress">压缩</button>
+                <button id="decompress-btn" class="btn btn--secondary" data-i18n="tools.gzip.decompress">解压</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+                <button id="download-btn" class="btn btn--outline" data-i18n="common.download">下载</button>
+            </section>
+
+            <!-- 统计信息 -->
+            <section class="stats-section" id="stats-section" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.gzip.originalSize">原始大小</span>
+                        <span class="stat-value" id="original-size">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.gzip.compressedSize">压缩后大小</span>
+                        <span class="stat-value" id="compressed-size">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.gzip.ratio">压缩率</span>
+                        <span class="stat-value" id="compression-ratio">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+        </main>
+    </div>
+
+    <!-- pako library for GZIP -->
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="gzip.js"></script>
+</body>
+</html>

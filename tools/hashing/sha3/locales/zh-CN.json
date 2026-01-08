@@ -1,0 +1,10 @@
+{
+    "title": "SHA-3 哈希",
+    "description": "计算 SHA3-224, SHA3-256, SHA3-384, SHA3-512 哈希值",
+    "inputPlaceholder": "请输入要计算哈希的内容...",
+    "algorithm": "算法",
+    "outputFormat": "输出格式",
+    "uploadFile": "上传文件",
+    "hashAll": "计算所有",
+    "allHashes": "所有哈希值"
+}

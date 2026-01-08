@@ -1,0 +1,16 @@
+{
+    "title": "Hex Viewer",
+    "description": "View hexadecimal representation of files or text",
+    "inputPlaceholder": "Enter text or upload a file...",
+    "uploadFile": "Upload File",
+    "bytesPerLine": "Bytes Per Line",
+    "showAscii": "Show ASCII",
+    "uppercase": "Uppercase",
+    "view": "View",
+    "hexView": "Hex View",
+    "fileSize": "File Size",
+    "totalBytes": "Total Bytes",
+    "magicNumber": "File Type",
+    "search": "Search",
+    "searchPlaceholder": "Search Hex or ASCII..."
+}

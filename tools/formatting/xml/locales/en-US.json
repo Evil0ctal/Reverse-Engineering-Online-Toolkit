@@ -1,0 +1,15 @@
+{
+    "title": "XML Formatter",
+    "description": "XML formatting, minification, and validation tool",
+    "inputPlaceholder": "Enter XML...",
+    "indent": "Indent",
+    "spaces2": "2 Spaces",
+    "spaces4": "4 Spaces",
+    "preserveComments": "Preserve Comments",
+    "preserveCDATA": "Preserve CDATA",
+    "validate": "Validate",
+    "validationResult": "Validation Result",
+    "validXml": "XML is valid",
+    "invalidXml": "XML is invalid",
+    "emptyInput": "Input is empty"
+}

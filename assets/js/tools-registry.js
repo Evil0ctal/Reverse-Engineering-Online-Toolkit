@@ -433,6 +433,34 @@
             keywords: ['base64', '编码', '解码', 'encode', 'decode'],
             popular: true
         },
+        // ========== 编码扩展 ==========
+        {
+            id: 'base32',
+            category: 'encoding',
+            name: 'tools.base32.title',
+            description: 'tools.base32.description',
+            icon: '📄',
+            path: '/tools/encoding/base32/',
+            keywords: ['base32', '编码', '解码']
+        },
+        {
+            id: 'base58',
+            category: 'encoding',
+            name: 'tools.base58.title',
+            description: 'tools.base58.description',
+            icon: '₿',
+            path: '/tools/encoding/base58/',
+            keywords: ['base58', 'bitcoin', '编码', '解码']
+        },
+        {
+            id: 'ascii',
+            category: 'encoding',
+            name: 'tools.ascii.title',
+            description: 'tools.ascii.description',
+            icon: '🔤',
+            path: '/tools/encoding/ascii/',
+            keywords: ['ascii', 'char', '字符', '码']
+        },
         {
             id: 'url-encode',
             category: 'encoding',
@@ -576,35 +604,6 @@
             path: '/tools/generators/password/',
             keywords: ['password', '密码', 'generate', '生成'],
             popular: true
-        },
-
-        // ========== 编码扩展 ==========
-        {
-            id: 'base32',
-            category: 'encoding',
-            name: 'tools.base32.title',
-            description: 'tools.base32.description',
-            icon: '📄',
-            path: '/tools/encoding/base32/',
-            keywords: ['base32', '编码', '解码']
-        },
-        {
-            id: 'base58',
-            category: 'encoding',
-            name: 'tools.base58.title',
-            description: 'tools.base58.description',
-            icon: '₿',
-            path: '/tools/encoding/base58/',
-            keywords: ['base58', 'bitcoin', '编码', '解码']
-        },
-        {
-            id: 'ascii',
-            category: 'encoding',
-            name: 'tools.ascii.title',
-            description: 'tools.ascii.description',
-            icon: '🔤',
-            path: '/tools/encoding/ascii/',
-            keywords: ['ascii', 'char', '字符', '码']
         },
         {
             id: 'rot13',
@@ -804,6 +803,81 @@
             icon: '📷',
             path: '/tools/generators/barcode-scanner/',
             keywords: ['qr', 'barcode', 'scan', 'scanner', '扫描', '条码', '二维码']
+        },
+
+        // ========== 数据格式化（新增） ==========
+        {
+            id: 'xml',
+            category: 'formatting',
+            name: 'tools.xml.title',
+            description: 'tools.xml.description',
+            icon: '📰',
+            path: '/tools/formatting/xml/',
+            keywords: ['xml', 'format', 'beautify', '格式化', '美化']
+        },
+        {
+            id: 'yaml',
+            category: 'formatting',
+            name: 'tools.yaml.title',
+            description: 'tools.yaml.description',
+            icon: '📝',
+            path: '/tools/formatting/yaml/',
+            keywords: ['yaml', 'yml', 'json', 'format', '格式化']
+        },
+
+        // ========== 压缩工具（新增） ==========
+        {
+            id: 'gzip',
+            category: 'compression',
+            name: 'tools.gzip.title',
+            description: 'tools.gzip.description',
+            icon: '📦',
+            path: '/tools/compression/gzip/',
+            keywords: ['gzip', 'compress', 'decompress', '压缩', '解压'],
+            popular: true
+        },
+
+        // ========== 哈希工具（新增） ==========
+        {
+            id: 'sha3',
+            category: 'hashing',
+            name: 'tools.sha3.title',
+            description: 'tools.sha3.description',
+            icon: '🔒',
+            path: '/tools/hashing/sha3/',
+            keywords: ['sha3', 'sha3-256', 'sha3-512', 'keccak', 'hash', '哈希']
+        },
+
+        // ========== 网络工具（新增） ==========
+        {
+            id: 'cookie-parser',
+            category: 'network',
+            name: 'tools.cookie-parser.title',
+            description: 'tools.cookie-parser.description',
+            icon: '🍪',
+            path: '/tools/network/cookie-parser/',
+            keywords: ['cookie', 'parse', 'http', '解析', 'web']
+        },
+        {
+            id: 'user-agent',
+            category: 'network',
+            name: 'tools.user-agent.title',
+            description: 'tools.user-agent.description',
+            icon: '🔍',
+            path: '/tools/network/user-agent/',
+            keywords: ['user-agent', 'ua', 'browser', 'detect', '浏览器', '识别']
+        },
+
+        // ========== 二进制分析（新增） ==========
+        {
+            id: 'hex-viewer',
+            category: 'binary',
+            name: 'tools.hex-viewer.title',
+            description: 'tools.hex-viewer.description',
+            icon: '🔢',
+            path: '/tools/binary/hex-viewer/',
+            keywords: ['hex', 'binary', 'viewer', '十六进制', '二进制', '查看器'],
+            popular: true
         }
     ]);
 

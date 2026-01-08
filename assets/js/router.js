@@ -16,39 +16,18 @@
      * @returns {string}
      */
     function getBasePath() {
-        // 检查是否有 <base> 标签
-        const baseTag = document.querySelector('base');
-        if (baseTag) {
-            return baseTag.href.replace(/\/$/, '');
-        }
+        const origin = window.location.origin;
 
-        // 从当前脚本路径推断基础路径
-        const scripts = document.querySelectorAll('script[src]');
-        for (const script of scripts) {
-            const src = script.getAttribute('src');
-            if (src && src.includes('assets/js/router.js')) {
-                // 如果是绝对路径
-                if (src.startsWith('http')) {
-                    return src.replace(/assets\/js\/router\.js.*$/, '').replace(/\/$/, '');
-                }
-                // 相对路径 - 使用 origin + 路径前缀
-                // 对于 GitHub Pages: origin = https://user.github.io, 需要加上仓库名
-                // 对于本地开发: origin = http://localhost:8080, 直接使用
-                const origin = window.location.origin;
-                const pathname = window.location.pathname;
-
-                // 检测 GitHub Pages 子目录 (如 /Reverse-Engineering-Online-Toolkit/)
-                if (window.location.hostname.endsWith('github.io')) {
-                    const repoName = pathname.split('/')[1];
-                    if (repoName) {
-                        return `${origin}/${repoName}`;
-                    }
-                }
-                return origin;
+        // 检测 GitHub Pages 子目录 (如 /Reverse-Engineering-Online-Toolkit/)
+        if (window.location.hostname.endsWith('github.io')) {
+            const repoName = window.location.pathname.split('/')[1];
+            if (repoName) {
+                return `${origin}/${repoName}`;
             }
         }
 
-        return window.location.origin;
+        // 本地开发 / Docker 部署 - 直接使用 origin
+        return origin;
     }
 
     /**

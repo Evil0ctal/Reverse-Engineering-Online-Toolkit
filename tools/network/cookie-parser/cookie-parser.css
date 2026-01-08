@@ -1,0 +1,180 @@
+/**
+ * Cookie 解析器样式
+ */
+
+/* 表格头部 */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* 表格容器 */
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* Cookie 表格 */
+.cookie-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.cookie-table th,
+.cookie-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cookie-table th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.cookie-table tr:last-child td {
+    border-bottom: none;
+}
+
+.cookie-table tr:hover {
+    background: var(--bg-secondary);
+}
+
+/* 输入框 */
+.cookie-name,
+.cookie-value {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 0.9em;
+}
+
+.cookie-name:focus,
+.cookie-value:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.cookie-name {
+    min-width: 120px;
+}
+
+.cookie-value {
+    min-width: 200px;
+}
+
+/* 解码值 */
+.decoded-value {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-secondary);
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 0.85em;
+}
+
+/* 操作按钮列 */
+.cookie-table td:last-child {
+    white-space: nowrap;
+}
+
+.cookie-table td:last-child .btn {
+    margin-right: 4px;
+}
+
+.cookie-table td:last-child .btn:last-child {
+    margin-right: 0;
+}
+
+/* 统计信息 */
+.stats-section {
+    margin-top: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.stat-label {
+    font-size: 0.85em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .cookie-table th,
+    .cookie-table td {
+        padding: 8px;
+    }
+
+    .cookie-name {
+        min-width: 80px;
+    }
+
+    .cookie-value {
+        min-width: 120px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .cookie-table th {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .cookie-table tr:hover {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .cookie-name,
+[data-theme="dark"] .cookie-value {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .stat-item {
+    background: var(--bg-tertiary);
+}

@@ -1,0 +1,23 @@
+{
+    "title": "User-Agent 解析器",
+    "description": "解析 User-Agent 字符串，识别浏览器、操作系统和设备信息",
+    "inputPlaceholder": "请输入 User-Agent 字符串...",
+    "parse": "解析",
+    "getBrowser": "获取当前浏览器",
+    "parsedResult": "解析结果",
+    "browser": "浏览器",
+    "os": "操作系统",
+    "device": "设备",
+    "other": "其他",
+    "name": "名称",
+    "version": "版本",
+    "engine": "引擎",
+    "platform": "平台",
+    "type": "类型",
+    "vendor": "厂商",
+    "model": "型号",
+    "isBot": "机器人",
+    "isMobile": "移动端",
+    "cpu": "CPU 架构",
+    "jsonOutput": "JSON 输出"
+}

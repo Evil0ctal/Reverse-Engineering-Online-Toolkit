@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.xml.title">XML 格式化 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="xml.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.xml.title">XML 格式化</h1>
+            <p data-i18n="tools.xml.description">XML 格式化、压缩、校验工具</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.xml.indent">缩进</label>
+                    <select id="indent-select" class="form-select">
+                        <option value="2" data-i18n="tools.xml.spaces2">2 空格</option>
+                        <option value="4" selected data-i18n="tools.xml.spaces4">4 空格</option>
+                        <option value="\t">Tab</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="preserve-comments" checked>
+                        <span data-i18n="tools.xml.preserveComments">保留注释</span>
+                    </label>
+                </div>
+                <div class="option-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="preserve-cdata" checked>
+                        <span data-i18n="tools.xml.preserveCDATA">保留 CDATA</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.xml.inputPlaceholder"
+                          placeholder="请输入 XML..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="format-btn" class="btn btn--primary" data-i18n="common.format">格式化</button>
+                <button id="minify-btn" class="btn btn--secondary" data-i18n="common.minify">压缩</button>
+                <button id="validate-btn" class="btn btn--secondary" data-i18n="tools.xml.validate">校验</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <div id="highlighted-output" class="xml-highlighted-output"></div>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly
+                          style="display: none;"></textarea>
+            </section>
+
+            <!-- 验证结果 -->
+            <section class="validation-section" id="validation-section" style="display: none;">
+                <label data-i18n="tools.xml.validationResult">验证结果</label>
+                <div id="validation-result" class="validation-result"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="xml.js"></script>
+</body>
+</html>

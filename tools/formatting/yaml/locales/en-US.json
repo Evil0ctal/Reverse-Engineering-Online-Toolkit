@@ -1,0 +1,18 @@
+{
+    "title": "YAML Formatter",
+    "description": "YAML formatting, validation, and JSON conversion",
+    "inputPlaceholder": "Enter YAML or JSON...",
+    "indent": "Indent",
+    "spaces2": "2 Spaces",
+    "spaces4": "4 Spaces",
+    "lineWidth": "Line Width",
+    "unlimited": "Unlimited",
+    "sortKeys": "Sort Keys",
+    "validate": "Validate",
+    "toJson": "To JSON",
+    "fromJson": "JSON to YAML",
+    "validationResult": "Validation Result",
+    "validYaml": "YAML is valid",
+    "invalidYaml": "YAML is invalid",
+    "emptyInput": "Input is empty"
+}

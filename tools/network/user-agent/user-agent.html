@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.user-agent.title">User-Agent 解析器 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="user-agent.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.user-agent.title">User-Agent 解析器</h1>
+            <p data-i18n="tools.user-agent.description">解析 User-Agent 字符串，识别浏览器、操作系统和设备信息</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.user-agent.inputPlaceholder"
+                          placeholder="请输入 User-Agent 字符串..."></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="parse-btn" class="btn btn--primary" data-i18n="tools.user-agent.parse">解析</button>
+                <button id="get-browser-btn" class="btn btn--secondary" data-i18n="tools.user-agent.getBrowser">获取当前浏览器</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制 JSON</button>
+            </section>
+
+            <!-- 解析结果 -->
+            <section class="output-section" id="result-section" style="display: none;">
+                <label data-i18n="tools.user-agent.parsedResult">解析结果</label>
+
+                <div class="ua-result-grid">
+                    <!-- 浏览器信息 -->
+                    <div class="ua-card">
+                        <div class="ua-card-header">
+                            <span class="ua-card-icon" id="browser-icon">🌐</span>
+                            <span class="ua-card-title" data-i18n="tools.user-agent.browser">浏览器</span>
+                        </div>
+                        <div class="ua-card-body">
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.name">名称</span>
+                                <span class="ua-value" id="browser-name">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.version">版本</span>
+                                <span class="ua-value" id="browser-version">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.engine">引擎</span>
+                                <span class="ua-value" id="browser-engine">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 操作系统信息 -->
+                    <div class="ua-card">
+                        <div class="ua-card-header">
+                            <span class="ua-card-icon" id="os-icon">💻</span>
+                            <span class="ua-card-title" data-i18n="tools.user-agent.os">操作系统</span>
+                        </div>
+                        <div class="ua-card-body">
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.name">名称</span>
+                                <span class="ua-value" id="os-name">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.version">版本</span>
+                                <span class="ua-value" id="os-version">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.platform">平台</span>
+                                <span class="ua-value" id="os-platform">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 设备信息 -->
+                    <div class="ua-card">
+                        <div class="ua-card-header">
+                            <span class="ua-card-icon" id="device-icon">📱</span>
+                            <span class="ua-card-title" data-i18n="tools.user-agent.device">设备</span>
+                        </div>
+                        <div class="ua-card-body">
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.type">类型</span>
+                                <span class="ua-value" id="device-type">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.vendor">厂商</span>
+                                <span class="ua-value" id="device-vendor">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.model">型号</span>
+                                <span class="ua-value" id="device-model">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 其他信息 -->
+                    <div class="ua-card">
+                        <div class="ua-card-header">
+                            <span class="ua-card-icon">🤖</span>
+                            <span class="ua-card-title" data-i18n="tools.user-agent.other">其他</span>
+                        </div>
+                        <div class="ua-card-body">
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.isBot">机器人</span>
+                                <span class="ua-value" id="is-bot">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.isMobile">移动端</span>
+                                <span class="ua-value" id="is-mobile">-</span>
+                            </div>
+                            <div class="ua-info-row">
+                                <span class="ua-label" data-i18n="tools.user-agent.cpu">CPU 架构</span>
+                                <span class="ua-value" id="cpu-arch">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JSON 输出 -->
+                <div class="json-output-section">
+                    <label data-i18n="tools.user-agent.jsonOutput">JSON 输出</label>
+                    <textarea id="json-output" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="user-agent.js"></script>
+</body>
+</html>

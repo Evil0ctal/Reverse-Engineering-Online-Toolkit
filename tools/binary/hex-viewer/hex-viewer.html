@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.hex-viewer.title">Hex 查看器 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="hex-viewer.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.hex-viewer.title">Hex 查看器</h1>
+            <p data-i18n="tools.hex-viewer.description">查看文件或文本的十六进制表示</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" style="display: none;">
+                            <span data-i18n="tools.hex-viewer.uploadFile">上传文件</span>
+                        </label>
+                    </div>
+                </div>
+                <textarea id="text-input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.hex-viewer.inputPlaceholder"
+                          placeholder="请输入文本或上传文件..."></textarea>
+                <div id="file-info" class="file-info" style="display: none;"></div>
+            </section>
+
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.hex-viewer.bytesPerLine">每行字节数</label>
+                    <select id="bytes-per-line" class="form-select">
+                        <option value="8">8</option>
+                        <option value="16" selected>16</option>
+                        <option value="32">32</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="show-ascii" checked>
+                        <span data-i18n="tools.hex-viewer.showAscii">显示 ASCII</span>
+                    </label>
+                </div>
+                <div class="option-group">
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="uppercase" checked>
+                        <span data-i18n="tools.hex-viewer.uppercase">大写</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="view-btn" class="btn btn--primary" data-i18n="tools.hex-viewer.view">查看</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制</button>
+            </section>
+
+            <!-- 文件信息 -->
+            <section class="stats-section" id="stats-section" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.hex-viewer.fileSize">文件大小</span>
+                        <span class="stat-value" id="file-size">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.hex-viewer.totalBytes">总字节数</span>
+                        <span class="stat-value" id="total-bytes">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-i18n="tools.hex-viewer.magicNumber">Magic Number</span>
+                        <span class="stat-value" id="magic-number">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hex 输出 -->
+            <section class="output-section" id="output-section" style="display: none;">
+                <label data-i18n="tools.hex-viewer.hexView">十六进制视图</label>
+                <div class="hex-viewer-container">
+                    <div class="hex-viewer" id="hex-output"></div>
+                </div>
+            </section>
+
+            <!-- 搜索功能 -->
+            <section class="search-section" id="search-section" style="display: none;">
+                <div class="search-box">
+                    <input type="text" id="search-input" class="form-input"
+                           data-i18n-placeholder="tools.hex-viewer.searchPlaceholder"
+                           placeholder="搜索 Hex 或 ASCII...">
+                    <button id="search-btn" class="btn btn--sm btn--primary" data-i18n="tools.hex-viewer.search">搜索</button>
+                </div>
+                <div id="search-results" class="search-results"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="hex-viewer.js"></script>
+</body>
+</html>

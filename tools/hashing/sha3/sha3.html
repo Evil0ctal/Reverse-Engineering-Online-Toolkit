@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.sha3.title">SHA-3 哈希 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="sha3.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.sha3.title">SHA-3 哈希</h1>
+            <p data-i18n="tools.sha3.description">计算 SHA3-224, SHA3-256, SHA3-384, SHA3-512 哈希值</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.sha3.algorithm">算法</label>
+                    <select id="algorithm" class="form-select">
+                        <option value="sha3-224">SHA3-224</option>
+                        <option value="sha3-256" selected>SHA3-256</option>
+                        <option value="sha3-384">SHA3-384</option>
+                        <option value="sha3-512">SHA3-512</option>
+                        <option value="keccak-256">Keccak-256</option>
+                        <option value="keccak-512">Keccak-512</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.sha3.outputFormat">输出格式</label>
+                    <select id="output-format" class="form-select">
+                        <option value="hex" selected>Hex (小写)</option>
+                        <option value="hex-upper">Hex (大写)</option>
+                        <option value="base64">Base64</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" style="display: none;">
+                            <span data-i18n="tools.sha3.uploadFile">上传文件</span>
+                        </label>
+                    </div>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.sha3.inputPlaceholder"
+                          placeholder="请输入要计算哈希的内容..."></textarea>
+                <div id="file-info" class="file-info" style="display: none;"></div>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="hash-btn" class="btn btn--primary" data-i18n="common.hash">计算哈希</button>
+                <button id="hash-all-btn" class="btn btn--secondary" data-i18n="tools.sha3.hashAll">计算所有</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <!-- 单一输出 -->
+            <section class="output-section" id="single-output-section">
+                <label data-i18n="common.output">输出</label>
+                <div class="hash-output">
+                    <input type="text" id="output" class="form-input" readonly>
+                </div>
+            </section>
+
+            <!-- 所有哈希输出 -->
+            <section class="output-section" id="all-output-section" style="display: none;">
+                <label data-i18n="tools.sha3.allHashes">所有哈希值</label>
+                <div class="hash-list" id="hash-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- js-sha3 library (loaded dynamically by sha3.js for SPA compatibility) -->
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="sha3.js"></script>
+</body>
+</html>
