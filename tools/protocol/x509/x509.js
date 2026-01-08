@@ -253,58 +253,92 @@
         }
 
         async parse() {
-            const cert = {};
+            const cert = {
+                version: 1,
+                serialNumber: 'unknown',
+                signatureAlgorithm: 'unknown',
+                issuer: {},
+                subject: {},
+                validity: { notBefore: new Date(), notAfter: new Date() },
+                publicKey: { algorithm: 'unknown', keySize: 0 },
+                extensions: [],
+                fingerprints: { sha1: '', sha256: '' }
+            };
+
+            if (!this.asn1?.children?.[0]?.children) {
+                throw new Error('无效的证书结构');
+            }
+
             const tbsCert = this.asn1.children[0];
+            const children = tbsCert.children;
 
             // 版本
             let idx = 0;
-            if (tbsCert.children[0].tag === 0xA0) {
-                cert.version = parseInt(tbsCert.children[0].children[0].intValue) + 1;
+            if (children[0]?.tag === 0xA0) {
+                const versionInt = children[0].children?.[0]?.intValue;
+                cert.version = versionInt ? parseInt(versionInt) + 1 : 1;
                 idx = 1;
-            } else {
-                cert.version = 1;
             }
 
             // 序列号
-            cert.serialNumber = tbsCert.children[idx].intValue;
+            if (children[idx]) {
+                cert.serialNumber = children[idx].intValue || bytesToHex(children[idx].value || []);
+            }
             idx++;
 
             // 签名算法
-            cert.signatureAlgorithm = tbsCert.children[idx].children[0].oidName;
+            if (children[idx]?.children?.[0]) {
+                cert.signatureAlgorithm = children[idx].children[0].oidName ||
+                                          children[idx].children[0].oid || 'unknown';
+            }
             idx++;
 
             // 颁发者
-            cert.issuer = this.parseName(tbsCert.children[idx]);
+            if (children[idx]) {
+                cert.issuer = this.parseName(children[idx]);
+            }
             idx++;
 
             // 有效期
-            cert.validity = {
-                notBefore: tbsCert.children[idx].children[0].time,
-                notAfter: tbsCert.children[idx].children[1].time
-            };
+            if (children[idx]?.children) {
+                const validityChildren = children[idx].children;
+                if (validityChildren[0]?.time) {
+                    cert.validity.notBefore = validityChildren[0].time;
+                }
+                if (validityChildren[1]?.time) {
+                    cert.validity.notAfter = validityChildren[1].time;
+                }
+            }
             idx++;
 
             // 主题
-            cert.subject = this.parseName(tbsCert.children[idx]);
+            if (children[idx]) {
+                cert.subject = this.parseName(children[idx]);
+            }
             idx++;
 
             // 公钥
-            cert.publicKey = this.parsePublicKey(tbsCert.children[idx]);
+            if (children[idx]) {
+                cert.publicKey = this.parsePublicKey(children[idx]);
+            }
             idx++;
 
             // 扩展
-            cert.extensions = [];
-            for (let i = idx; i < tbsCert.children.length; i++) {
-                if (tbsCert.children[i].tag === 0xA3) {
-                    cert.extensions = this.parseExtensions(tbsCert.children[i].children[0]);
+            for (let i = idx; i < children.length; i++) {
+                if (children[i]?.tag === 0xA3 && children[i].children?.[0]) {
+                    cert.extensions = this.parseExtensions(children[i].children[0]);
                 }
             }
 
             // 指纹
-            cert.fingerprints = {
-                sha1: await calculateFingerprint(this.der, 'SHA-1'),
-                sha256: await calculateFingerprint(this.der, 'SHA-256')
-            };
+            try {
+                cert.fingerprints = {
+                    sha1: await calculateFingerprint(this.der, 'SHA-1'),
+                    sha256: await calculateFingerprint(this.der, 'SHA-256')
+                };
+            } catch (e) {
+                console.warn('计算指纹失败:', e);
+            }
 
             // 检查有效性
             const now = new Date();
@@ -317,35 +351,83 @@
 
         parseName(nameSeq) {
             const name = {};
+            if (!nameSeq?.children) return name;
             for (const rdn of nameSeq.children) {
-                const attr = rdn.children[0];
-                const oid = attr.children[0].oidName;
-                const value = attr.children[1].string;
-                name[oid] = value;
+                try {
+                    const attr = rdn.children?.[0];
+                    if (attr?.children?.[0] && attr?.children?.[1]) {
+                        const oid = attr.children[0].oidName || attr.children[0].oid;
+                        const value = attr.children[1].string || bytesToHex(attr.children[1].value || []);
+                        if (oid && value) {
+                            name[oid] = value;
+                        }
+                    }
+                } catch (e) {
+                    // 跳过无法解析的字段
+                }
             }
             return name;
         }
 
         parsePublicKey(pkInfo) {
-            const algorithm = pkInfo.children[0].children[0].oidName;
-            const pubKeyBits = pkInfo.children[1].bits;
-
             const result = {
-                algorithm: algorithm
+                algorithm: 'unknown',
+                keySize: 0
             };
 
-            if (algorithm === 'rsaEncryption') {
-                // 解析 RSA 公钥
-                const rsaKey = new ASN1Parser(pubKeyBits).parse();
-                const modulus = rsaKey.children[0].value;
-                result.keySize = (modulus.length - 1) * 8; // 减去前导 0
-                result.modulus = bytesToHex(modulus).substring(0, 64) + '...';
-                result.exponent = rsaKey.children[1].intValue;
-            } else if (algorithm === 'ecPublicKey') {
-                // EC 公钥
-                const curve = pkInfo.children[0].children[1]?.oidName || 'unknown';
-                result.curve = curve;
-                result.keySize = pubKeyBits.length * 4; // 大约
+            try {
+                if (!pkInfo?.children?.[0]?.children?.[0]) {
+                    return result;
+                }
+
+                const algorithmSeq = pkInfo.children[0];
+                result.algorithm = algorithmSeq.children[0].oidName || algorithmSeq.children[0].oid || 'unknown';
+
+                const pubKeyBitString = pkInfo.children[1];
+                const pubKeyBits = pubKeyBitString?.bits || pubKeyBitString?.value?.slice(1);
+
+                if (!pubKeyBits) {
+                    return result;
+                }
+
+                if (result.algorithm === 'rsaEncryption') {
+                    // 解析 RSA 公钥
+                    try {
+                        const rsaKey = new ASN1Parser(pubKeyBits).parse();
+                        if (rsaKey?.children?.[0]?.value) {
+                            const modulus = rsaKey.children[0].value;
+                            // 计算密钥长度，跳过前导零
+                            let keyLen = modulus.length;
+                            if (modulus[0] === 0) keyLen--;
+                            result.keySize = keyLen * 8;
+                            result.modulus = bytesToHex(modulus).substring(0, 64) + '...';
+                        }
+                        if (rsaKey?.children?.[1]) {
+                            result.exponent = rsaKey.children[1].intValue || '65537';
+                        }
+                    } catch (e) {
+                        result.keySize = pubKeyBits.length * 8;
+                    }
+                } else if (result.algorithm === 'ecPublicKey') {
+                    // EC 公钥
+                    const curve = algorithmSeq.children[1]?.oidName || algorithmSeq.children[1]?.oid || 'unknown';
+                    result.curve = curve;
+                    // EC 密钥长度根据曲线估算
+                    if (curve.includes('256') || curve === 'prime256v1') {
+                        result.keySize = 256;
+                    } else if (curve.includes('384') || curve === 'secp384r1') {
+                        result.keySize = 384;
+                    } else if (curve.includes('521') || curve === 'secp521r1') {
+                        result.keySize = 521;
+                    } else {
+                        result.keySize = pubKeyBits.length * 4;
+                    }
+                } else {
+                    // 其他算法
+                    result.keySize = pubKeyBits.length * 8;
+                }
+            } catch (e) {
+                console.warn('解析公钥失败:', e);
             }
 
             return result;
@@ -353,18 +435,27 @@
 
         parseExtensions(extSeq) {
             const extensions = [];
-            for (const ext of extSeq.children) {
-                const oid = ext.children[0].oidName;
-                const critical = ext.children.length > 2 && ext.children[1].tag === 0x01;
-                const valueIdx = critical ? 2 : 1;
-                const value = ext.children[valueIdx].value;
+            if (!extSeq?.children) return extensions;
 
-                const extension = {
-                    oid: oid,
-                    critical: critical,
-                    value: this.parseExtensionValue(oid, value)
-                };
-                extensions.push(extension);
+            for (const ext of extSeq.children) {
+                try {
+                    if (!ext?.children?.[0]) continue;
+
+                    const oid = ext.children[0].oidName || ext.children[0].oid || 'unknown';
+                    const critical = ext.children.length > 2 && ext.children[1]?.tag === 0x01;
+                    const valueIdx = critical ? 2 : 1;
+                    const valueElement = ext.children[valueIdx];
+                    const value = valueElement?.value || new Uint8Array(0);
+
+                    const extension = {
+                        oid: oid,
+                        critical: critical,
+                        value: this.parseExtensionValue(oid, value)
+                    };
+                    extensions.push(extension);
+                } catch (e) {
+                    // 跳过无法解析的扩展
+                }
             }
             return extensions;
         }
