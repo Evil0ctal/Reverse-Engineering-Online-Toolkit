@@ -286,8 +286,17 @@
         }
     }
 
+    // 检查当前是否在 CRC 工具页面
+    function isCrcToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/hashing/crc');
+    }
+
     // 使用事件委托处理点击事件
     document.addEventListener('click', (e) => {
+        // 只在 CRC 工具页面处理事件
+        if (!isCrcToolActive()) return;
+
         const target = e.target;
 
         // 计算按钮

@@ -281,8 +281,17 @@
         }
     });
 
+    // 检查当前是否在 SHA3 工具页面
+    function isSha3ToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/hashing/sha3');
+    }
+
     // 事件委托处理器
     document.addEventListener('click', async (e) => {
+        // 只在 SHA3 工具页面处理事件
+        if (!isSha3ToolActive()) return;
+
         const target = e.target;
 
         // 计算哈希按钮

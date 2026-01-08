@@ -167,8 +167,17 @@
         }
     }
 
+    // 检查当前是否在 Cookie Parser 工具页面
+    function isCookieParserToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/network/cookie-parser');
+    }
+
     // 事件委托处理器
     document.addEventListener('click', (e) => {
+        // 只在 Cookie Parser 工具页面处理事件
+        if (!isCookieParserToolActive()) return;
+
         const target = e.target;
 
         // 解析按钮

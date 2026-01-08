@@ -330,8 +330,17 @@
         }
     });
 
+    // 检查当前是否在 Hex Viewer 工具页面
+    function isHexViewerToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/binary/hex-viewer');
+    }
+
     // 事件委托处理器
     document.addEventListener('click', (e) => {
+        // 只在 Hex Viewer 工具页面处理事件
+        if (!isHexViewerToolActive()) return;
+
         const target = e.target;
 
         // 查看按钮

@@ -304,8 +304,17 @@
         }
     });
 
+    // 检查当前是否在 Gzip 工具页面
+    function isGzipToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/compression/gzip');
+    }
+
     // 事件委托处理器
     document.addEventListener('click', async (e) => {
+        // 只在 Gzip 工具页面处理事件
+        if (!isGzipToolActive()) return;
+
         const target = e.target;
 
         // 压缩按钮

@@ -299,8 +299,17 @@
         }
     }
 
+    // 检查当前是否在 User-Agent 工具页面
+    function isUserAgentToolActive() {
+        const route = REOT.router?.getRoute();
+        return route && route.includes('/tools/network/user-agent');
+    }
+
     // 事件委托处理器
     document.addEventListener('click', (e) => {
+        // 只在 User-Agent 工具页面处理事件
+        if (!isUserAgentToolActive()) return;
+
         const target = e.target;
 
         // 解析按钮
