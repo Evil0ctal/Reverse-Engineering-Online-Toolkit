@@ -1,0 +1,9 @@
+{
+    "title": "RIPEMD-160 哈希",
+    "description": "RIPEMD-160 哈希计算，广泛用于比特币地址生成",
+    "inputPlaceholder": "请输入要计算哈希的内容...",
+    "hashLower": "哈希值 (小写)",
+    "hashUpper": "哈希值 (大写)",
+    "aboutRipemd": "关于 RIPEMD-160",
+    "aboutDesc": "RIPEMD-160 是一种 160 位加密哈希函数，由 Hans Dobbertin、Antoon Bosselaers 和 Bart Preneel 设计。它在比特币等加密货币中广泛使用，用于从 SHA-256 哈希生成更短的地址。输出长度固定为 20 字节（160 位）。"
+}

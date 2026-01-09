@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.x509-certificate.title">X.509 证书工具 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="x509-certificate.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.x509-certificate.title">X.509 证书工具</h1>
+            <p data-i18n="tools.x509-certificate.description">密钥对生成、CSR创建、自签名证书、CA签发、证书解析</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 功能标签页 -->
+            <nav class="feature-tabs">
+                <button class="feature-tab active" data-feature="keypair"><span class="tab-icon">🔑</span> <span data-i18n="tools.x509-certificate.tabKeypair">密钥对</span></button>
+                <button class="feature-tab" data-feature="csr"><span class="tab-icon">📄</span> <span data-i18n="tools.x509-certificate.tabCsr">CSR</span></button>
+                <button class="feature-tab" data-feature="selfsign"><span class="tab-icon">📜</span> <span data-i18n="tools.x509-certificate.tabSelfsign">自签名</span></button>
+                <button class="feature-tab" data-feature="issue"><span class="tab-icon">🏛️</span> <span data-i18n="tools.x509-certificate.tabIssue">CA签发</span></button>
+                <button class="feature-tab" data-feature="parse"><span class="tab-icon">🔍</span> <span data-i18n="tools.x509-certificate.tabParse">解析</span></button>
+            </nav>
+
+            <!-- 密钥对生成 -->
+            <section id="panel-keypair" class="feature-panel active">
+                <div class="panel-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.keyType">密钥类型</label>
+                            <select id="keypair-type" class="form-input form-select">
+                                <option value="ECC">ECC (椭圆曲线)</option>
+                                <option value="RSA">RSA</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.keySize">密钥参数</label>
+                            <select id="keypair-size" class="form-input form-select">
+                                <option value="P-256">P-256</option>
+                                <option value="P-384" selected>P-384</option>
+                                <option value="P-521">P-521</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="action-row">
+                        <button id="btn-gen-keypair" class="btn btn--primary"><span class="btn-icon">⚡</span> <span data-i18n="tools.x509-certificate.generate">生成密钥对</span></button>
+                    </div>
+                    <div class="output-row">
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.privateKey">私钥</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="keypair-private" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="keypair-private" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.publicKey">公钥</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="keypair-public" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="keypair-public" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CSR 生成 -->
+            <section id="panel-csr" class="feature-panel">
+                <div class="panel-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.keyType">密钥类型</label>
+                            <select id="csr-keytype" class="form-input form-select">
+                                <option value="ECC">ECC (椭圆曲线)</option>
+                                <option value="RSA">RSA</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.keySize">密钥参数</label>
+                            <select id="csr-keysize" class="form-input form-select">
+                                <option value="P-256">P-256</option>
+                                <option value="P-384" selected>P-384</option>
+                                <option value="P-521">P-521</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="subject-fields">
+                        <h4 data-i18n="tools.x509-certificate.subjectInfo">主体信息</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>CN <span class="label-hint" data-i18n="tools.x509-certificate.commonName">(通用名称)</span></label>
+                                <input type="text" id="csr-cn" class="form-input" placeholder="example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>O <span class="label-hint" data-i18n="tools.x509-certificate.organization">(组织)</span></label>
+                                <input type="text" id="csr-o" class="form-input" placeholder="My Company">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>OU <span class="label-hint" data-i18n="tools.x509-certificate.orgUnit">(部门)</span></label>
+                                <input type="text" id="csr-ou" class="form-input" placeholder="IT Department">
+                            </div>
+                            <div class="form-group">
+                                <label>C <span class="label-hint" data-i18n="tools.x509-certificate.country">(国家)</span></label>
+                                <input type="text" id="csr-c" class="form-input" placeholder="CN" maxlength="2">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ST <span class="label-hint" data-i18n="tools.x509-certificate.state">(省份)</span></label>
+                                <input type="text" id="csr-st" class="form-input" placeholder="Beijing">
+                            </div>
+                            <div class="form-group">
+                                <label>L <span class="label-hint" data-i18n="tools.x509-certificate.locality">(城市)</span></label>
+                                <input type="text" id="csr-l" class="form-input" placeholder="Beijing">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group form-group--full">
+                                <label>SAN <span class="label-hint" data-i18n="tools.x509-certificate.san">(备用名称，逗号分隔)</span></label>
+                                <input type="text" id="csr-san" class="form-input" placeholder="example.com, www.example.com, 192.168.1.1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-row">
+                        <button id="btn-gen-csr" class="btn btn--primary"><span class="btn-icon">⚡</span> <span data-i18n="tools.x509-certificate.generateCsr">生成 CSR</span></button>
+                    </div>
+                    <div class="output-row output-row--triple">
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.privateKey">私钥</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="csr-private" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="csr-private" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.publicKey">公钥</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="csr-public" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="csr-public" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label>CSR</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="csr-output" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="csr-output" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 自签名证书 -->
+            <section id="panel-selfsign" class="feature-panel">
+                <div class="panel-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.keyType">密钥类型</label>
+                            <select id="selfsign-keytype" class="form-input form-select">
+                                <option value="ECC">ECC (椭圆曲线)</option>
+                                <option value="RSA">RSA</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.keySize">密钥参数</label>
+                            <select id="selfsign-keysize" class="form-input form-select">
+                                <option value="P-256">P-256</option>
+                                <option value="P-384" selected>P-384</option>
+                                <option value="P-521">P-521</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.validDays">有效期 (天)</label>
+                            <input type="number" id="selfsign-days" class="form-input" value="365" min="1" max="7300">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="selfsign-isca">
+                                <span data-i18n="tools.x509-certificate.isCa">CA 证书</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="subject-fields">
+                        <h4 data-i18n="tools.x509-certificate.subjectInfo">主体信息</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>CN</label>
+                                <input type="text" id="selfsign-cn" class="form-input" placeholder="My Root CA">
+                            </div>
+                            <div class="form-group">
+                                <label>O</label>
+                                <input type="text" id="selfsign-o" class="form-input" placeholder="My Company">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>C</label>
+                                <input type="text" id="selfsign-c" class="form-input" placeholder="CN" maxlength="2">
+                            </div>
+                            <div class="form-group form-group--full">
+                                <label>SAN</label>
+                                <input type="text" id="selfsign-san" class="form-input" placeholder="localhost, 127.0.0.1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-row">
+                        <button id="btn-gen-selfsign" class="btn btn--primary"><span class="btn-icon">⚡</span> <span data-i18n="tools.x509-certificate.generateCert">生成自签名证书</span></button>
+                    </div>
+                    <div class="output-row output-row--triple">
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.privateKey">私钥</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="selfsign-private" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="selfsign-private" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.publicKey">公钥</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="selfsign-public" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="selfsign-public" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                        <div class="output-group">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.certificate">证书</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="selfsign-cert" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="selfsign-cert" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CA 签发 -->
+            <section id="panel-issue" class="feature-panel">
+                <div class="panel-content">
+                    <div class="form-row">
+                        <div class="form-group form-group--full">
+                            <label data-i18n="tools.x509-certificate.csrInput">CSR (证书签名请求)</label>
+                            <textarea id="issue-csr" class="form-input form-textarea form-textarea--code" placeholder="-----BEGIN CERTIFICATE REQUEST-----"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group--full">
+                            <label data-i18n="tools.x509-certificate.caCert">CA 证书</label>
+                            <textarea id="issue-ca-cert" class="form-input form-textarea form-textarea--code" placeholder="-----BEGIN CERTIFICATE-----"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group--full">
+                            <label data-i18n="tools.x509-certificate.caKey">CA 私钥</label>
+                            <textarea id="issue-ca-key" class="form-input form-textarea form-textarea--code" placeholder="-----BEGIN PRIVATE KEY-----"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-i18n="tools.x509-certificate.validDays">有效期 (天)</label>
+                            <input type="number" id="issue-days" class="form-input" value="365" min="1" max="7300">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="issue-isca">
+                                <span data-i18n="tools.x509-certificate.isCa">CA 证书</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="action-row">
+                        <button id="btn-issue-cert" class="btn btn--primary"><span class="btn-icon">✍️</span> <span data-i18n="tools.x509-certificate.issueCert">签发证书</span></button>
+                    </div>
+                    <div class="output-row">
+                        <div class="output-group output-group--full">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.issuedCert">签发的证书</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="issue-output" data-i18n="common.copy">复制</button>
+                            </div>
+                            <textarea id="issue-output" class="form-input form-textarea form-textarea--code" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 证书解析 -->
+            <section id="panel-parse" class="feature-panel">
+                <div class="panel-content">
+                    <div class="form-row">
+                        <div class="form-group form-group--full">
+                            <div class="input-header">
+                                <label data-i18n="tools.x509-certificate.pemInput">PEM 输入</label>
+                                <div class="input-actions">
+                                    <label class="file-upload-btn btn btn--sm btn--outline">
+                                        <input type="file" id="parse-file-input" accept=".pem,.crt,.cer,.key,.csr" style="display: none;">
+                                        <span data-i18n="common.upload">上传文件</span>
+                                    </label>
+                                    <button id="btn-parse-sample" class="btn btn--sm btn--outline" data-i18n="tools.x509-certificate.sample">示例</button>
+                                </div>
+                            </div>
+                            <textarea id="parse-input" class="form-input form-textarea form-textarea--code" placeholder="-----BEGIN CERTIFICATE-----"></textarea>
+                            <div class="input-hint" data-i18n="tools.x509-certificate.parseHint">支持解析: 证书、CSR、公钥、私钥</div>
+                        </div>
+                    </div>
+                    <div class="action-row">
+                        <button id="btn-parse" class="btn btn--primary"><span class="btn-icon">🔍</span> <span data-i18n="tools.x509-certificate.parse">解析</span></button>
+                    </div>
+                    <div class="output-row">
+                        <div class="output-group output-group--full">
+                            <div class="output-header">
+                                <label data-i18n="tools.x509-certificate.parseResult">解析结果</label>
+                                <button class="btn btn--sm btn--outline copy-btn" data-target="parse-output" data-i18n="common.copy">复制</button>
+                            </div>
+                            <div id="parse-output" class="parse-output"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 安全提示 -->
+            <section class="security-warning">
+                <h3 data-i18n="tools.x509-certificate.securityNote">安全提示</h3>
+                <p data-i18n="tools.x509-certificate.securityDesc">所有密钥和证书完全在浏览器本地生成，不会上传到任何服务器。请妥善保管私钥，切勿泄露。生产环境建议使用硬件安全模块 (HSM) 或专业证书颁发机构 (CA)。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="x509-certificate.js"></script>
+</body>
+</html>

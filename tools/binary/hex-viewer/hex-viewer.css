@@ -171,7 +171,53 @@
     color: transparent;
 }
 
-/* 截断提示 */
+/* 截断提示面板 */
+.hex-truncated-panel {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+    border-top: 2px solid var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.truncated-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.truncated-icon {
+    font-size: 1.2rem;
+}
+
+.truncated-info strong {
+    color: var(--color-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+}
+
+.truncated-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.truncated-actions .btn {
+    min-width: 140px;
+}
+
+.truncated-warning {
+    font-size: 0.8rem;
+    color: var(--color-warning);
+    padding: 8px 12px;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid var(--color-warning);
+}
+
+/* 旧的截断提示 (兼容) */
 .hex-truncated {
     padding: 12px;
     text-align: center;
@@ -236,6 +282,26 @@
     .hex-byte {
         margin-right: 0.25ch;
     }
+
+    .hex-truncated-panel {
+        padding: 12px;
+    }
+
+    .truncated-info {
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 0.85rem;
+    }
+
+    .truncated-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .truncated-actions .btn {
+        width: 100%;
+        min-width: auto;
+    }
 }
 
 /* 暗色主题 */
@@ -253,4 +319,12 @@
 
 [data-theme="dark"] .stat-item {
     background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .hex-truncated-panel {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.03) 100%);
+}
+
+[data-theme="dark"] .truncated-warning {
+    background: rgba(245, 158, 11, 0.15);
 }

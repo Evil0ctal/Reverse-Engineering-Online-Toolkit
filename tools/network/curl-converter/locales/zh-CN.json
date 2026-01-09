@@ -1,0 +1,10 @@
+{
+    "title": "cURL 转代码",
+    "description": "将 cURL 命令转换为各种编程语言代码",
+    "curlCommand": "cURL 命令",
+    "inputPlaceholder": "粘贴 cURL 命令...",
+    "language": "目标语言",
+    "sample": "示例",
+    "tips": "使用提示",
+    "tipsDesc": "支持常用的 cURL 选项：-X (方法)、-H (请求头)、-d/--data (请求体)、-u (认证)、-k (忽略证书) 等。从浏览器开发者工具 (F12) 的网络面板中可以直接复制请求为 cURL 命令。"
+}

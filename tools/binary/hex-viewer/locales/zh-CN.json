@@ -4,6 +4,7 @@
     "inputPlaceholder": "请输入文本或上传文件...",
     "uploadFile": "上传文件",
     "bytesPerLine": "每行字节数",
+    "displayLimit": "显示限制",
     "showAscii": "显示 ASCII",
     "uppercase": "大写",
     "view": "查看",
@@ -12,5 +13,8 @@
     "totalBytes": "总字节数",
     "magicNumber": "文件类型",
     "search": "搜索",
-    "searchPlaceholder": "搜索 Hex 或 ASCII..."
+    "searchPlaceholder": "搜索 Hex 或 ASCII...",
+    "loadMore": "加载更多",
+    "loadAll": "显示全部",
+    "dataLoaded": "全部数据已加载"
 }

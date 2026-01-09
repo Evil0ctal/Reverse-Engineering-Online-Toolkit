@@ -53,6 +53,16 @@
                     </select>
                 </div>
                 <div class="option-group">
+                    <label data-i18n="tools.hex-viewer.displayLimit">显示限制</label>
+                    <select id="display-limit" class="form-select">
+                        <option value="10000" selected>10,000 字节</option>
+                        <option value="50000">50,000 字节</option>
+                        <option value="100000">100,000 字节</option>
+                        <option value="500000">500,000 字节</option>
+                        <option value="-1">全部显示 (可能卡顿)</option>
+                    </select>
+                </div>
+                <div class="option-group">
                     <label class="form-checkbox">
                         <input type="checkbox" id="show-ascii" checked>
                         <span data-i18n="tools.hex-viewer.showAscii">显示 ASCII</span>

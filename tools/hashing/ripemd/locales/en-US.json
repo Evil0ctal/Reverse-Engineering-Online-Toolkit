@@ -1,0 +1,9 @@
+{
+    "title": "RIPEMD-160 Hash",
+    "description": "RIPEMD-160 hash calculation, widely used in Bitcoin address generation",
+    "inputPlaceholder": "Enter content to hash...",
+    "hashLower": "Hash (lowercase)",
+    "hashUpper": "Hash (uppercase)",
+    "aboutRipemd": "About RIPEMD-160",
+    "aboutDesc": "RIPEMD-160 is a 160-bit cryptographic hash function designed by Hans Dobbertin, Antoon Bosselaers, and Bart Preneel. It is widely used in cryptocurrencies like Bitcoin to generate shorter addresses from SHA-256 hashes. The output length is fixed at 20 bytes (160 bits)."
+}

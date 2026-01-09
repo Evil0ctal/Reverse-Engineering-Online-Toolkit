@@ -1,0 +1,723 @@
+/**
+ * Protobuf 解码工具样式
+ * 只定义工具特定的样式，不覆盖全局类
+ */
+
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.input-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.input-hint {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.options-inline {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: 16px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* 视图切换标签 */
+.view-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-tertiary);
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.view-tab {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+}
+
+.view-tab.active {
+    color: var(--color-primary);
+    background: var(--bg-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.output-content {
+    min-height: 200px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: auto;
+    max-height: 500px;
+}
+
+.output-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.output-actions.hidden {
+    display: none;
+}
+
+.empty-state,
+.error-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    color: var(--text-muted);
+}
+
+.error-state {
+    color: var(--color-error);
+}
+
+.parse-info {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: var(--color-primary-bg);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: var(--color-primary);
+}
+
+/* ========== 树形视图 ========== */
+.protobuf-tree {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+}
+
+/* 顶级树不需要左边距 */
+.output-content > .protobuf-tree {
+    padding-left: 0;
+}
+
+/* 嵌套树的样式 */
+.protobuf-tree .protobuf-tree {
+    margin-top: 8px;
+    margin-left: 12px;
+    padding-left: 16px;
+    border-left: 2px solid var(--color-primary);
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
+    border-radius: 0 6px 6px 0;
+}
+
+.protobuf-field {
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.protobuf-field:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+.protobuf-field:last-child {
+    margin-bottom: 0;
+}
+
+/* 包含嵌套内容的字段 */
+.protobuf-field:has(.protobuf-tree) {
+    background: var(--bg-secondary);
+    border-color: var(--color-primary);
+    border-left-width: 3px;
+}
+
+.field-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.field-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #4f46e5 100%);
+    color: #fff;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-weight: 600;
+    font-size: 0.8rem;
+    box-shadow: 0 1px 3px rgba(99, 102, 241, 0.3);
+}
+
+.wire-type {
+    padding: 3px 8px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-weight: 500;
+}
+
+.field-value {
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.85rem;
+    padding: 2px 0;
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.field-value.string {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.field-value.string::before {
+    content: '"';
+}
+
+.field-value.string::after {
+    content: '"';
+}
+
+.field-value.number {
+    color: #f59e0b;
+    font-weight: 500;
+}
+
+.field-value.nested {
+    color: var(--color-primary);
+    font-style: italic;
+    font-weight: 500;
+}
+
+.field-hint {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.field-meta {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    padding: 2px 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+}
+
+.field-alt {
+    margin-top: 8px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    border-left: 3px solid var(--border-color);
+}
+
+.field-hex {
+    margin-top: 8px;
+    padding: 6px 10px;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    word-break: break-all;
+    border: 1px dashed var(--border-color);
+}
+
+/* 表格视图 */
+.table-container {
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.protobuf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.protobuf-table th,
+.protobuf-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.protobuf-table th {
+    background: var(--bg-tertiary);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.protobuf-table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+.protobuf-table tr.row-nested {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.protobuf-table tr.row-nested:hover {
+    background: var(--bg-hover);
+}
+
+.protobuf-table .byte-range {
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    background: var(--bg-tertiary);
+}
+
+.protobuf-table .field-num {
+    font-weight: 600;
+    color: var(--color-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    text-align: center;
+}
+
+.protobuf-table .wire {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+}
+
+.protobuf-table .content {
+    max-width: 600px;
+    min-width: 200px;
+}
+
+/* 嵌套表格样式 */
+.nested-protobuf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    margin: 8px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-primary);
+}
+
+.nested-protobuf-table th,
+.nested-protobuf-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.nested-protobuf-table th {
+    background: var(--bg-tertiary);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.nested-protobuf-table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+.nested-protobuf-table .byte-range {
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+}
+
+.nested-protobuf-table .field-num {
+    font-weight: 600;
+    color: var(--color-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    text-align: center;
+}
+
+.nested-protobuf-table .wire {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+}
+
+/* 嵌套表格内部再嵌套 */
+.nested-protobuf-table .nested-protobuf-table {
+    font-size: 0.75rem;
+    background: var(--bg-secondary);
+}
+
+.nested-protobuf-table .nested-protobuf-table th {
+    font-size: 0.65rem;
+}
+
+/* ========== 解释列表样式 ========== */
+.interp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.interp-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--border-color);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.interp-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.interp-label {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.interp-value {
+    word-break: break-all;
+}
+
+/* 值类型高亮 */
+.interp-value.value-string {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.interp-value.value-string::before {
+    content: '"';
+    color: #10b981;
+}
+
+.interp-value.value-string::after {
+    content: '"';
+    color: #10b981;
+}
+
+.interp-value.value-number {
+    color: #f59e0b;
+    font-weight: 500;
+}
+
+.interp-value.value-bytes {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    background: var(--bg-tertiary);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+/* JSON 视图 */
+.json-editor-container {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.json-editor-container .cm-editor {
+    font-size: 0.85rem;
+    max-height: 450px;
+}
+
+.json-editor-container .cm-scroller {
+    overflow: auto !important;
+}
+
+/* 当显示 JSON 视图时，调整外层容器 */
+.output-content:has(.json-editor-container),
+.output-content.json-view-active {
+    overflow: visible;
+    max-height: none;
+}
+
+/* 回退样式（当 CodeMirror 不可用时） */
+.json-output {
+    margin: 0;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow: auto;
+    max-height: 400px;
+}
+
+.json-output code {
+    display: block;
+}
+
+/* 信息区域 */
+.info-section {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.info-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.info-section p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .output-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .options-inline {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .protobuf-tree .protobuf-tree {
+        margin-left: 8px;
+        padding-left: 12px;
+    }
+
+    .protobuf-field {
+        padding: 6px 10px;
+    }
+
+    .field-number {
+        padding: 3px 8px;
+        font-size: 0.75rem;
+    }
+
+    .field-value {
+        max-width: 200px;
+        font-size: 0.8rem;
+    }
+
+    .field-alt {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+
+    .protobuf-table .content {
+        max-width: 250px;
+        min-width: 150px;
+    }
+
+    .interp-item {
+        font-size: 0.8rem;
+    }
+
+    .interp-label {
+        font-size: 0.75rem;
+    }
+
+    .nested-protobuf-table {
+        font-size: 0.75rem;
+    }
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .output-content {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .info-section {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .view-tab.active {
+    background: var(--bg-secondary);
+}
+
+/* 暗色主题表格样式 */
+[data-theme="dark"] .table-container {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .protobuf-table th,
+[data-theme="dark"] .protobuf-table td {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .protobuf-table th {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .protobuf-table .byte-range {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .protobuf-table tr.row-nested {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="dark"] .nested-protobuf-table {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .nested-protobuf-table th,
+[data-theme="dark"] .nested-protobuf-table td {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nested-protobuf-table th {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .nested-protobuf-table .byte-range {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .interp-item {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .interp-value.value-bytes {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* 暗色主题下的值高亮颜色调整 */
+[data-theme="dark"] .interp-value.value-string {
+    color: #34d399;
+}
+
+[data-theme="dark"] .interp-value.value-string::before,
+[data-theme="dark"] .interp-value.value-string::after {
+    color: #34d399;
+}
+
+[data-theme="dark"] .interp-value.value-number {
+    color: #fbbf24;
+}
+
+/* ========== 暗色主题树形视图 ========== */
+[data-theme="dark"] .protobuf-field {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .protobuf-field:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .protobuf-field:has(.protobuf-tree) {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .protobuf-tree .protobuf-tree {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+    border-left-color: var(--color-primary);
+}
+
+[data-theme="dark"] .wire-type {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .field-meta {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .field-alt {
+    background: rgba(255, 255, 255, 0.03);
+    border-left-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .field-hex {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .field-value.string {
+    color: #34d399;
+}
+
+[data-theme="dark"] .field-value.number {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .field-value.nested {
+    color: #818cf8;
+}

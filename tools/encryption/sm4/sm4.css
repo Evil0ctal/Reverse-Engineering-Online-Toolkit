@@ -1,0 +1,86 @@
+/**
+ * SM4 加解密工具样式
+ * 只定义工具特定的样式，不覆盖全局类
+ */
+
+/* 密钥输入区 */
+.key-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.key-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.key-group > label {
+    font-weight: 500;
+}
+
+.key-input-wrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.key-input-wrapper .form-input {
+    flex: 1;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.key-format {
+    display: flex;
+    gap: 16px;
+    font-size: 0.875rem;
+}
+
+.key-format label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+/* 信息区域 */
+.info-section {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.info-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.info-section p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .key-input-wrapper {
+        flex-direction: column;
+    }
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .key-section {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .info-section {
+    background: var(--bg-tertiary);
+}

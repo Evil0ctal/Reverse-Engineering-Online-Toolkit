@@ -1,0 +1,20 @@
+{
+    "title": "SM4 Encryption",
+    "description": "Chinese national standard SM4 symmetric encryption, supports ECB and CBC modes",
+    "mode": "Encryption Mode",
+    "padding": "Padding",
+    "outputFormat": "Output Format",
+    "key": "Key (128-bit/16 bytes)",
+    "keyPlaceholder": "Enter 16-byte key or 32-char hex...",
+    "generateKey": "Generate Key",
+    "keyText": "Text",
+    "keyHex": "Hex",
+    "iv": "IV (128-bit/16 bytes)",
+    "ivPlaceholder": "Enter 16-byte IV or 32-char hex...",
+    "generateIV": "Generate IV",
+    "ivText": "Text",
+    "ivHex": "Hex",
+    "inputPlaceholder": "Enter content to encrypt/decrypt...",
+    "aboutSm4": "About SM4",
+    "aboutDesc": "SM4 is a block cipher algorithm published by the Chinese State Cryptography Administration for wireless LAN products. It is a symmetric encryption algorithm with both key length and block length of 128 bits. SM4 has high security and is widely used in finance, government, and other fields."
+}

@@ -1,0 +1,10 @@
+{
+    "title": "Key Pair Generator",
+    "description": "Generate RSA, ECDSA, Ed25519 key pairs",
+    "algorithm": "Algorithm",
+    "format": "Output Format",
+    "publicKey": "Public Key",
+    "privateKey": "Private Key",
+    "securityNote": "Security Notice",
+    "securityDesc": "Keys are generated entirely in your browser and are never uploaded to any server. Please keep your private key secure and never share it. For production environments, consider using Hardware Security Modules (HSM) or professional key management systems."
+}

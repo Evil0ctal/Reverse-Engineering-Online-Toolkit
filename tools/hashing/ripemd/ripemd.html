@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.ripemd.title">RIPEMD-160 哈希 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="ripemd.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.ripemd.title">RIPEMD-160 哈希</h1>
+            <p data-i18n="tools.ripemd.description">RIPEMD-160 哈希计算，广泛用于比特币地址生成</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" style="display: none;">
+                            <span data-i18n="common.upload">上传文件</span>
+                        </label>
+                    </div>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.ripemd.inputPlaceholder"
+                          placeholder="请输入要计算哈希的内容..."></textarea>
+                <div id="file-info" class="file-info" style="display: none;"></div>
+            </section>
+
+            <section class="action-section">
+                <button id="hash-btn" class="btn btn--primary" data-i18n="common.hash">计算哈希</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="tools.ripemd.hashLower">哈希值 (小写)</label>
+                <input type="text" id="output-lower" class="form-input" readonly>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="tools.ripemd.hashUpper">哈希值 (大写)</label>
+                <input type="text" id="output-upper" class="form-input" readonly>
+            </section>
+
+            <!-- 算法信息 -->
+            <section class="info-section">
+                <h3 data-i18n="tools.ripemd.aboutRipemd">关于 RIPEMD-160</h3>
+                <p data-i18n="tools.ripemd.aboutDesc">RIPEMD-160 是一种 160 位加密哈希函数，由 Hans Dobbertin、Antoon Bosselaers 和 Bart Preneel 设计。它在比特币等加密货币中广泛使用，用于从 SHA-256 哈希生成更短的地址。输出长度固定为 20 字节（160 位）。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="ripemd.js"></script>
+</body>
+</html>

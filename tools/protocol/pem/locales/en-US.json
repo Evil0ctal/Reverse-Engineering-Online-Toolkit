@@ -1,0 +1,10 @@
+{
+    "title": "PEM Parser",
+    "description": "Parse PEM format certificates, keys, and other data",
+    "inputPlaceholder": "Paste PEM data (starting with -----BEGIN xxx-----)...",
+    "parse": "Parse",
+    "sampleCert": "Sample Certificate",
+    "sampleKey": "Sample Key",
+    "aboutPem": "About PEM Format",
+    "aboutDesc": "PEM (Privacy Enhanced Mail) is a commonly used file format for storing cryptographic keys, certificates, and other security-related data. PEM files are Base64 encoded and enclosed between \"-----BEGIN xxx-----\" and \"-----END xxx-----\" markers. Common types include: CERTIFICATE, PRIVATE KEY, PUBLIC KEY, RSA PRIVATE KEY, etc."
+}

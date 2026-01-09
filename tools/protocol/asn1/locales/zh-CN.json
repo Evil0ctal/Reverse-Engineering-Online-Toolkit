@@ -1,0 +1,10 @@
+{
+    "title": "ASN.1 解析",
+    "description": "ASN.1 DER/BER 格式解析与可视化",
+    "inputFormat": "输入格式",
+    "inputPlaceholder": "输入 DER/BER 编码的数据...",
+    "parse": "解析",
+    "sample": "示例数据",
+    "aboutAsn1": "关于 ASN.1",
+    "aboutDesc": "ASN.1 (Abstract Syntax Notation One) 是一种用于描述数据结构的标准，广泛应用于通信协议和安全领域。DER (Distinguished Encoding Rules) 和 BER (Basic Encoding Rules) 是 ASN.1 的两种编码规则，常用于 X.509 证书、PKCS 标准等。"
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.pem.title">PEM 格式解析 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="pem.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.pem.title">PEM 格式解析</h1>
+            <p data-i18n="tools.pem.description">解析 PEM 格式的证书、密钥等数据</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" accept=".pem,.crt,.cer,.key,.pub" style="display: none;">
+                            <span data-i18n="common.upload">上传文件</span>
+                        </label>
+                        <button id="sample-cert-btn" class="btn btn--sm btn--outline" data-i18n="tools.pem.sampleCert">示例证书</button>
+                        <button id="sample-key-btn" class="btn btn--sm btn--outline" data-i18n="tools.pem.sampleKey">示例密钥</button>
+                    </div>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.pem.inputPlaceholder"
+                          placeholder="粘贴 PEM 格式数据..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="parse-btn" class="btn btn--primary" data-i18n="tools.pem.parse">解析</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <div class="output-header">
+                    <label data-i18n="common.output">解析结果</label>
+                </div>
+                <div id="output" class="output-content"></div>
+            </section>
+
+            <!-- 算法信息 -->
+            <section class="info-section">
+                <h3 data-i18n="tools.pem.aboutPem">关于 PEM 格式</h3>
+                <p data-i18n="tools.pem.aboutDesc">PEM (Privacy Enhanced Mail) 是一种常用的文件格式，用于存储加密密钥、证书和其他安全相关数据。PEM 文件使用 Base64 编码，并以 "-----BEGIN xxx-----" 和 "-----END xxx-----" 标记包围。常见类型包括：CERTIFICATE、PRIVATE KEY、PUBLIC KEY、RSA PRIVATE KEY 等。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="pem.js"></script>
+</body>
+</html>

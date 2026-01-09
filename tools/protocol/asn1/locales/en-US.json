@@ -1,0 +1,10 @@
+{
+    "title": "ASN.1 Parser",
+    "description": "ASN.1 DER/BER format parsing and visualization",
+    "inputFormat": "Input Format",
+    "inputPlaceholder": "Enter DER/BER encoded data...",
+    "parse": "Parse",
+    "sample": "Sample Data",
+    "aboutAsn1": "About ASN.1",
+    "aboutDesc": "ASN.1 (Abstract Syntax Notation One) is a standard for describing data structures, widely used in communication protocols and security. DER (Distinguished Encoding Rules) and BER (Basic Encoding Rules) are two encoding rules for ASN.1, commonly used in X.509 certificates, PKCS standards, etc."
+}

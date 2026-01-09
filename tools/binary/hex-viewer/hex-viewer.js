@@ -9,6 +9,8 @@
     'use strict';
 
     let currentData = null;
+    let currentDisplayLimit = 10000;  // 当前显示限制
+    let currentOffset = 0;            // 当前已显示到的偏移量
 
     // 常见文件类型的 Magic Number
     const magicNumbers = {
@@ -33,10 +35,12 @@
      * 获取选项
      */
     function getOptions() {
+        const displayLimitValue = document.getElementById('display-limit')?.value || '10000';
         return {
             bytesPerLine: parseInt(document.getElementById('bytes-per-line')?.value || '16', 10),
             showAscii: document.getElementById('show-ascii')?.checked ?? true,
-            uppercase: document.getElementById('uppercase')?.checked ?? true
+            uppercase: document.getElementById('uppercase')?.checked ?? true,
+            displayLimit: parseInt(displayLimitValue, 10)  // -1 表示显示全部
         };
     }
 
@@ -93,12 +97,20 @@
 
     /**
      * 生成 Hex 视图
+     * @param {Uint8Array} data - 数据
+     * @param {number} startOffset - 起始偏移量
+     * @param {number} maxBytes - 最大显示字节数 (-1 为全部)
+     * @returns {string} HTML 字符串
      */
-    function generateHexView(data) {
+    function generateHexView(data, startOffset = 0, maxBytes = -1) {
         if (!data || data.length === 0) return '';
 
         const options = getOptions();
-        const { bytesPerLine, showAscii, uppercase } = options;
+        const { bytesPerLine, showAscii, uppercase, displayLimit } = options;
+
+        // 计算实际显示的字节数
+        const effectiveLimit = maxBytes > 0 ? maxBytes : (displayLimit > 0 ? displayLimit : data.length);
+        const endOffset = Math.min(startOffset + effectiveLimit, data.length);
 
         let html = '<table class="hex-table">';
         html += '<thead><tr><th class="hex-offset">Offset</th>';
@@ -108,9 +120,7 @@
         }
         html += '</tr></thead><tbody>';
 
-        const maxBytes = Math.min(data.length, 10000); // 限制显示的最大字节数
-
-        for (let offset = 0; offset < maxBytes; offset += bytesPerLine) {
+        for (let offset = startOffset; offset < endOffset; offset += bytesPerLine) {
             const offsetHex = offset.toString(16).padStart(8, '0').toUpperCase();
 
             // 十六进制字节
@@ -119,7 +129,7 @@
 
             for (let i = 0; i < bytesPerLine; i++) {
                 const byteIndex = offset + i;
-                if (byteIndex < data.length) {
+                if (byteIndex < endOffset && byteIndex < data.length) {
                     const byte = data[byteIndex];
                     hexBytes += `<span class="hex-byte" data-offset="${byteIndex}">${byteToHex(byte, uppercase)}</span>`;
                     asciiChars += `<span class="ascii-char" data-offset="${byteIndex}">${byteToAscii(byte)}</span>`;
@@ -145,11 +155,135 @@
 
         html += '</tbody></table>';
 
-        if (data.length > maxBytes) {
-            html += `<div class="hex-truncated">... 数据已截断，仅显示前 ${maxBytes} 字节 (共 ${data.length} 字节)</div>`;
+        // 更新当前偏移量
+        currentOffset = endOffset;
+
+        // 如果还有更多数据，显示截断提示和操作按钮
+        if (endOffset < data.length) {
+            const remainingBytes = data.length - endOffset;
+            const nextChunkSize = Math.min(remainingBytes, effectiveLimit);
+
+            html += `<div class="hex-truncated-panel">
+                <div class="truncated-info">
+                    <span class="truncated-icon">⚠️</span>
+                    <span>已显示 <strong>${endOffset.toLocaleString()}</strong> / <strong>${data.length.toLocaleString()}</strong> 字节，剩余 <strong>${remainingBytes.toLocaleString()}</strong> 字节</span>
+                </div>
+                <div class="truncated-actions">
+                    <button id="load-more-btn" class="btn btn--sm btn--primary" data-next="${nextChunkSize}">
+                        加载更多 (${formatFileSize(nextChunkSize)})
+                    </button>
+                    <button id="load-all-btn" class="btn btn--sm btn--outline" data-remaining="${remainingBytes}">
+                        显示全部 (${formatFileSize(remainingBytes)})
+                    </button>
+                </div>
+                <div class="truncated-warning" ${remainingBytes > 500000 ? '' : 'style="display:none"'}>
+                    <span>💡 提示：显示大量数据可能导致页面卡顿</span>
+                </div>
+            </div>`;
         }
 
         return html;
+    }
+
+    /**
+     * 追加更多 Hex 数据
+     * @param {number} additionalBytes - 要追加的字节数 (-1 为全部剩余)
+     */
+    function loadMoreHexData(additionalBytes = -1) {
+        if (!currentData) return;
+
+        const hexOutput = document.getElementById('hex-output');
+        if (!hexOutput) return;
+
+        const options = getOptions();
+        const { bytesPerLine, showAscii, uppercase } = options;
+
+        // 移除旧的截断面板
+        const oldPanel = hexOutput.querySelector('.hex-truncated-panel');
+        if (oldPanel) {
+            oldPanel.remove();
+        }
+
+        // 计算要加载的字节数
+        const remainingBytes = currentData.length - currentOffset;
+        const bytesToLoad = additionalBytes > 0 ? Math.min(additionalBytes, remainingBytes) : remainingBytes;
+        const endOffset = currentOffset + bytesToLoad;
+
+        // 获取现有的表格 tbody
+        const tbody = hexOutput.querySelector('tbody');
+        if (!tbody) return;
+
+        // 生成新行
+        let newRows = '';
+        for (let offset = currentOffset; offset < endOffset; offset += bytesPerLine) {
+            const offsetHex = offset.toString(16).padStart(8, '0').toUpperCase();
+
+            let hexBytes = '';
+            let asciiChars = '';
+
+            for (let i = 0; i < bytesPerLine; i++) {
+                const byteIndex = offset + i;
+                if (byteIndex < endOffset && byteIndex < currentData.length) {
+                    const byte = currentData[byteIndex];
+                    hexBytes += `<span class="hex-byte" data-offset="${byteIndex}">${byteToHex(byte, uppercase)}</span>`;
+                    asciiChars += `<span class="ascii-char" data-offset="${byteIndex}">${byteToAscii(byte)}</span>`;
+                } else {
+                    hexBytes += '<span class="hex-byte empty">  </span>';
+                    asciiChars += '<span class="ascii-char empty"> </span>';
+                }
+
+                if (i === 7 && bytesPerLine > 8) {
+                    hexBytes += '<span class="hex-separator"> </span>';
+                }
+            }
+
+            newRows += `<tr>`;
+            newRows += `<td class="hex-offset">${offsetHex}</td>`;
+            newRows += `<td class="hex-bytes">${hexBytes}</td>`;
+            if (showAscii) {
+                newRows += `<td class="hex-ascii">${asciiChars}</td>`;
+            }
+            newRows += '</tr>';
+        }
+
+        // 追加新行
+        tbody.insertAdjacentHTML('beforeend', newRows);
+
+        // 更新当前偏移量
+        currentOffset = endOffset;
+
+        // 如果还有更多数据，添加新的截断面板
+        if (endOffset < currentData.length) {
+            const remainingBytes = currentData.length - endOffset;
+            const displayLimit = options.displayLimit > 0 ? options.displayLimit : 10000;
+            const nextChunkSize = Math.min(remainingBytes, displayLimit);
+
+            const panelHtml = `<div class="hex-truncated-panel">
+                <div class="truncated-info">
+                    <span class="truncated-icon">⚠️</span>
+                    <span>已显示 <strong>${endOffset.toLocaleString()}</strong> / <strong>${currentData.length.toLocaleString()}</strong> 字节，剩余 <strong>${remainingBytes.toLocaleString()}</strong> 字节</span>
+                </div>
+                <div class="truncated-actions">
+                    <button id="load-more-btn" class="btn btn--sm btn--primary" data-next="${nextChunkSize}">
+                        加载更多 (${formatFileSize(nextChunkSize)})
+                    </button>
+                    <button id="load-all-btn" class="btn btn--sm btn--outline" data-remaining="${remainingBytes}">
+                        显示全部 (${formatFileSize(remainingBytes)})
+                    </button>
+                </div>
+                <div class="truncated-warning" ${remainingBytes > 500000 ? '' : 'style="display:none"'}>
+                    <span>💡 提示：显示大量数据可能导致页面卡顿</span>
+                </div>
+            </div>`;
+
+            hexOutput.insertAdjacentHTML('beforeend', panelHtml);
+        } else {
+            // 全部加载完成
+            REOT.utils?.showNotification('全部数据已加载', 'success');
+        }
+
+        // 重新绑定高亮事件
+        addByteHighlighting();
     }
 
     /**
@@ -161,14 +295,18 @@
 
         if (currentData) {
             data = currentData;
-        } else if (textInput?.value) {
+        } else if (textInput?.value && !textInput.disabled) {
             // 将文本转换为字节数组
             const encoder = new TextEncoder();
             data = encoder.encode(textInput.value);
+            currentData = data;  // 保存以便后续加载更多
         } else {
             REOT.utils?.showNotification('请输入文本或上传文件', 'warning');
             return;
         }
+
+        // 重置偏移量
+        currentOffset = 0;
 
         // 更新统计信息
         const statsSection = document.getElementById('stats-section');
@@ -367,6 +505,29 @@
             if (outputSection) outputSection.style.display = 'none';
             if (searchSection) searchSection.style.display = 'none';
             currentData = null;
+            currentOffset = 0;
+        }
+
+        // 加载更多按钮
+        if (target.id === 'load-more-btn' || target.closest('#load-more-btn')) {
+            const btn = target.id === 'load-more-btn' ? target : target.closest('#load-more-btn');
+            const nextBytes = parseInt(btn.dataset.next, 10);
+            loadMoreHexData(nextBytes);
+        }
+
+        // 显示全部按钮
+        if (target.id === 'load-all-btn' || target.closest('#load-all-btn')) {
+            const btn = target.id === 'load-all-btn' ? target : target.closest('#load-all-btn');
+            const remaining = parseInt(btn.dataset.remaining, 10);
+
+            // 如果剩余数据太大，给出警告
+            if (remaining > 1000000) {
+                if (!confirm(`即将加载 ${formatFileSize(remaining)} 数据，这可能导致页面卡顿或无响应。\n\n确定要继续吗？`)) {
+                    return;
+                }
+            }
+
+            loadMoreHexData(-1);  // -1 表示加载全部
         }
 
         // 复制按钮

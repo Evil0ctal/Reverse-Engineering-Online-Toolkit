@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.protobuf.title">Protobuf 解码 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="protobuf.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.protobuf.title">Protobuf 解码</h1>
+            <p data-i18n="tools.protobuf.description">Protocol Buffers / gRPC 无 Schema 解码</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" style="display: none;">
+                            <span data-i18n="common.upload">上传文件</span>
+                        </label>
+                        <button id="sample-btn" class="btn btn--sm btn--outline" data-i18n="tools.protobuf.sample">示例</button>
+                        <button id="clear-btn" class="btn btn--sm btn--outline" data-i18n="common.clear">清除</button>
+                    </div>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          placeholder="Paste Protobuf or gRPC data as hex or base64..."></textarea>
+                <div class="input-hint">
+                    <span data-i18n="tools.protobuf.inputHint">支持自动检测: 十六进制、Base64、gRPC (带长度前缀)</span>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="decode-btn" class="btn btn--primary" data-i18n="common.decode">解码</button>
+                <div class="options-inline">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="grpc-mode">
+                        <span data-i18n="tools.protobuf.grpcMode">gRPC 模式 (跳过5字节头)</span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <div class="output-header">
+                    <label data-i18n="common.output">解码结果</label>
+                    <div class="view-tabs">
+                        <button class="view-tab" data-view="tree" data-i18n="tools.protobuf.treeView">树形视图</button>
+                        <button class="view-tab active" data-view="table" data-i18n="tools.protobuf.tableView">表格视图</button>
+                        <button class="view-tab" data-view="json" data-i18n="tools.protobuf.jsonView">JSON 视图</button>
+                    </div>
+                </div>
+                <div id="output" class="output-content">
+                    <div class="empty-state" data-i18n="tools.protobuf.emptyState">请输入 Protobuf 数据并点击解码</div>
+                </div>
+                <div class="output-actions hidden" id="output-actions">
+                    <button id="copy-output-btn" class="btn btn--sm btn--outline" data-i18n="common.copy">复制</button>
+                    <button id="download-json-btn" class="btn btn--sm btn--outline" data-i18n="tools.protobuf.downloadJson">下载 JSON</button>
+                </div>
+            </section>
+
+            <section class="info-section">
+                <h3 data-i18n="tools.protobuf.aboutProtobuf">关于 Protocol Buffers</h3>
+                <p data-i18n="tools.protobuf.aboutDesc">Protocol Buffers (Protobuf) 是 Google 开发的高效二进制序列化格式。本工具支持无 Schema 解码，自动检测字段类型并尝试多种解释方式。支持 gRPC 请求格式（自动跳过5字节长度前缀）。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="protobuf.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.curl-converter.title">cURL 转代码 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="curl-converter.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.curl-converter.title">cURL 转代码</h1>
+            <p data-i18n="tools.curl-converter.description">将 cURL 命令转换为各种编程语言代码</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="tools.curl-converter.curlCommand">cURL 命令</label>
+                    <button id="sample-btn" class="btn btn--sm btn--outline" data-i18n="tools.curl-converter.sample">示例</button>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.curl-converter.inputPlaceholder"
+                          placeholder="粘贴 cURL 命令..."></textarea>
+            </section>
+
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.curl-converter.language">目标语言</label>
+                    <select id="language-select" class="form-select">
+                        <option value="python" selected>Python (requests)</option>
+                        <option value="javascript">JavaScript (fetch)</option>
+                        <option value="nodejs">Node.js (axios)</option>
+                        <option value="php">PHP (cURL)</option>
+                        <option value="go">Go (net/http)</option>
+                        <option value="java">Java (HttpClient)</option>
+                        <option value="csharp">C# (HttpClient)</option>
+                        <option value="rust">Rust (reqwest)</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="convert-btn" class="btn btn--primary" data-i18n="common.convert">转换</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制代码</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">生成的代码</label>
+                <pre id="output" class="code-output"></pre>
+            </section>
+
+            <section class="info-section">
+                <h3 data-i18n="tools.curl-converter.tips">使用提示</h3>
+                <p data-i18n="tools.curl-converter.tipsDesc">支持常用的 cURL 选项：-X (方法)、-H (请求头)、-d/--data (请求体)、-u (认证)、-k (忽略证书) 等。从浏览器开发者工具 (F12) 的网络面板中可以直接复制请求为 cURL 命令。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="curl-converter.js"></script>
+</body>
+</html>

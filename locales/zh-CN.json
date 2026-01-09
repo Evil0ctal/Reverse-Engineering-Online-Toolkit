@@ -441,6 +441,38 @@
         "x509": {
             "title": "X.509 证书解析",
             "description": "解析 PEM/DER 格式的 X.509 证书，查看详细信息"
+        },
+        "ripemd": {
+            "title": "RIPEMD-160 哈希",
+            "description": "RIPEMD-160 哈希计算，广泛用于比特币地址生成"
+        },
+        "sm4": {
+            "title": "SM4 加解密",
+            "description": "国密 SM4 对称加密算法，支持 ECB 和 CBC 模式"
+        },
+        "pem": {
+            "title": "PEM 格式解析",
+            "description": "解析 PEM 格式的证书、密钥等数据"
+        },
+        "asn1": {
+            "title": "ASN.1 解析",
+            "description": "ASN.1 DER/BER 格式解析与可视化"
+        },
+        "protobuf": {
+            "title": "Protobuf 解码",
+            "description": "Protocol Buffers 无 Schema 解码"
+        },
+        "keypair": {
+            "title": "密钥对生成",
+            "description": "生成 RSA、ECDSA、Ed25519 等密钥对"
+        },
+        "curl-converter": {
+            "title": "cURL 转代码",
+            "description": "将 cURL 命令转换为各种编程语言代码"
+        },
+        "x509-certificate": {
+            "title": "X.509 证书工具",
+            "description": "密钥对生成、CSR创建、自签名证书、CA签发、证书解析"
         }
     }
 }

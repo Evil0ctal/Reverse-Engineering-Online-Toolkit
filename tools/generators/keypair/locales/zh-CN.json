@@ -1,0 +1,10 @@
+{
+    "title": "密钥对生成",
+    "description": "生成 RSA、ECDSA、Ed25519 等密钥对",
+    "algorithm": "算法",
+    "format": "输出格式",
+    "publicKey": "公钥",
+    "privateKey": "私钥",
+    "securityNote": "安全提示",
+    "securityDesc": "密钥完全在浏览器本地生成，不会上传到任何服务器。请妥善保管私钥，切勿泄露。生产环境建议使用硬件安全模块 (HSM) 或专业密钥管理系统。"
+}

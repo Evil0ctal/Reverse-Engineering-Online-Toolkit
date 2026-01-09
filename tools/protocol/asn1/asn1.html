@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.asn1.title">ASN.1 解析 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="asn1.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.asn1.title">ASN.1 解析</h1>
+            <p data-i18n="tools.asn1.description">ASN.1 DER/BER 格式解析与可视化</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.asn1.inputFormat">输入格式</label>
+                    <select id="input-format" class="form-select">
+                        <option value="hex" selected>十六进制</option>
+                        <option value="base64">Base64</option>
+                        <option value="pem">PEM</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <div class="input-header">
+                    <label data-i18n="common.input">输入</label>
+                    <div class="input-actions">
+                        <label class="file-upload-btn btn btn--sm btn--outline">
+                            <input type="file" id="file-input" accept=".der,.ber,.crt,.cer,.pem" style="display: none;">
+                            <span data-i18n="common.upload">上传文件</span>
+                        </label>
+                        <button id="sample-btn" class="btn btn--sm btn--outline" data-i18n="tools.asn1.sample">示例数据</button>
+                    </div>
+                </div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.asn1.inputPlaceholder"
+                          placeholder="输入 DER/BER 编码的十六进制数据..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="parse-btn" class="btn btn--primary" data-i18n="tools.asn1.parse">解析</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+            </section>
+
+            <section class="output-section">
+                <div class="output-header">
+                    <label data-i18n="common.output">解析结果</label>
+                </div>
+                <div id="output" class="output-content"></div>
+            </section>
+
+            <section class="info-section">
+                <h3 data-i18n="tools.asn1.aboutAsn1">关于 ASN.1</h3>
+                <p data-i18n="tools.asn1.aboutDesc">ASN.1 (Abstract Syntax Notation One) 是一种用于描述数据结构的标准，广泛应用于通信协议和安全领域。DER (Distinguished Encoding Rules) 和 BER (Basic Encoding Rules) 是 ASN.1 的两种编码规则，常用于 X.509 证书、PKCS 标准等。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="asn1.js"></script>
+</body>
+</html>

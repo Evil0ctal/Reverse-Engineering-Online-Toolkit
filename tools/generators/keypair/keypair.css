@@ -1,0 +1,125 @@
+/**
+ * 密钥对生成工具样式
+ * 只定义工具特定的样式，不覆盖全局类
+ */
+
+.output-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.output-header label {
+    font-weight: 500;
+}
+
+.keypair-output-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+/* 密钥文本区特定样式 */
+.keypair-textarea {
+    min-height: 300px;
+    resize: vertical;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+/* 安全警告区域 - 使用工具特定类名 */
+.security-warning {
+    margin-top: 24px;
+    padding: 16px 16px 16px 52px;
+    background: var(--color-warning-bg);
+    border: 1px solid var(--color-warning-text);
+    border-left: 4px solid var(--color-warning-text);
+    border-radius: 8px;
+    position: relative;
+}
+
+.security-warning::before {
+    content: "⚠";
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.security-warning h3 {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-warning-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.security-warning p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-warning-text);
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.security-warning ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+    font-size: 0.875rem;
+    color: var(--color-warning-text);
+    line-height: 1.8;
+    opacity: 0.9;
+}
+
+.security-warning li {
+    margin-bottom: 4px;
+}
+
+/* 信息区域 */
+.info-section {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.info-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.info-section p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .keypair-output-section {
+        grid-template-columns: 1fr;
+    }
+
+    .keypair-textarea {
+        min-height: 200px;
+    }
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .info-section {
+    background: var(--bg-tertiary);
+}

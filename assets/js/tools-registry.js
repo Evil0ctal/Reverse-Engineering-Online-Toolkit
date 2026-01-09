@@ -1117,6 +1117,91 @@
             icon: '🏗️',
             path: '/tools/reverse/struct-parser/',
             keywords: ['struct', 'layout', 'memory', 'padding', 'alignment', '结构体', '内存', '布局']
+        },
+
+        // ========== 哈希工具（新增） ==========
+        {
+            id: 'ripemd',
+            category: 'hashing',
+            name: 'tools.ripemd.title',
+            description: 'tools.ripemd.description',
+            icon: '🔐',
+            path: '/tools/hashing/ripemd/',
+            keywords: ['ripemd', 'ripemd160', 'hash', 'bitcoin', '哈希', '比特币']
+        },
+
+        // ========== 加密工具（新增） ==========
+        {
+            id: 'sm4',
+            category: 'encryption',
+            name: 'tools.sm4.title',
+            description: 'tools.sm4.description',
+            icon: '🔒',
+            path: '/tools/encryption/sm4/',
+            keywords: ['sm4', '国密', 'china', 'encrypt', 'decrypt', '加密', '解密', '对称']
+        },
+
+        // ========== 协议解析（新增） ==========
+        {
+            id: 'pem',
+            category: 'protocol',
+            name: 'tools.pem.title',
+            description: 'tools.pem.description',
+            icon: '📄',
+            path: '/tools/protocol/pem/',
+            keywords: ['pem', 'certificate', 'key', 'base64', '证书', '密钥', '解析']
+        },
+        {
+            id: 'asn1',
+            category: 'protocol',
+            name: 'tools.asn1.title',
+            description: 'tools.asn1.description',
+            icon: '🔬',
+            path: '/tools/protocol/asn1/',
+            keywords: ['asn1', 'der', 'ber', 'x509', 'pkcs', '解析']
+        },
+        {
+            id: 'protobuf',
+            category: 'protocol',
+            name: 'tools.protobuf.title',
+            description: 'tools.protobuf.description',
+            icon: '📦',
+            path: '/tools/protocol/protobuf/',
+            keywords: ['protobuf', 'protocol buffers', 'google', 'binary', '解码', '二进制']
+        },
+
+        // ========== 生成器（新增） ==========
+        {
+            id: 'keypair',
+            category: 'generators',
+            name: 'tools.keypair.title',
+            description: 'tools.keypair.description',
+            icon: '🔑',
+            path: '/tools/generators/keypair/',
+            keywords: ['keypair', 'rsa', 'ecdsa', 'ed25519', 'key', 'generate', '密钥对', '生成']
+        },
+
+        // ========== 网络工具（新增） ==========
+        {
+            id: 'curl-converter',
+            category: 'network',
+            name: 'tools.curl-converter.title',
+            description: 'tools.curl-converter.description',
+            icon: '🔄',
+            path: '/tools/network/curl-converter/',
+            keywords: ['curl', 'convert', 'python', 'javascript', 'php', 'go', '转换', '代码']
+        },
+
+        // ========== 加密工具（综合） ==========
+        {
+            id: 'x509-certificate',
+            category: 'encryption',
+            name: 'tools.x509-certificate.title',
+            description: 'tools.x509-certificate.description',
+            icon: '📜',
+            path: '/tools/crypto/x509-certificate/',
+            keywords: ['x509', 'certificate', 'csr', 'ca', 'ssl', 'tls', 'pem', 'keypair', 'self-signed', '证书', '密钥对', '自签名', '签发'],
+            popular: true
         }
     ]);
 

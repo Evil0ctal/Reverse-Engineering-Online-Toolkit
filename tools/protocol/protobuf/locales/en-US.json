@@ -1,0 +1,20 @@
+{
+    "title": "Protobuf Decoder",
+    "description": "Protocol Buffers / gRPC schema-less decoding",
+    "inputFormat": "Input Format",
+    "inputPlaceholder": "Paste Protobuf or gRPC data as hex or base64...",
+    "sample": "Sample Data",
+    "treeView": "Tree View",
+    "tableView": "Table View",
+    "jsonView": "JSON View",
+    "grpcMode": "gRPC Mode (skip 5-byte header)",
+    "inputHint": "Auto-detect supported: Hex, Base64, gRPC (with length prefix)",
+    "emptyState": "Enter Protobuf data and click Decode",
+    "downloadJson": "Download JSON",
+    "tableBytes": "Bytes",
+    "tableField": "Field",
+    "tableWireType": "Wire Type",
+    "tableContent": "Content",
+    "aboutProtobuf": "About Protocol Buffers",
+    "aboutDesc": "Protocol Buffers (Protobuf) is an efficient binary serialization format developed by Google. This tool supports schema-less decoding, automatically detecting field types and attempting multiple interpretations. Supports gRPC request format (automatically skips 5-byte length prefix)."
+}

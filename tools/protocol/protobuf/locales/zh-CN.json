@@ -1,0 +1,20 @@
+{
+    "title": "Protobuf 解码",
+    "description": "Protocol Buffers / gRPC 无 Schema 解码",
+    "inputFormat": "输入格式",
+    "inputPlaceholder": "粘贴 Protobuf 或 gRPC 数据（十六进制或 Base64）...",
+    "sample": "示例数据",
+    "treeView": "树形视图",
+    "tableView": "表格视图",
+    "jsonView": "JSON 视图",
+    "grpcMode": "gRPC 模式 (跳过5字节头)",
+    "inputHint": "支持自动检测: 十六进制、Base64、gRPC (带长度前缀)",
+    "emptyState": "请输入 Protobuf 数据并点击解码",
+    "downloadJson": "下载 JSON",
+    "tableBytes": "字节",
+    "tableField": "字段",
+    "tableWireType": "Wire 类型",
+    "tableContent": "内容",
+    "aboutProtobuf": "关于 Protocol Buffers",
+    "aboutDesc": "Protocol Buffers (Protobuf) 是 Google 开发的高效二进制序列化格式。本工具支持无 Schema 解码，自动检测字段类型并尝试多种解释方式。支持 gRPC 请求格式（自动跳过5字节长度前缀）。"
+}

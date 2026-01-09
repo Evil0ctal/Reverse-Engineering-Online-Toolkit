@@ -4,6 +4,7 @@
     "inputPlaceholder": "Enter text or upload a file...",
     "uploadFile": "Upload File",
     "bytesPerLine": "Bytes Per Line",
+    "displayLimit": "Display Limit",
     "showAscii": "Show ASCII",
     "uppercase": "Uppercase",
     "view": "View",
@@ -12,5 +13,8 @@
     "totalBytes": "Total Bytes",
     "magicNumber": "File Type",
     "search": "Search",
-    "searchPlaceholder": "Search Hex or ASCII..."
+    "searchPlaceholder": "Search Hex or ASCII...",
+    "loadMore": "Load More",
+    "loadAll": "Load All",
+    "dataLoaded": "All data loaded"
 }

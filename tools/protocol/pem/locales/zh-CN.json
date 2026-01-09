@@ -1,0 +1,10 @@
+{
+    "title": "PEM 格式解析",
+    "description": "解析 PEM 格式的证书、密钥等数据",
+    "inputPlaceholder": "粘贴 PEM 格式数据（以 -----BEGIN xxx----- 开头）...",
+    "parse": "解析",
+    "sampleCert": "示例证书",
+    "sampleKey": "示例密钥",
+    "aboutPem": "关于 PEM 格式",
+    "aboutDesc": "PEM (Privacy Enhanced Mail) 是一种常用的文件格式，用于存储加密密钥、证书和其他安全相关数据。PEM 文件使用 Base64 编码，并以 \"-----BEGIN xxx-----\" 和 \"-----END xxx-----\" 标记包围。常见类型包括：CERTIFICATE、PRIVATE KEY、PUBLIC KEY、RSA PRIVATE KEY 等。"
+}

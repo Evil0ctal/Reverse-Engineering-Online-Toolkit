@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.keypair.title">密钥对生成 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="keypair.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.keypair.title">密钥对生成</h1>
+            <p data-i18n="tools.keypair.description">生成 RSA、ECDSA、Ed25519 等密钥对</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.keypair.algorithm">算法</label>
+                    <select id="algorithm-select" class="form-select">
+                        <option value="RSA-2048">RSA 2048 位</option>
+                        <option value="RSA-3072">RSA 3072 位</option>
+                        <option value="RSA-4096">RSA 4096 位</option>
+                        <option value="ECDSA-P256" selected>ECDSA P-256</option>
+                        <option value="ECDSA-P384">ECDSA P-384</option>
+                        <option value="ECDSA-P521">ECDSA P-521</option>
+                        <option value="Ed25519">Ed25519</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.keypair.format">输出格式</label>
+                    <select id="format-select" class="form-select">
+                        <option value="pem" selected>PEM</option>
+                        <option value="jwk">JWK</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button id="generate-btn" class="btn btn--primary" data-i18n="common.generate">生成密钥对</button>
+            </section>
+
+            <section class="keypair-output-section">
+                <div class="output-group">
+                    <div class="output-header">
+                        <label data-i18n="tools.keypair.publicKey">公钥</label>
+                        <button id="copy-public-btn" class="btn btn--sm btn--outline" data-i18n="common.copy">复制</button>
+                    </div>
+                    <textarea id="public-key" class="form-input form-textarea keypair-textarea" readonly></textarea>
+                </div>
+                <div class="output-group">
+                    <div class="output-header">
+                        <label data-i18n="tools.keypair.privateKey">私钥</label>
+                        <button id="copy-private-btn" class="btn btn--sm btn--outline" data-i18n="common.copy">复制</button>
+                    </div>
+                    <textarea id="private-key" class="form-input form-textarea keypair-textarea" readonly></textarea>
+                </div>
+            </section>
+
+            <section class="security-warning">
+                <h3 data-i18n="tools.keypair.securityNote">安全提示</h3>
+                <p data-i18n="tools.keypair.securityDesc">密钥完全在浏览器本地生成，不会上传到任何服务器。请妥善保管私钥，切勿泄露。生产环境建议使用硬件安全模块 (HSM) 或专业密钥管理系统。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="keypair.js"></script>
+</body>
+</html>

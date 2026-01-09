@@ -441,6 +441,38 @@
         "x509": {
             "title": "X.509 Certificate Parser",
             "description": "Parse PEM/DER format X.509 certificates and view details"
+        },
+        "ripemd": {
+            "title": "RIPEMD-160 Hash",
+            "description": "RIPEMD-160 hash calculation, widely used in Bitcoin address generation"
+        },
+        "sm4": {
+            "title": "SM4 Encryption",
+            "description": "Chinese national standard SM4 symmetric encryption, supports ECB and CBC modes"
+        },
+        "pem": {
+            "title": "PEM Parser",
+            "description": "Parse PEM format certificates, keys, and other data"
+        },
+        "asn1": {
+            "title": "ASN.1 Parser",
+            "description": "ASN.1 DER/BER format parsing and visualization"
+        },
+        "protobuf": {
+            "title": "Protobuf Decoder",
+            "description": "Protocol Buffers schema-less decoding"
+        },
+        "keypair": {
+            "title": "Key Pair Generator",
+            "description": "Generate RSA, ECDSA, Ed25519 key pairs"
+        },
+        "curl-converter": {
+            "title": "cURL to Code",
+            "description": "Convert cURL commands to various programming language code"
+        },
+        "x509-certificate": {
+            "title": "X.509 Certificate Tool",
+            "description": "Key pair generation, CSR creation, self-signed certificates, CA issuance, certificate parsing"
         }
     }
 }

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.sm4.title">SM4 加解密 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="sm4.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.sm4.title">SM4 加解密</h1>
+            <p data-i18n="tools.sm4.description">国密 SM4 对称加密算法，支持 ECB 和 CBC 模式</p>
+        </header>
+
+        <main class="tool-main">
+            <section class="options-section">
+                <div class="option-group">
+                    <label data-i18n="tools.sm4.mode">加密模式</label>
+                    <select id="mode-select" class="form-select">
+                        <option value="ecb">ECB (电子密码本)</option>
+                        <option value="cbc" selected>CBC (密码块链接)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.sm4.padding">填充方式</label>
+                    <select id="padding-select" class="form-select">
+                        <option value="pkcs7" selected>PKCS7</option>
+                        <option value="zero">Zero Padding</option>
+                        <option value="none">无填充</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label data-i18n="tools.sm4.outputFormat">输出格式</label>
+                    <select id="output-format" class="form-select">
+                        <option value="hex" selected>Hex</option>
+                        <option value="base64">Base64</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="key-section">
+                <div class="key-group">
+                    <label data-i18n="tools.sm4.key">密钥 (128位/16字节)</label>
+                    <div class="key-input-wrapper">
+                        <input type="text" id="key-input" class="form-input"
+                               data-i18n-placeholder="tools.sm4.keyPlaceholder"
+                               placeholder="输入16字节密钥或32位十六进制...">
+                        <button id="generate-key-btn" class="btn btn--sm btn--outline" data-i18n="tools.sm4.generateKey">生成密钥</button>
+                    </div>
+                    <div class="key-format">
+                        <label><input type="radio" name="key-format" value="text" checked> <span data-i18n="tools.sm4.keyText">文本</span></label>
+                        <label><input type="radio" name="key-format" value="hex"> <span data-i18n="tools.sm4.keyHex">十六进制</span></label>
+                    </div>
+                </div>
+                <div class="key-group" id="iv-group">
+                    <label data-i18n="tools.sm4.iv">IV 初始向量 (128位/16字节)</label>
+                    <div class="key-input-wrapper">
+                        <input type="text" id="iv-input" class="form-input"
+                               data-i18n-placeholder="tools.sm4.ivPlaceholder"
+                               placeholder="输入16字节IV或32位十六进制...">
+                        <button id="generate-iv-btn" class="btn btn--sm btn--outline" data-i18n="tools.sm4.generateIV">生成IV</button>
+                    </div>
+                    <div class="key-format">
+                        <label><input type="radio" name="iv-format" value="text" checked> <span data-i18n="tools.sm4.ivText">文本</span></label>
+                        <label><input type="radio" name="iv-format" value="hex"> <span data-i18n="tools.sm4.ivHex">十六进制</span></label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="input-section">
+                <label data-i18n="common.input">输入</label>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.sm4.inputPlaceholder"
+                          placeholder="请输入要加密/解密的内容..."></textarea>
+            </section>
+
+            <section class="action-section">
+                <button id="encrypt-btn" class="btn btn--primary" data-i18n="common.encrypt">加密</button>
+                <button id="decrypt-btn" class="btn btn--primary" data-i18n="common.decrypt">解密</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly></textarea>
+            </section>
+
+            <!-- 算法信息 -->
+            <section class="info-section">
+                <h3 data-i18n="tools.sm4.aboutSm4">关于 SM4</h3>
+                <p data-i18n="tools.sm4.aboutDesc">SM4 是中国国家密码管理局发布的分组密码算法，用于无线局域网产品。它是一种对称加密算法，密钥长度和分组长度均为 128 位。SM4 算法安全性高，已被广泛应用于金融、政务等领域。</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="sm4.js"></script>
+</body>
+</html>

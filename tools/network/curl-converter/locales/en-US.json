@@ -1,0 +1,10 @@
+{
+    "title": "cURL to Code",
+    "description": "Convert cURL commands to various programming language code",
+    "curlCommand": "cURL Command",
+    "inputPlaceholder": "Paste cURL command...",
+    "language": "Target Language",
+    "sample": "Sample",
+    "tips": "Tips",
+    "tipsDesc": "Supports common cURL options: -X (method), -H (headers), -d/--data (body), -u (auth), -k (insecure), etc. You can copy requests as cURL from the browser's developer tools (F12) Network panel."
+}
