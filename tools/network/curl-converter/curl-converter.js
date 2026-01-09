@@ -782,17 +782,13 @@
             const tr = document.createElement('tr');
             tr.className = `diff-${item.status}`;
 
-            // 格式化显示值，超长值截断并添加 title 提示
             const val1Str = String(item.val1);
             const val2Str = String(item.val2);
-            const maxLen = 100;
-            const displayVal1 = val1Str.length > maxLen ? val1Str.slice(0, maxLen) + '...' : val1Str;
-            const displayVal2 = val2Str.length > maxLen ? val2Str.slice(0, maxLen) + '...' : val2Str;
 
             tr.innerHTML = `
-                <td class="diff-key" title="${escapeHtml(item.key)}">${escapeHtml(item.key)}</td>
-                <td class="diff-value" title="${escapeHtml(val1Str)}">${escapeHtml(displayVal1)}</td>
-                <td class="diff-value" title="${escapeHtml(val2Str)}">${escapeHtml(displayVal2)}</td>
+                <td class="diff-key clickable-cell" data-copy="${escapeHtml(item.key)}">${escapeHtml(item.key)}</td>
+                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val1Str)}">${escapeHtml(val1Str)}</td>
+                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val2Str)}">${escapeHtml(val2Str)}</td>
                 <td class="diff-status"><span class="status-badge ${item.status}">${getStatusText(item.status)}</span></td>
             `;
             tbody.appendChild(tr);
@@ -1753,6 +1749,19 @@
             if (code) {
                 await REOT.utils?.copyToClipboard(code);
                 REOT.utils?.showNotification('代码已复制', 'success');
+            }
+        }
+
+        // 点击单元格复制内容
+        const clickableCell = target.closest('.clickable-cell');
+        if (clickableCell) {
+            const copyText = clickableCell.dataset.copy || clickableCell.textContent;
+            if (copyText) {
+                await REOT.utils?.copyToClipboard(copyText);
+                // 添加复制成功的视觉反馈
+                clickableCell.classList.add('copied');
+                setTimeout(() => clickableCell.classList.remove('copied'), 500);
+                REOT.utils?.showNotification('已复制', 'success');
             }
         }
     });

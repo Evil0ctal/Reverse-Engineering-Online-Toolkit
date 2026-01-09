@@ -527,7 +527,47 @@
 .diff-table .diff-value {
     word-break: break-all;
     overflow-wrap: break-word;
-    max-width: 300px;
+}
+
+/* 可点击复制的单元格 */
+.clickable-cell {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    position: relative;
+}
+
+.clickable-cell:hover {
+    background-color: rgba(var(--color-primary-rgb), 0.1) !important;
+}
+
+.clickable-cell:active {
+    background-color: rgba(var(--color-primary-rgb), 0.2) !important;
+}
+
+.clickable-cell.copied {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* 复制提示 */
+.clickable-cell::after {
+    content: '点击复制';
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    color: var(--color-primary);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.clickable-cell:hover::after {
+    opacity: 1;
 }
 
 .diff-table tr.diff-added td { background: rgba(16, 185, 129, 0.1); }
