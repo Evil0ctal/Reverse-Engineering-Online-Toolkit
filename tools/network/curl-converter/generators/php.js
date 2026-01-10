@@ -11,10 +11,20 @@
     // 确保命名空间存在
     window.CurlGenerators = window.CurlGenerators || {};
 
-    const escapeString = window.CurlGenerators.escapeString;
+    const escapeStringBase = window.CurlGenerators.escapeString;
     const makeIndent = window.CurlGenerators.makeIndent;
     const getDefaultOptions = window.CurlGenerators.getDefaultOptions;
     const getBaseUrl = window.CurlGenerators.getBaseUrl;
+    const getQuote = window.CurlGenerators.getQuote;
+
+    /**
+     * 包装字符串（带引号和转义）
+     */
+    function phpStr(str, opts) {
+        const q = getQuote(opts);
+        const escaped = escapeStringBase(str, 'php', opts);
+        return `${q}${escaped}${q}`;
+    }
 
     /**
      * 从 URL 中提取查询参数
@@ -40,6 +50,7 @@
     function toPhpCurl(parsed, options = {}) {
         const opts = getDefaultOptions(options);
         const i1 = makeIndent(1, opts);
+        const q = getQuote(opts);
 
         let code = '<?php\n\n';
         code += '$ch = curl_init();\n\n';
@@ -50,37 +61,37 @@
             const baseUrl = getBaseUrl(parsed.url);
 
             if (Object.keys(params).length > 0) {
-                code += `$baseUrl = '${escapeString(baseUrl, 'php')}';\n`;
+                code += `$baseUrl = ${phpStr(baseUrl, opts)};\n`;
                 code += '$params = [\n';
                 for (const [key, value] of Object.entries(params)) {
-                    code += `${i1}'${escapeString(key, 'php')}' => '${escapeString(value, 'php')}',\n`;
+                    code += `${i1}${phpStr(key, opts)} => ${phpStr(value, opts)},\n`;
                 }
                 code += '];\n';
-                code += '$url = $baseUrl . \'?\' . http_build_query($params);\n\n';
+                code += `$url = $baseUrl . ${q}?${q} . http_build_query($params);\n\n`;
             } else {
-                code += `$url = '${escapeString(baseUrl, 'php')}';\n\n`;
+                code += `$url = ${phpStr(baseUrl, opts)};\n\n`;
             }
         } else {
-            code += `$url = '${escapeString(parsed.url, 'php')}';\n\n`;
+            code += `$url = ${phpStr(parsed.url, opts)};\n\n`;
         }
 
         code += 'curl_setopt($ch, CURLOPT_URL, $url);\n';
         code += 'curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n';
 
         if (parsed.method !== 'GET') {
-            code += `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, '${parsed.method}');\n`;
+            code += `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, ${phpStr(parsed.method, opts)});\n`;
         }
 
         if (Object.keys(parsed.headers).length > 0) {
             code += '\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n';
             for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `${i1}'${escapeString(key, 'php')}: ${escapeString(value, 'php')}',\n`;
+                code += `${i1}${phpStr(key + ': ' + value, opts)},\n`;
             }
             code += ']);\n';
         }
 
         if (parsed.data) {
-            code += `\ncurl_setopt($ch, CURLOPT_POSTFIELDS, '${escapeString(parsed.data, 'php')}');\n`;
+            code += `\ncurl_setopt($ch, CURLOPT_POSTFIELDS, ${phpStr(parsed.data, opts)});\n`;
         }
 
         code += '\n$response = curl_exec($ch);\n';
@@ -100,9 +111,10 @@
         const opts = getDefaultOptions(options);
         const i1 = makeIndent(1, opts);
         const i2 = makeIndent(2, opts);
+        const q = getQuote(opts);
 
         let code = '<?php\n\n';
-        code += "require 'vendor/autoload.php';\n\n";
+        code += `require ${q}vendor/autoload.php${q};\n\n`;
         code += 'use GuzzleHttp\\Client;\n\n';
         code += '$client = new Client();\n\n';
 
@@ -115,15 +127,15 @@
 
             if (Object.keys(params).length > 0) {
                 hasQueryParams = true;
-                urlCode = escapeString(baseUrl, 'php');
+                urlCode = baseUrl;
             } else {
-                urlCode = escapeString(baseUrl, 'php');
+                urlCode = baseUrl;
             }
         } else {
-            urlCode = escapeString(parsed.url, 'php');
+            urlCode = parsed.url;
         }
 
-        code += '$response = $client->request(\'' + parsed.method + '\', \'' + urlCode + '\'';
+        code += `$response = $client->request(${phpStr(parsed.method, opts)}, ${phpStr(urlCode, opts)}`;
 
         const hasOptions = Object.keys(parsed.headers).length > 0 || parsed.data || hasQueryParams;
         if (hasOptions) {
@@ -131,23 +143,23 @@
 
             if (hasQueryParams) {
                 const params = extractQueryParams(parsed.url);
-                code += `${i1}'query' => [\n`;
+                code += `${i1}${phpStr('query', opts)} => [\n`;
                 for (const [key, value] of Object.entries(params)) {
-                    code += `${i2}'${escapeString(key, 'php')}' => '${escapeString(value, 'php')}',\n`;
+                    code += `${i2}${phpStr(key, opts)} => ${phpStr(value, opts)},\n`;
                 }
                 code += `${i1}],\n`;
             }
 
             if (Object.keys(parsed.headers).length > 0) {
-                code += `${i1}'headers' => [\n`;
+                code += `${i1}${phpStr('headers', opts)} => [\n`;
                 for (const [key, value] of Object.entries(parsed.headers)) {
-                    code += `${i2}'${escapeString(key, 'php')}' => '${escapeString(value, 'php')}',\n`;
+                    code += `${i2}${phpStr(key, opts)} => ${phpStr(value, opts)},\n`;
                 }
                 code += `${i1}],\n`;
             }
 
             if (parsed.data) {
-                code += `${i1}'body' => '${escapeString(parsed.data, 'php')}',\n`;
+                code += `${i1}${phpStr('body', opts)} => ${phpStr(parsed.data, opts)},\n`;
             }
 
             code += ']';

@@ -11,10 +11,20 @@
     // 确保命名空间存在
     window.CurlGenerators = window.CurlGenerators || {};
 
-    const escapeString = window.CurlGenerators.escapeString;
+    const escapeStringBase = window.CurlGenerators.escapeString;
     const makeIndent = window.CurlGenerators.makeIndent;
     const getDefaultOptions = window.CurlGenerators.getDefaultOptions;
     const getBaseUrl = window.CurlGenerators.getBaseUrl;
+    const getQuote = window.CurlGenerators.getQuote;
+
+    /**
+     * 包装字符串（带引号和转义）
+     */
+    function rbStr(str, opts) {
+        const q = getQuote(opts);
+        const escaped = escapeStringBase(str, 'ruby', opts);
+        return `${q}${escaped}${q}`;
+    }
 
     /**
      * 从 URL 中提取查询参数
@@ -40,8 +50,9 @@
     function toRubyNetHttp(parsed, options = {}) {
         const opts = getDefaultOptions(options);
         const i1 = makeIndent(1, opts);
+        const q = getQuote(opts);
 
-        let code = "require 'net/http'\nrequire 'uri'\nrequire 'json'\n\n";
+        let code = `require ${q}net/http${q}\nrequire ${q}uri${q}\nrequire ${q}json${q}\n\n`;
 
         // 处理 URL 和查询参数
         if (opts.useParamsDict) {
@@ -49,18 +60,18 @@
             const baseUrl = getBaseUrl(parsed.url);
 
             if (Object.keys(params).length > 0) {
-                code += `base_url = '${escapeString(baseUrl, 'ruby')}'\n`;
+                code += `base_url = ${rbStr(baseUrl, opts)}\n`;
                 code += 'params = {\n';
                 for (const [key, value] of Object.entries(params)) {
-                    code += `${i1}'${escapeString(key, 'ruby')}' => '${escapeString(value, 'ruby')}',\n`;
+                    code += `${i1}${rbStr(key, opts)} => ${rbStr(value, opts)},\n`;
                 }
                 code += '}\n';
-                code += "uri = URI.parse(base_url + '?' + URI.encode_www_form(params))\n\n";
+                code += `uri = URI.parse(base_url + ${q}?${q} + URI.encode_www_form(params))\n\n`;
             } else {
-                code += `uri = URI.parse('${escapeString(baseUrl, 'ruby')}')\n\n`;
+                code += `uri = URI.parse(${rbStr(baseUrl, opts)})\n\n`;
             }
         } else {
-            code += `uri = URI.parse('${escapeString(parsed.url, 'ruby')}')\n\n`;
+            code += `uri = URI.parse(${rbStr(parsed.url, opts)})\n\n`;
         }
 
         code += 'http = Net::HTTP.new(uri.host, uri.port)\n';
@@ -71,11 +82,11 @@
         code += `request = Net::HTTP::${parsed.method.charAt(0) + parsed.method.slice(1).toLowerCase()}.new(uri.request_uri)\n\n`;
 
         for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `request['${escapeString(key, 'ruby')}'] = '${escapeString(value, 'ruby')}'\n`;
+            code += `request[${rbStr(key, opts)}] = ${rbStr(value, opts)}\n`;
         }
 
         if (parsed.data) {
-            code += `\nrequest.body = '${escapeString(parsed.data, 'ruby')}'\n`;
+            code += `\nrequest.body = ${rbStr(parsed.data, opts)}\n`;
         }
 
         code += '\nresponse = http.request(request)\n\n';
@@ -91,11 +102,12 @@
     function toRubyFaraday(parsed, options = {}) {
         const opts = getDefaultOptions(options);
         const i1 = makeIndent(1, opts);
+        const q = getQuote(opts);
 
-        let code = "require 'faraday'\nrequire 'json'\n\n";
-        code += "conn = Faraday.new do |f|\n";
+        let code = `require ${q}faraday${q}\nrequire ${q}json${q}\n\n`;
+        code += 'conn = Faraday.new do |f|\n';
         code += `${i1}f.adapter Faraday.default_adapter\n`;
-        code += "end\n\n";
+        code += 'end\n\n';
 
         // 处理 URL 和查询参数
         if (opts.useParamsDict) {
@@ -103,25 +115,25 @@
             const baseUrl = getBaseUrl(parsed.url);
 
             if (Object.keys(params).length > 0) {
-                code += `response = conn.${parsed.method.toLowerCase()}('${escapeString(baseUrl, 'ruby')}') do |req|\n`;
+                code += `response = conn.${parsed.method.toLowerCase()}(${rbStr(baseUrl, opts)}) do |req|\n`;
                 code += `${i1}req.params = {\n`;
                 for (const [key, value] of Object.entries(params)) {
-                    code += `${i1}${i1}'${escapeString(key, 'ruby')}' => '${escapeString(value, 'ruby')}',\n`;
+                    code += `${i1}${i1}${rbStr(key, opts)} => ${rbStr(value, opts)},\n`;
                 }
                 code += `${i1}}\n`;
             } else {
-                code += `response = conn.${parsed.method.toLowerCase()}('${escapeString(baseUrl, 'ruby')}') do |req|\n`;
+                code += `response = conn.${parsed.method.toLowerCase()}(${rbStr(baseUrl, opts)}) do |req|\n`;
             }
         } else {
-            code += `response = conn.${parsed.method.toLowerCase()}('${escapeString(parsed.url, 'ruby')}') do |req|\n`;
+            code += `response = conn.${parsed.method.toLowerCase()}(${rbStr(parsed.url, opts)}) do |req|\n`;
         }
 
         for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `${i1}req.headers['${escapeString(key, 'ruby')}'] = '${escapeString(value, 'ruby')}'\n`;
+            code += `${i1}req.headers[${rbStr(key, opts)}] = ${rbStr(value, opts)}\n`;
         }
 
         if (parsed.data) {
-            code += `${i1}req.body = '${escapeString(parsed.data, 'ruby')}'\n`;
+            code += `${i1}req.body = ${rbStr(parsed.data, opts)}\n`;
         }
 
         code += 'end\n\n';
