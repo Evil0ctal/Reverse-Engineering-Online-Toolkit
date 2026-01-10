@@ -374,6 +374,46 @@
     }
 
     /**
+     * 从字符串值推断 Python 类型
+     * @param {string} value - 字符串值
+     * @returns {object} { pyType: Python类型, pyValue: Python格式的值 }
+     */
+    function inferPythonType(value) {
+        if (value === null || value === undefined || value === '') {
+            return { pyType: 'str', pyValue: "''" };
+        }
+
+        const strValue = String(value);
+
+        // 1. 布尔值检测
+        if (strValue.toLowerCase() === 'true') {
+            return { pyType: 'bool', pyValue: 'True' };
+        }
+        if (strValue.toLowerCase() === 'false') {
+            return { pyType: 'bool', pyValue: 'False' };
+        }
+
+        // 2. 整数检测（包括负数）
+        if (/^-?\d+$/.test(strValue)) {
+            // 检查是否超出 JavaScript 安全整数范围，超大数字保持字符串
+            const num = parseInt(strValue, 10);
+            if (Number.isSafeInteger(num)) {
+                return { pyType: 'int', pyValue: strValue };
+            }
+            // 超大整数作为字符串处理
+            return { pyType: 'str', pyValue: `'${strValue}'` };
+        }
+
+        // 3. 浮点数检测
+        if (/^-?\d+\.\d+$/.test(strValue)) {
+            return { pyType: 'float', pyValue: strValue };
+        }
+
+        // 4. 默认为字符串
+        return { pyType: 'str', pyValue: `'${escapeString(strValue, 'python')}'` };
+    }
+
+    /**
      * Python - FastAPI + httpx 异步 API
      */
     function toPythonFastAPIHttpx(parsed, options = {}) {
@@ -422,12 +462,12 @@
 
             for (const [key, value] of Object.entries(queryParams)) {
                 const { varName, needsAlias } = paramNameMap[key];
-                const escapedValue = escapeString(value, 'python');
+                const { pyType, pyValue } = inferPythonType(value);
                 // 如果需要别名，使用 Field
                 if (needsAlias) {
-                    code += `${i1}${varName}: str = Field(default='${escapedValue}', alias='${escapeString(key, 'python')}')\n`;
+                    code += `${i1}${varName}: ${pyType} = Field(default=${pyValue}, alias='${escapeString(key, 'python')}')\n`;
                 } else {
-                    code += `${i1}${varName}: str = '${escapedValue}'\n`;
+                    code += `${i1}${varName}: ${pyType} = ${pyValue}\n`;
                 }
             }
             code += '\n';
