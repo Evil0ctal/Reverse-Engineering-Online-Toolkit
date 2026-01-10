@@ -20,6 +20,84 @@
     let exportedCurlEditor = null;
     let editorsInitialized = false;
 
+    // 代码生成器模块加载状态
+    let generatorsLoaded = false;
+    let generatorsLoading = null;
+
+    /**
+     * 动态加载代码生成器模块
+     */
+    async function loadGeneratorModules() {
+        // 检查生成器是否已通过 HTML script 标签加载
+        if (window.CurlGenerators && window.CurlGenerators.generateCode) {
+            generatorsLoaded = true;
+            return true;
+        }
+        if (generatorsLoaded) return true;
+        if (generatorsLoading) return generatorsLoading;
+
+        generatorsLoading = (async () => {
+            // 检测基础路径
+            const scripts = document.querySelectorAll('script[src*="curl-converter.js"]');
+            let basePath = '';
+            if (scripts.length > 0) {
+                const src = scripts[0].src;
+                basePath = src.substring(0, src.lastIndexOf('/') + 1);
+            } else {
+                // 备用路径检测
+                basePath = '/tools/network/curl-converter/';
+                if (window.REOT?.router?.basePath) {
+                    basePath = window.REOT.router.basePath + basePath;
+                }
+            }
+
+            const generatorFiles = [
+                'generators/base.js',
+                'generators/python.js',
+                'generators/javascript.js',
+                'generators/php.js',
+                'generators/go.js',
+                'generators/java.js',
+                'generators/csharp.js',
+                'generators/rust.js',
+                'generators/ruby.js',
+                'generators/swift.js',
+                'generators/kotlin.js',
+                'generators/index.js'
+            ];
+
+            // 按顺序加载脚本（base.js 必须先加载）
+            for (const file of generatorFiles) {
+                await loadScript(basePath + file);
+            }
+
+            generatorsLoaded = true;
+            console.log('cURL Generators modules loaded');
+            return true;
+        })();
+
+        return generatorsLoading;
+    }
+
+    /**
+     * 加载单个脚本
+     */
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            // 检查是否已加载
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = () => reject(new Error(`Failed to load: ${src}`));
+            document.head.appendChild(script);
+        });
+    }
+
     // 获取编辑器值的辅助函数
     function getEditorValue(editor, fallbackId) {
         if (editor) {
@@ -846,717 +924,59 @@
     }
 
     // ==================== 代码生成器 ====================
+    // 注意：代码生成器已模块化，详见 generators/ 目录
+    // - generators/base.js      - 共享工具函数
+    // - generators/python.js    - Python (requests, httpx, aiohttp, urllib)
+    // - generators/javascript.js - JavaScript/Node.js (fetch, axios, xhr, http)
+    // - generators/php.js       - PHP (curl, guzzle)
+    // - generators/go.js        - Go (net/http, resty)
+    // - generators/java.js      - Java (HttpClient, OkHttp)
+    // - generators/csharp.js    - C# (HttpClient, RestSharp)
+    // - generators/rust.js      - Rust (reqwest)
+    // - generators/ruby.js      - Ruby (Net::HTTP, Faraday)
+    // - generators/swift.js     - Swift (URLSession)
+    // - generators/kotlin.js    - Kotlin (OkHttp)
+    // - generators/index.js     - 注册表
 
     /**
-     * 转义字符串
+     * 获取代码生成选项
+     * @returns {Object} 生成选项
      */
-    function escapeString(str, lang) {
-        if (!str) return '';
-        str = String(str);
-
-        switch (lang) {
-            case 'python':
-                return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
-            case 'javascript':
-            case 'go':
-            case 'java':
-            case 'kotlin':
-            case 'rust':
-            case 'csharp':
-                return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
-            case 'php':
-                return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
-            case 'ruby':
-                return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
-            case 'swift':
-                return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
-            default:
-                return str;
-        }
-    }
-
-    // Python - requests
-    function toPythonRequests(parsed) {
-        let code = 'import requests\n\n';
-        code += `url = '${escapeString(parsed.url, 'python')}'\n\n`;
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += 'headers = {\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `    '${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
-            }
-            code += '}\n\n';
-        }
-
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += `json_data = ${parsed.data}\n\n`;
-            } else {
-                code += `data = '${escapeString(parsed.data, 'python')}'\n\n`;
-            }
-        }
-
-        code += `response = requests.${parsed.method.toLowerCase()}(\n    url`;
-        if (Object.keys(parsed.headers).length > 0) code += ',\n    headers=headers';
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += ',\n    json=json_data';
-            } else {
-                code += ',\n    data=data';
-            }
-        }
-        if (parsed.auth) {
-            const [user, pass] = parsed.auth.split(':');
-            code += `,\n    auth=('${escapeString(user, 'python')}', '${escapeString(pass || '', 'python')}')`;
-        }
-        if (parsed.insecure) code += ',\n    verify=False';
-        code += '\n)\n\n';
-        code += 'print(response.status_code)\nprint(response.text)';
-
-        return code;
-    }
-
-    // Python - httpx
-    function toPythonHttpx(parsed) {
-        let code = 'import httpx\n\n';
-        code += `url = '${escapeString(parsed.url, 'python')}'\n\n`;
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += 'headers = {\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `    '${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
-            }
-            code += '}\n\n';
-        }
-
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += `json_data = ${parsed.data}\n\n`;
-            } else {
-                code += `data = '${escapeString(parsed.data, 'python')}'\n\n`;
-            }
-        }
-
-        code += 'with httpx.Client() as client:\n';
-        code += `    response = client.${parsed.method.toLowerCase()}(\n        url`;
-        if (Object.keys(parsed.headers).length > 0) code += ',\n        headers=headers';
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += ',\n        json=json_data';
-            } else {
-                code += ',\n        data=data';
-            }
-        }
-        code += '\n    )\n\n';
-        code += '    print(response.status_code)\n    print(response.text)';
-
-        return code;
-    }
-
-    // Python - aiohttp
-    function toPythonAiohttp(parsed) {
-        let code = 'import aiohttp\nimport asyncio\n\n';
-        code += 'async def main():\n';
-        code += `    url = '${escapeString(parsed.url, 'python')}'\n\n`;
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += '    headers = {\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `        '${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
-            }
-            code += '    }\n\n';
-        }
-
-        if (parsed.data) {
-            code += `    data = '${escapeString(parsed.data, 'python')}'\n\n`;
-        }
-
-        code += '    async with aiohttp.ClientSession() as session:\n';
-        code += `        async with session.${parsed.method.toLowerCase()}(\n            url`;
-        if (Object.keys(parsed.headers).length > 0) code += ',\n            headers=headers';
-        if (parsed.data) code += ',\n            data=data';
-        code += '\n        ) as response:\n';
-        code += '            print(response.status)\n';
-        code += '            print(await response.text())\n\n';
-        code += 'asyncio.run(main())';
-
-        return code;
-    }
-
-    // Python - urllib
-    function toPythonUrllib(parsed) {
-        let code = 'import urllib.request\nimport urllib.parse\n\n';
-        code += `url = '${escapeString(parsed.url, 'python')}'\n\n`;
-
-        if (parsed.data) {
-            code += `data = '${escapeString(parsed.data, 'python')}'.encode('utf-8')\n\n`;
-        }
-
-        code += 'req = urllib.request.Request(\n    url';
-        if (parsed.data) code += ',\n    data=data';
-        code += `,\n    method='${parsed.method}'`;
-        code += '\n)\n\n';
-
-        if (Object.keys(parsed.headers).length > 0) {
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `req.add_header('${escapeString(key, 'python')}', '${escapeString(value, 'python')}')\n`;
-            }
-            code += '\n';
-        }
-
-        code += 'with urllib.request.urlopen(req) as response:\n';
-        code += '    print(response.status)\n';
-        code += '    print(response.read().decode())';
-
-        return code;
-    }
-
-    // JavaScript - fetch
-    function toJsFetch(parsed) {
-        let code = `fetch('${escapeString(parsed.url, 'javascript')}', {\n`;
-        code += `  method: '${parsed.method}'`;
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += ',\n  headers: {\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `    '${escapeString(key, 'javascript')}': '${escapeString(value, 'javascript')}',\n`;
-            }
-            code += '  }';
-        }
-
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += `,\n  body: JSON.stringify(${parsed.data})`;
-            } else {
-                code += `,\n  body: '${escapeString(parsed.data, 'javascript')}'`;
-            }
-        }
-
-        code += '\n})\n';
-        code += '  .then(response => response.json())\n';
-        code += '  .then(data => console.log(data))\n';
-        code += '  .catch(error => console.error(error));';
-
-        return code;
-    }
-
-    // JavaScript - axios
-    function toJsAxios(parsed) {
-        let code = `axios({\n`;
-        code += `  method: '${parsed.method.toLowerCase()}',\n`;
-        code += `  url: '${escapeString(parsed.url, 'javascript')}'`;
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += ',\n  headers: {\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `    '${escapeString(key, 'javascript')}': '${escapeString(value, 'javascript')}',\n`;
-            }
-            code += '  }';
-        }
-
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += `,\n  data: ${parsed.data}`;
-            } else {
-                code += `,\n  data: '${escapeString(parsed.data, 'javascript')}'`;
-            }
-        }
-
-        code += '\n})\n';
-        code += '  .then(response => console.log(response.data))\n';
-        code += '  .catch(error => console.error(error));';
-
-        return code;
-    }
-
-    // JavaScript - XMLHttpRequest
-    function toJsXhr(parsed) {
-        let code = 'const xhr = new XMLHttpRequest();\n';
-        code += `xhr.open('${parsed.method}', '${escapeString(parsed.url, 'javascript')}');\n\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `xhr.setRequestHeader('${escapeString(key, 'javascript')}', '${escapeString(value, 'javascript')}');\n`;
-        }
-
-        code += '\nxhr.onreadystatechange = function() {\n';
-        code += '  if (xhr.readyState === 4) {\n';
-        code += '    console.log(xhr.status);\n';
-        code += '    console.log(xhr.responseText);\n';
-        code += '  }\n};\n\n';
-
-        if (parsed.data) {
-            if (parsed.dataType === 'json') {
-                code += `xhr.send(JSON.stringify(${parsed.data}));`;
-            } else {
-                code += `xhr.send('${escapeString(parsed.data, 'javascript')}');`;
-            }
-        } else {
-            code += 'xhr.send();';
-        }
-
-        return code;
-    }
-
-    // Node.js - axios
-    function toNodeAxios(parsed) {
-        let code = "const axios = require('axios');\n\n";
-        code += toJsAxios(parsed);
-        return code;
-    }
-
-    // Node.js - node-fetch
-    function toNodeFetch(parsed) {
-        let code = "const fetch = require('node-fetch');\n\n";
-        code += toJsFetch(parsed);
-        return code;
-    }
-
-    // Node.js - http/https
-    function toNodeHttp(parsed) {
-        const isHttps = parsed.url.startsWith('https');
-        let code = `const ${isHttps ? 'https' : 'http'} = require('${isHttps ? 'https' : 'http'}');\n\n`;
-
-        code += 'const options = {\n';
-        code += `  method: '${parsed.method}'`;
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += ',\n  headers: {\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `    '${escapeString(key, 'javascript')}': '${escapeString(value, 'javascript')}',\n`;
-            }
-            code += '  }';
-        }
-
-        code += '\n};\n\n';
-
-        code += `const req = ${isHttps ? 'https' : 'http'}.request('${escapeString(parsed.url, 'javascript')}', options, (res) => {\n`;
-        code += '  let data = \'\';\n';
-        code += "  res.on('data', (chunk) => { data += chunk; });\n";
-        code += "  res.on('end', () => { console.log(data); });\n";
-        code += '});\n\n';
-        code += "req.on('error', (error) => { console.error(error); });\n\n";
-
-        if (parsed.data) {
-            code += `req.write('${escapeString(parsed.data, 'javascript')}');\n`;
-        }
-        code += 'req.end();';
-
-        return code;
-    }
-
-    // PHP - cURL
-    function toPhpCurl(parsed) {
-        let code = '<?php\n\n';
-        code += '$ch = curl_init();\n\n';
-        code += `curl_setopt($ch, CURLOPT_URL, '${escapeString(parsed.url, 'php')}');\n`;
-        code += 'curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n';
-
-        if (parsed.method !== 'GET') {
-            code += `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, '${parsed.method}');\n`;
-        }
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += 'curl_setopt($ch, CURLOPT_HTTPHEADER, [\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `    '${escapeString(key, 'php')}: ${escapeString(value, 'php')}',\n`;
-            }
-            code += ']);\n';
-        }
-
-        if (parsed.data) {
-            code += `curl_setopt($ch, CURLOPT_POSTFIELDS, '${escapeString(parsed.data, 'php')}');\n`;
-        }
-
-        if (parsed.insecure) {
-            code += 'curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);\n';
-        }
-
-        code += '\n$response = curl_exec($ch);\n';
-        code += '$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);\n';
-        code += 'curl_close($ch);\n\n';
-        code += 'echo "HTTP Code: $httpCode\\n";\n';
-        code += 'echo $response;\n';
-
-        return code;
-    }
-
-    // PHP - Guzzle
-    function toPhpGuzzle(parsed) {
-        let code = '<?php\n\n';
-        code += "require 'vendor/autoload.php';\n\n";
-        code += "use GuzzleHttp\\Client;\n\n";
-        code += '$client = new Client();\n\n';
-        code += '$response = $client->request(\n';
-        code += `    '${parsed.method}',\n`;
-        code += `    '${escapeString(parsed.url, 'php')}'`;
-
-        const hasOptions = Object.keys(parsed.headers).length > 0 || parsed.data;
-        if (hasOptions) {
-            code += ',\n    [\n';
-            if (Object.keys(parsed.headers).length > 0) {
-                code += "        'headers' => [\n";
-                for (const [key, value] of Object.entries(parsed.headers)) {
-                    code += `            '${escapeString(key, 'php')}' => '${escapeString(value, 'php')}',\n`;
-                }
-                code += '        ],\n';
-            }
-            if (parsed.data) {
-                if (parsed.dataType === 'json') {
-                    code += `        'json' => ${parsed.data},\n`;
-                } else {
-                    code += `        'body' => '${escapeString(parsed.data, 'php')}',\n`;
-                }
-            }
-            code += '    ]';
-        }
-
-        code += '\n);\n\n';
-        code += 'echo $response->getStatusCode() . "\\n";\n';
-        code += 'echo $response->getBody();\n';
-
-        return code;
-    }
-
-    // Go - net/http
-    function toGoHttp(parsed) {
-        let code = 'package main\n\nimport (\n';
-        code += '    "fmt"\n    "io"\n    "net/http"\n';
-        if (parsed.data) code += '    "strings"\n';
-        code += ')\n\nfunc main() {\n';
-
-        if (parsed.data) {
-            code += `    body := strings.NewReader(\`${parsed.data}\`)\n`;
-            code += `    req, err := http.NewRequest("${parsed.method}", "${escapeString(parsed.url, 'go')}", body)\n`;
-        } else {
-            code += `    req, err := http.NewRequest("${parsed.method}", "${escapeString(parsed.url, 'go')}", nil)\n`;
-        }
-
-        code += '    if err != nil {\n        panic(err)\n    }\n\n';
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `    req.Header.Set("${escapeString(key, 'go')}", "${escapeString(value, 'go')}")\n`;
-        }
-
-        code += '\n    client := &http.Client{}\n';
-        code += '    resp, err := client.Do(req)\n';
-        code += '    if err != nil {\n        panic(err)\n    }\n';
-        code += '    defer resp.Body.Close()\n\n';
-        code += '    respBody, err := io.ReadAll(resp.Body)\n';
-        code += '    if err != nil {\n        panic(err)\n    }\n\n';
-        code += '    fmt.Println(resp.StatusCode)\n';
-        code += '    fmt.Println(string(respBody))\n}';
-
-        return code;
-    }
-
-    // Go - resty
-    function toGoResty(parsed) {
-        let code = 'package main\n\nimport (\n';
-        code += '    "fmt"\n    "github.com/go-resty/resty/v2"\n';
-        code += ')\n\nfunc main() {\n';
-        code += '    client := resty.New()\n\n';
-        code += '    resp, err := client.R().\n';
-
-        if (Object.keys(parsed.headers).length > 0) {
-            code += '        SetHeaders(map[string]string{\n';
-            for (const [key, value] of Object.entries(parsed.headers)) {
-                code += `            "${escapeString(key, 'go')}": "${escapeString(value, 'go')}",\n`;
-            }
-            code += '        }).\n';
-        }
-
-        if (parsed.data) {
-            code += `        SetBody(\`${parsed.data}\`).\n`;
-        }
-
-        code += `        ${parsed.method.charAt(0) + parsed.method.slice(1).toLowerCase()}("${escapeString(parsed.url, 'go')}")\n\n`;
-        code += '    if err != nil {\n        panic(err)\n    }\n\n';
-        code += '    fmt.Println(resp.StatusCode())\n';
-        code += '    fmt.Println(string(resp.Body()))\n}';
-
-        return code;
-    }
-
-    // Java - HttpClient
-    function toJavaHttpClient(parsed) {
-        let code = 'import java.net.http.*;\nimport java.net.URI;\n\n';
-        code += 'public class Main {\n    public static void main(String[] args) throws Exception {\n';
-        code += '        HttpClient client = HttpClient.newHttpClient();\n\n';
-        code += '        HttpRequest request = HttpRequest.newBuilder()\n';
-        code += `            .uri(URI.create("${escapeString(parsed.url, 'java')}"))\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `            .header("${escapeString(key, 'java')}", "${escapeString(value, 'java')}")\n`;
-        }
-
-        code += `            .method("${parsed.method}", `;
-        if (parsed.data) {
-            code += `HttpRequest.BodyPublishers.ofString("${escapeString(parsed.data, 'java')}"))\n`;
-        } else {
-            code += 'HttpRequest.BodyPublishers.noBody())\n';
-        }
-        code += '            .build();\n\n';
-        code += '        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());\n\n';
-        code += '        System.out.println(response.statusCode());\n';
-        code += '        System.out.println(response.body());\n';
-        code += '    }\n}';
-
-        return code;
-    }
-
-    // Java - OkHttp
-    function toJavaOkHttp(parsed) {
-        let code = 'import okhttp3.*;\n\n';
-        code += 'public class Main {\n    public static void main(String[] args) throws Exception {\n';
-        code += '        OkHttpClient client = new OkHttpClient();\n\n';
-
-        if (parsed.data) {
-            code += `        RequestBody body = RequestBody.create("${escapeString(parsed.data, 'java')}", MediaType.parse("application/json"));\n\n`;
-        }
-
-        code += '        Request request = new Request.Builder()\n';
-        code += `            .url("${escapeString(parsed.url, 'java')}")\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `            .addHeader("${escapeString(key, 'java')}", "${escapeString(value, 'java')}")\n`;
-        }
-
-        if (parsed.data) {
-            code += `            .method("${parsed.method}", body)\n`;
-        } else if (parsed.method !== 'GET') {
-            code += `            .method("${parsed.method}", RequestBody.create("", null))\n`;
-        }
-
-        code += '            .build();\n\n';
-        code += '        Response response = client.newCall(request).execute();\n\n';
-        code += '        System.out.println(response.code());\n';
-        code += '        System.out.println(response.body().string());\n';
-        code += '    }\n}';
-
-        return code;
-    }
-
-    // C# - HttpClient
-    function toCsharpHttpClient(parsed) {
-        let code = 'using System;\nusing System.Net.Http;\nusing System.Text;\nusing System.Threading.Tasks;\n\n';
-        code += 'class Program\n{\n    static async Task Main()\n    {\n';
-        code += '        using var client = new HttpClient();\n\n';
-        code += `        var request = new HttpRequestMessage(HttpMethod.${parsed.method.charAt(0) + parsed.method.slice(1).toLowerCase()}, "${escapeString(parsed.url, 'csharp')}");\n\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `        request.Headers.TryAddWithoutValidation("${escapeString(key, 'csharp')}", "${escapeString(value, 'csharp')}");\n`;
-        }
-
-        if (parsed.data) {
-            code += `\n        request.Content = new StringContent("${escapeString(parsed.data, 'csharp')}", Encoding.UTF8, "application/json");\n`;
-        }
-
-        code += '\n        var response = await client.SendAsync(request);\n';
-        code += '        var content = await response.Content.ReadAsStringAsync();\n\n';
-        code += '        Console.WriteLine((int)response.StatusCode);\n';
-        code += '        Console.WriteLine(content);\n';
-        code += '    }\n}';
-
-        return code;
-    }
-
-    // C# - RestSharp
-    function toCsharpRestSharp(parsed) {
-        let code = 'using RestSharp;\n\n';
-        code += 'var client = new RestClient();\n';
-        code += `var request = new RestRequest("${escapeString(parsed.url, 'csharp')}", Method.${parsed.method});\n\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `request.AddHeader("${escapeString(key, 'csharp')}", "${escapeString(value, 'csharp')}");\n`;
-        }
-
-        if (parsed.data) {
-            code += `\nrequest.AddJsonBody("${escapeString(parsed.data, 'csharp')}");\n`;
-        }
-
-        code += '\nvar response = await client.ExecuteAsync(request);\n\n';
-        code += 'Console.WriteLine((int)response.StatusCode);\n';
-        code += 'Console.WriteLine(response.Content);';
-
-        return code;
-    }
-
-    // Rust - reqwest
-    function toRustReqwest(parsed) {
-        let code = 'use reqwest;\nuse std::error::Error;\n\n';
-        code += '#[tokio::main]\nasync fn main() -> Result<(), Box<dyn Error>> {\n';
-        code += '    let client = reqwest::Client::new();\n\n';
-        code += `    let response = client.${parsed.method.toLowerCase()}("${escapeString(parsed.url, 'rust')}")\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `        .header("${escapeString(key, 'rust')}", "${escapeString(value, 'rust')}")\n`;
-        }
-
-        if (parsed.data) {
-            code += `        .body("${escapeString(parsed.data, 'rust')}")\n`;
-        }
-
-        code += '        .send()\n        .await?;\n\n';
-        code += '    println!("{}", response.status());\n';
-        code += '    println!("{}", response.text().await?);\n\n';
-        code += '    Ok(())\n}';
-
-        return code;
-    }
-
-    // Ruby - Net::HTTP
-    function toRubyNetHttp(parsed) {
-        let code = "require 'net/http'\nrequire 'uri'\nrequire 'json'\n\n";
-        code += `uri = URI.parse('${escapeString(parsed.url, 'ruby')}')\n\n`;
-        code += 'http = Net::HTTP.new(uri.host, uri.port)\n';
-        if (parsed.url.startsWith('https')) {
-            code += 'http.use_ssl = true\n';
-        }
-        code += '\n';
-        code += `request = Net::HTTP::${parsed.method.charAt(0) + parsed.method.slice(1).toLowerCase()}.new(uri.request_uri)\n\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `request['${escapeString(key, 'ruby')}'] = '${escapeString(value, 'ruby')}'\n`;
-        }
-
-        if (parsed.data) {
-            code += `\nrequest.body = '${escapeString(parsed.data, 'ruby')}'\n`;
-        }
-
-        code += '\nresponse = http.request(request)\n\n';
-        code += 'puts response.code\n';
-        code += 'puts response.body';
-
-        return code;
-    }
-
-    // Ruby - Faraday
-    function toRubyFaraday(parsed) {
-        let code = "require 'faraday'\nrequire 'json'\n\n";
-        code += "conn = Faraday.new do |f|\n  f.adapter Faraday.default_adapter\nend\n\n";
-        code += `response = conn.${parsed.method.toLowerCase()}('${escapeString(parsed.url, 'ruby')}') do |req|\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `  req.headers['${escapeString(key, 'ruby')}'] = '${escapeString(value, 'ruby')}'\n`;
-        }
-
-        if (parsed.data) {
-            code += `  req.body = '${escapeString(parsed.data, 'ruby')}'\n`;
-        }
-
-        code += 'end\n\n';
-        code += 'puts response.status\n';
-        code += 'puts response.body';
-
-        return code;
-    }
-
-    // Swift - URLSession
-    function toSwiftUrlSession(parsed) {
-        let code = 'import Foundation\n\n';
-        code += `let url = URL(string: "${escapeString(parsed.url, 'swift')}")!\n`;
-        code += 'var request = URLRequest(url: url)\n';
-        code += `request.httpMethod = "${parsed.method}"\n\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `request.setValue("${escapeString(value, 'swift')}", forHTTPHeaderField: "${escapeString(key, 'swift')}")\n`;
-        }
-
-        if (parsed.data) {
-            code += `\nrequest.httpBody = "${escapeString(parsed.data, 'swift')}".data(using: .utf8)\n`;
-        }
-
-        code += '\nlet task = URLSession.shared.dataTask(with: request) { data, response, error in\n';
-        code += '    if let error = error {\n';
-        code += '        print("Error: \\(error)")\n';
-        code += '        return\n';
-        code += '    }\n\n';
-        code += '    if let httpResponse = response as? HTTPURLResponse {\n';
-        code += '        print("Status: \\(httpResponse.statusCode)")\n';
-        code += '    }\n\n';
-        code += '    if let data = data, let body = String(data: data, encoding: .utf8) {\n';
-        code += '        print(body)\n';
-        code += '    }\n';
-        code += '}\n\ntask.resume()';
-
-        return code;
-    }
-
-    // Kotlin - OkHttp
-    function toKotlinOkHttp(parsed) {
-        let code = 'import okhttp3.*\nimport okhttp3.MediaType.Companion.toMediaType\nimport okhttp3.RequestBody.Companion.toRequestBody\n\n';
-        code += 'fun main() {\n';
-        code += '    val client = OkHttpClient()\n\n';
-
-        if (parsed.data) {
-            code += '    val mediaType = "application/json".toMediaType()\n';
-            code += `    val body = """${parsed.data}""".toRequestBody(mediaType)\n\n`;
-        }
-
-        code += '    val request = Request.Builder()\n';
-        code += `        .url("${escapeString(parsed.url, 'kotlin')}")\n`;
-
-        for (const [key, value] of Object.entries(parsed.headers)) {
-            code += `        .addHeader("${escapeString(key, 'kotlin')}", "${escapeString(value, 'kotlin')}")\n`;
-        }
-
-        if (parsed.data) {
-            code += `        .method("${parsed.method}", body)\n`;
-        } else if (parsed.method !== 'GET') {
-            code += `        .method("${parsed.method}", "".toRequestBody(null))\n`;
-        }
-
-        code += '        .build()\n\n';
-        code += '    client.newCall(request).execute().use { response ->\n';
-        code += '        println(response.code)\n';
-        code += '        println(response.body?.string())\n';
-        code += '    }\n}';
-
-        return code;
+    function getGeneratorOptions() {
+        const useParamsDict = document.getElementById('opt-use-params-dict')?.checked || false;
+        const indentSize = parseInt(document.getElementById('opt-indent-size')?.value) || 4;
+        const indentChar = document.getElementById('opt-indent-char')?.value || 'space';
+
+        return {
+            useParamsDict,
+            indentSize,
+            indentChar
+        };
     }
 
     /**
-     * 生成代码
+     * 生成代码 - 使用模块化生成器
      */
-    function generateCode(curlCommand, language) {
+    async function generateCode(curlCommand, language, options = null) {
+        // 确保生成器模块已加载
+        await loadGeneratorModules();
+
         const parsed = parseCurl(curlCommand);
 
         if (!parsed.url) {
             throw new Error('未找到有效的 URL');
         }
 
-        const generators = {
-            'python-requests': toPythonRequests,
-            'python-httpx': toPythonHttpx,
-            'python-aiohttp': toPythonAiohttp,
-            'python-urllib': toPythonUrllib,
-            'js-fetch': toJsFetch,
-            'js-axios': toJsAxios,
-            'js-xhr': toJsXhr,
-            'node-axios': toNodeAxios,
-            'node-fetch': toNodeFetch,
-            'node-http': toNodeHttp,
-            'php-curl': toPhpCurl,
-            'php-guzzle': toPhpGuzzle,
-            'go-http': toGoHttp,
-            'go-resty': toGoResty,
-            'java-httpclient': toJavaHttpClient,
-            'java-okhttp': toJavaOkHttp,
-            'csharp-httpclient': toCsharpHttpClient,
-            'csharp-restsharp': toCsharpRestSharp,
-            'rust-reqwest': toRustReqwest,
-            'ruby-net-http': toRubyNetHttp,
-            'ruby-faraday': toRubyFaraday,
-            'swift-urlsession': toSwiftUrlSession,
-            'kotlin-okhttp': toKotlinOkHttp
-        };
-
-        const generator = generators[language];
-        if (!generator) {
-            throw new Error('不支持的语言');
+        // 检查生成器模块是否已加载
+        if (!window.CurlGenerators || !window.CurlGenerators.generateCode) {
+            throw new Error('代码生成器模块未加载，请刷新页面重试');
         }
 
-        return generator(parsed);
+        // 获取选项（如未传入则从 UI 读取）
+        const genOptions = options || getGeneratorOptions();
+
+        // 使用模块化代码生成器
+        return window.CurlGenerators.generateCode(parsed, language, genOptions);
     }
 
     // ==================== 工具函数 ====================
@@ -1927,7 +1347,7 @@
             const language = selectEl?.value || 'python-requests';
             try {
                 await recreateCodeOutputEditor(language);
-                const code = generateCode(SAMPLE_CURL, language);
+                const code = await generateCode(SAMPLE_CURL, language);
                 setEditorValue(codeOutputEditor, 'code-output', code);
             } catch (error) {
                 console.error('Sample generation error:', error);
@@ -1953,7 +1373,7 @@
 
             try {
                 await recreateCodeOutputEditor(language);
-                const code = generateCode(input, language);
+                const code = await generateCode(input, language);
                 setEditorValue(codeOutputEditor, 'code-output', code);
                 REOT.utils?.showNotification('代码生成成功', 'success');
             } catch (error) {
@@ -1971,6 +1391,20 @@
             }
         }
 
+        // 选项面板切换按钮
+        if (target.id === 'gen-options-toggle' || target.closest('#gen-options-toggle')) {
+            const panel = document.getElementById('gen-options-panel');
+            if (panel) {
+                const isHidden = panel.style.display === 'none' || !panel.style.display;
+                panel.style.display = isHidden ? 'block' : 'none';
+                // 更新按钮状态
+                const btn = document.getElementById('gen-options-toggle');
+                if (btn) {
+                    btn.classList.toggle('active', isHidden);
+                }
+            }
+        }
+
         // 点击单元格复制内容
         const clickableCell = target.closest('.clickable-cell');
         if (clickableCell) {
@@ -1985,7 +1419,7 @@
         }
     });
 
-    // 语言选择变化时重新生成
+    // 语言选择和选项变化时重新生成
     document.addEventListener('change', async (e) => {
         if (!isCurlConverterToolActive()) return;
 
@@ -1998,7 +1432,25 @@
 
             if (input.trim()) {
                 try {
-                    const code = generateCode(input, language);
+                    const code = await generateCode(input, language);
+                    setEditorValue(codeOutputEditor, 'code-output', code);
+                } catch (error) {
+                    setEditorValue(codeOutputEditor, 'code-output', '错误: ' + error.message);
+                }
+            }
+        }
+
+        // 选项变化时重新生成代码
+        if (e.target.id === 'opt-use-params-dict' ||
+            e.target.id === 'opt-indent-size' ||
+            e.target.id === 'opt-indent-char') {
+            const input = getEditorValue(genInputEditor, 'gen-input');
+            const selectEl = document.getElementById('code-language-select');
+            const language = selectEl?.value;
+
+            if (input.trim() && language) {
+                try {
+                    const code = await generateCode(input, language);
                     setEditorValue(codeOutputEditor, 'code-output', code);
                 } catch (error) {
                     setEditorValue(codeOutputEditor, 'code-output', '错误: ' + error.message);

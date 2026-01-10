@@ -309,7 +309,8 @@
                 <section class="options-section">
                     <div class="option-group">
                         <label data-i18n="tools.curl-converter.language">编程语言</label>
-                        <select id="code-language-select" class="form-select">
+                        <div class="language-select-wrapper">
+                            <select id="code-language-select" class="form-select">
                             <optgroup label="Python">
                                 <option value="python-requests" selected>Python - requests</option>
                                 <option value="python-httpx">Python - httpx</option>
@@ -354,6 +355,38 @@
                                 <option value="kotlin-okhttp">Kotlin - OkHttp</option>
                             </optgroup>
                         </select>
+                            <button id="gen-options-toggle" class="btn btn--icon btn--outline" title="代码生成选项">
+                                ⚙
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 代码生成选项面板 -->
+                    <div id="gen-options-panel" class="gen-options-panel" style="display: none;">
+                        <div class="gen-options-grid">
+                            <div class="gen-option-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="opt-use-params-dict">
+                                    <span data-i18n="tools.curl-converter.options.useParamsDict">使用参数字典</span>
+                                </label>
+                                <small class="option-hint" data-i18n="tools.curl-converter.options.useParamsDictHint">将 URL 查询参数提取为单独的字典变量</small>
+                            </div>
+                            <div class="gen-option-item">
+                                <label for="opt-indent-size" data-i18n="tools.curl-converter.options.indentSize">缩进数量</label>
+                                <select id="opt-indent-size" class="form-select form-select--sm">
+                                    <option value="2">2</option>
+                                    <option value="4" selected>4</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+                            <div class="gen-option-item">
+                                <label for="opt-indent-char" data-i18n="tools.curl-converter.options.indentChar">缩进字符</label>
+                                <select id="opt-indent-char" class="form-select form-select--sm">
+                                    <option value="space" selected data-i18n="tools.curl-converter.options.space">空格 (Space)</option>
+                                    <option value="tab" data-i18n="tools.curl-converter.options.tab">制表符 (Tab)</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -374,6 +407,19 @@
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
     <script src="../../../assets/js/code-editor.js"></script>
+    <!-- 代码生成器模块 -->
+    <script src="generators/base.js"></script>
+    <script src="generators/python.js"></script>
+    <script src="generators/javascript.js"></script>
+    <script src="generators/php.js"></script>
+    <script src="generators/go.js"></script>
+    <script src="generators/java.js"></script>
+    <script src="generators/csharp.js"></script>
+    <script src="generators/rust.js"></script>
+    <script src="generators/ruby.js"></script>
+    <script src="generators/swift.js"></script>
+    <script src="generators/kotlin.js"></script>
+    <script src="generators/index.js"></script>
     <script src="curl-converter.js"></script>
 </body>
 </html>
