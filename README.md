@@ -296,7 +296,8 @@ Reverse-Engineering-Online-Toolkit/
 
 ### 在线使用
 
-直接访问：[https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit](https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit)
+- **官方网站**：[https://reot.dev](https://reot.dev)
+- **GitHub Pages**：[https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit](https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit)
 
 ### 本地开发（推荐使用 Docker）
 

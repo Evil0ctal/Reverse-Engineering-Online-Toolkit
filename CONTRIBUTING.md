@@ -8,30 +8,41 @@
 - 提交代码修复或新功能
 - 添加新语言支持
 
+## 在线访问
+
+- **官方网站**：[https://reot.dev](https://reot.dev)
+- **GitHub Pages**：[https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit](https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit)
+
 ## 开发环境设置
 
 ### 前置要求
 
 - 现代浏览器（Chrome、Firefox、Safari、Edge）
 - Git
-- 任意 HTTP 服务器（可选，用于本地开发）
+- Docker（推荐）或 Node.js
 
 ### 本地运行
+
+由于本项目是 SPA（单页应用），需要服务器支持路由重定向。
 
 ```bash
 # 克隆仓库
 git clone https://github.com/Evil0ctal/Reverse-Engineering-Online-Toolkit.git
 cd Reverse-Engineering-Online-Toolkit
 
-# 使用任意 HTTP 服务器启动（选择其一）
-python -m http.server 8080
-# 或
-npx serve
-# 或
-php -S localhost:8080
+# 方式一：使用 Docker Compose（推荐，支持热更新）
+docker-compose up -d
+
+# 方式二：使用 Node.js serve（带 SPA 支持）
+npx serve -s -l 8080
+
+# 方式三：使用 npm scripts
+npm run serve
 
 # 访问 http://localhost:8080
 ```
+
+> ⚠️ **注意**：简单的 HTTP 服务器（如 `python -m http.server`）不支持 SPA 路由，直接访问工具页面 URL 会导致 404 错误。
 
 ## 如何贡献
 
@@ -106,14 +117,16 @@ git push origin feature/your-feature-name
 
 ```
 tools/<category>/<tool-name>/
-├── index.html    # 工具页面
-├── <tool>.js     # 核心逻辑
-├── <tool>.css    # 工具样式（可选）
-├── README.md     # 工具文档
-└── locales/      # 工具专属国际化（推荐）
+├── <tool-name>.html   # 工具页面（以工具ID命名）
+├── <tool-name>.js     # 核心逻辑
+├── <tool-name>.css    # 工具样式（可选）
+├── README.md          # 工具文档
+└── locales/           # 工具专属国际化（推荐）
     ├── zh-CN.json
     └── en-US.json
 ```
+
+> **重要**：工具文件必须以工具 ID 命名（如 `base64.html`、`base64.js`），而不是 `index.html`。这是为了避免直接访问 URL 时返回 HTML 片段。
 
 ### 实现步骤
 
