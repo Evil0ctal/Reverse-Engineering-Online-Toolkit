@@ -307,19 +307,28 @@
         let current = '';
         let inQuote = false;
         let quoteChar = '';
-        let escape = false;
 
         for (let i = 0; i < cmd.length; i++) {
             const char = cmd[i];
 
-            if (escape) {
-                current += char;
-                escape = false;
-                continue;
-            }
-
-            if (char === '\\') {
-                escape = true;
+            if (char === '\\' && i + 1 < cmd.length) {
+                const nextChar = cmd[i + 1];
+                if (inQuote) {
+                    // 在引号内，保留反斜杠和被转义的字符
+                    if (nextChar === quoteChar || nextChar === '\\') {
+                        // 转义引号或反斜杠：只添加被转义的字符
+                        current += nextChar;
+                        i++;
+                    } else {
+                        // 其他情况（如 JSON 内的 \"），保留整个转义序列
+                        current += char + nextChar;
+                        i++;
+                    }
+                } else {
+                    // 在引号外，处理转义
+                    current += nextChar;
+                    i++;
+                }
                 continue;
             }
 
@@ -448,15 +457,50 @@
     }
 
     /**
-     * 扁平化对象
+     * 扁平化对象（支持数组和嵌套结构）
      */
     function flattenObject(obj, prefix = '', result = {}) {
+        if (obj === null || obj === undefined) {
+            return result;
+        }
+
+        // 处理数组
+        if (Array.isArray(obj)) {
+            obj.forEach((item, index) => {
+                const newKey = prefix ? `${prefix}[${index}]` : `[${index}]`;
+                if (typeof item === 'object' && item !== null) {
+                    flattenObject(item, newKey, result);
+                } else {
+                    result[newKey] = item;
+                }
+            });
+            return result;
+        }
+
+        // 处理对象
         for (const key in obj) {
+            if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+
+            const value = obj[key];
             const newKey = prefix ? `${prefix}.${key}` : key;
-            if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-                flattenObject(obj[key], newKey, result);
+
+            if (typeof value === 'object' && value !== null) {
+                if (Array.isArray(value)) {
+                    // 数组递归处理
+                    value.forEach((item, index) => {
+                        const arrayKey = `${newKey}[${index}]`;
+                        if (typeof item === 'object' && item !== null) {
+                            flattenObject(item, arrayKey, result);
+                        } else {
+                            result[arrayKey] = item;
+                        }
+                    });
+                } else {
+                    // 对象递归处理
+                    flattenObject(value, newKey, result);
+                }
             } else {
-                result[newKey] = obj[key];
+                result[newKey] = value;
             }
         }
         return result;
@@ -805,6 +849,42 @@
     }
 
     /**
+     * 将值转换为可比较的字符串
+     */
+    function valueToString(val) {
+        if (val === null) return 'null';
+        if (val === undefined) return '';
+        if (typeof val === 'object') {
+            try {
+                return JSON.stringify(val);
+            } catch (e) {
+                return String(val);
+            }
+        }
+        return String(val);
+    }
+
+    /**
+     * 比较两个值是否相等
+     */
+    function valuesEqual(val1, val2) {
+        if (val1 === val2) return true;
+        if (val1 === undefined || val2 === undefined) return false;
+        if (val1 === null || val2 === null) return val1 === val2;
+
+        // 对于复杂类型，使用 JSON.stringify 比较
+        if (typeof val1 === 'object' || typeof val2 === 'object') {
+            try {
+                return JSON.stringify(val1) === JSON.stringify(val2);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        return String(val1) === String(val2);
+    }
+
+    /**
      * 比较两个对象
      */
     function compareObjects(obj1, obj2) {
@@ -816,7 +896,7 @@
             const val2 = obj2?.[key];
 
             let status;
-            if (val1 === val2) {
+            if (valuesEqual(val1, val2)) {
                 status = 'same';
             } else if (val1 === undefined) {
                 status = 'added';
@@ -897,13 +977,19 @@
             const tr = document.createElement('tr');
             tr.className = `diff-${item.status}`;
 
-            const val1Str = String(item.val1);
-            const val2Str = String(item.val2);
+            // 使用 valueToString 正确处理复杂值
+            const val1Str = valueToString(item.val1);
+            const val2Str = valueToString(item.val2);
+
+            // 截断过长的值用于显示
+            const maxDisplayLen = 200;
+            const val1Display = val1Str.length > maxDisplayLen ? val1Str.substring(0, maxDisplayLen) + '...' : val1Str;
+            const val2Display = val2Str.length > maxDisplayLen ? val2Str.substring(0, maxDisplayLen) + '...' : val2Str;
 
             tr.innerHTML = `
-                <td class="diff-key clickable-cell" data-copy="${escapeHtml(item.key)}">${escapeHtml(item.key)}</td>
-                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val1Str)}">${escapeHtml(val1Str)}</td>
-                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val2Str)}">${escapeHtml(val2Str)}</td>
+                <td class="diff-key clickable-cell" data-copy="${escapeHtml(item.key)}" title="${escapeHtml(item.key)}">${escapeHtml(item.key)}</td>
+                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val1Str)}" title="${escapeHtml(val1Str)}">${escapeHtml(val1Display)}</td>
+                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val2Str)}" title="${escapeHtml(val2Str)}">${escapeHtml(val2Display)}</td>
                 <td class="diff-status"><span class="status-badge ${item.status}">${getStatusText(item.status)}</span></td>
             `;
             tbody.appendChild(tr);
