@@ -78,7 +78,7 @@
 
         // 按语言分组
         const groups = {
-            'Python': ['python-requests', 'python-httpx', 'python-aiohttp', 'python-urllib'],
+            'Python': ['python-requests', 'python-httpx', 'python-httpx-async', 'python-aiohttp', 'python-urllib', 'python-fastapi-httpx'],
             'JavaScript': ['js-fetch', 'js-axios', 'js-xhr'],
             'Node.js': ['node-axios', 'node-fetch', 'node-http'],
             'PHP': ['php-curl', 'php-guzzle'],

@@ -55,8 +55,10 @@
         const languageMap = {
             'python-requests': 'python',
             'python-httpx': 'python',
+            'python-httpx-async': 'python',
             'python-aiohttp': 'python',
             'python-urllib': 'python',
+            'python-fastapi-httpx': 'python',
             'js-fetch': 'javascript',
             'js-axios': 'javascript',
             'js-xhr': 'javascript',

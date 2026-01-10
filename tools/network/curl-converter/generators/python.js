@@ -267,6 +267,202 @@
         return code;
     }
 
+    /**
+     * Python - httpx 库 (异步)
+     */
+    function toPythonHttpxAsync(parsed, options = {}) {
+        const opts = getDefaultOptions(options);
+        const i1 = makeIndent(1, opts);
+        const i2 = makeIndent(2, opts);
+
+        let code = 'import httpx\nimport asyncio\n\n';
+        code += 'async def main():\n';
+        code += `${i1}async with httpx.AsyncClient() as client:\n`;
+
+        // 处理 URL 和查询参数
+        if (opts.useParamsDict) {
+            const params = extractQueryParams(parsed.url);
+            const baseUrl = getBaseUrl(parsed.url);
+            code += `${i2}url = '${escapeString(baseUrl, 'python')}'\n\n`;
+
+            if (Object.keys(params).length > 0) {
+                code += `${i2}params = {\n`;
+                for (const [key, value] of Object.entries(params)) {
+                    code += `${i2}${i1}'${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
+                }
+                code += `${i2}}\n\n`;
+            }
+        } else {
+            code += `${i2}url = '${escapeString(parsed.url, 'python')}'\n\n`;
+        }
+
+        if (Object.keys(parsed.headers).length > 0) {
+            code += `${i2}headers = {\n`;
+            for (const [key, value] of Object.entries(parsed.headers)) {
+                code += `${i2}${i1}'${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
+            }
+            code += `${i2}}\n\n`;
+        }
+
+        if (parsed.data) {
+            code += `${i2}data = '${escapeString(parsed.data, 'python')}'\n\n`;
+        }
+
+        code += `${i2}response = await client.${parsed.method.toLowerCase()}(url`;
+        if (opts.useParamsDict && Object.keys(extractQueryParams(parsed.url)).length > 0) {
+            code += ', params=params';
+        }
+        if (Object.keys(parsed.headers).length > 0) {
+            code += ', headers=headers';
+        }
+        if (parsed.data) {
+            code += ', data=data';
+        }
+        code += ')\n\n';
+        code += `${i2}print(response.status_code)\n`;
+        code += `${i2}print(response.text)\n\n`;
+        code += 'asyncio.run(main())';
+
+        return code;
+    }
+
+    /**
+     * Python - FastAPI + httpx 异步 API
+     */
+    function toPythonFastAPIHttpx(parsed, options = {}) {
+        const opts = getDefaultOptions(options);
+        const i1 = makeIndent(1, opts);
+        const i2 = makeIndent(2, opts);
+
+        // 从 URL 提取路径作为 API 端点
+        let apiPath = '/proxy';
+        try {
+            const urlObj = new URL(parsed.url);
+            // 使用最后一段路径作为端点名
+            const pathParts = urlObj.pathname.split('/').filter(p => p);
+            if (pathParts.length > 0) {
+                apiPath = '/' + pathParts[pathParts.length - 1];
+            }
+        } catch (e) {}
+
+        let code = 'from fastapi import FastAPI, HTTPException\n';
+        code += 'from pydantic import BaseModel\n';
+        code += 'import httpx\n';
+        code += 'from typing import Optional, Any\n\n';
+
+        code += 'app = FastAPI()\n\n';
+
+        // 如果有请求体，生成 Pydantic 模型
+        if (parsed.data && parsed.dataType === 'json') {
+            code += '# 请求体模型\n';
+            code += 'class RequestBody(BaseModel):\n';
+            try {
+                const jsonData = JSON.parse(parsed.data);
+                for (const [key, value] of Object.entries(jsonData)) {
+                    const pyType = getPythonType(value);
+                    code += `${i1}${key}: ${pyType}\n`;
+                }
+            } catch (e) {
+                code += `${i1}data: str\n`;
+            }
+            code += '\n';
+        }
+
+        code += '# 响应模型\n';
+        code += 'class ProxyResponse(BaseModel):\n';
+        code += `${i1}status_code: int\n`;
+        code += `${i1}data: Any\n\n`;
+
+        // 生成 API 端点
+        const methodDecorator = parsed.method.toLowerCase();
+        code += `@app.${methodDecorator}("${apiPath}", response_model=ProxyResponse)\n`;
+
+        if (parsed.data && parsed.dataType === 'json') {
+            code += `async def proxy_request(body: RequestBody):\n`;
+        } else {
+            code += `async def proxy_request():\n`;
+        }
+
+        code += `${i1}"""\n`;
+        code += `${i1}代理请求到目标 API\n`;
+        code += `${i1}"""\n`;
+
+        // URL
+        if (opts.useParamsDict) {
+            const params = extractQueryParams(parsed.url);
+            const baseUrl = getBaseUrl(parsed.url);
+            code += `${i1}url = '${escapeString(baseUrl, 'python')}'\n\n`;
+
+            if (Object.keys(params).length > 0) {
+                code += `${i1}params = {\n`;
+                for (const [key, value] of Object.entries(params)) {
+                    code += `${i2}'${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
+                }
+                code += `${i1}}\n\n`;
+            }
+        } else {
+            code += `${i1}url = '${escapeString(parsed.url, 'python')}'\n\n`;
+        }
+
+        // Headers
+        if (Object.keys(parsed.headers).length > 0) {
+            code += `${i1}headers = {\n`;
+            for (const [key, value] of Object.entries(parsed.headers)) {
+                code += `${i2}'${escapeString(key, 'python')}': '${escapeString(value, 'python')}',\n`;
+            }
+            code += `${i1}}\n\n`;
+        }
+
+        code += `${i1}async with httpx.AsyncClient() as client:\n`;
+        code += `${i2}try:\n`;
+        code += `${i2}${i1}response = await client.${parsed.method.toLowerCase()}(\n`;
+        code += `${i2}${i2}url,\n`;
+        if (opts.useParamsDict && Object.keys(extractQueryParams(parsed.url)).length > 0) {
+            code += `${i2}${i2}params=params,\n`;
+        }
+        if (Object.keys(parsed.headers).length > 0) {
+            code += `${i2}${i2}headers=headers,\n`;
+        }
+        if (parsed.data && parsed.dataType === 'json') {
+            code += `${i2}${i2}json=body.model_dump(),\n`;
+        } else if (parsed.data) {
+            code += `${i2}${i2}data='${escapeString(parsed.data, 'python')}',\n`;
+        }
+        code += `${i2}${i1})\n`;
+        code += `${i2}${i1}response.raise_for_status()\n\n`;
+
+        code += `${i2}${i1}# 尝试解析 JSON 响应\n`;
+        code += `${i2}${i1}try:\n`;
+        code += `${i2}${i2}data = response.json()\n`;
+        code += `${i2}${i1}except:\n`;
+        code += `${i2}${i2}data = response.text\n\n`;
+
+        code += `${i2}${i1}return ProxyResponse(status_code=response.status_code, data=data)\n\n`;
+
+        code += `${i2}except httpx.HTTPStatusError as e:\n`;
+        code += `${i2}${i1}raise HTTPException(status_code=e.response.status_code, detail=str(e))\n`;
+        code += `${i2}except httpx.RequestError as e:\n`;
+        code += `${i2}${i1}raise HTTPException(status_code=500, detail=f"请求失败: {str(e)}")\n\n`;
+
+        code += '\n# 运行: uvicorn main:app --reload';
+
+        return code;
+    }
+
+    /**
+     * 获取 Python 类型
+     */
+    function getPythonType(value) {
+        if (value === null) return 'Optional[Any]';
+        if (typeof value === 'boolean') return 'bool';
+        if (typeof value === 'number') {
+            return Number.isInteger(value) ? 'int' : 'float';
+        }
+        if (Array.isArray(value)) return 'list';
+        if (typeof value === 'object') return 'dict';
+        return 'str';
+    }
+
     // 注册生成器
     window.CurlGenerators.python = {
         'python-requests': {
@@ -274,8 +470,12 @@
             generate: toPythonRequests
         },
         'python-httpx': {
-            name: 'Python - httpx',
+            name: 'Python - httpx (同步)',
             generate: toPythonHttpx
+        },
+        'python-httpx-async': {
+            name: 'Python - httpx (异步)',
+            generate: toPythonHttpxAsync
         },
         'python-aiohttp': {
             name: 'Python - aiohttp',
@@ -284,6 +484,10 @@
         'python-urllib': {
             name: 'Python - urllib',
             generate: toPythonUrllib
+        },
+        'python-fastapi-httpx': {
+            name: 'Python - FastAPI + httpx',
+            generate: toPythonFastAPIHttpx
         }
     };
 
