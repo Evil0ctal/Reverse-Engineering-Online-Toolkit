@@ -1,6 +1,6 @@
 {
   "name": "reverse-engineering-online-toolkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "纯前端逆向工程在线工具箱 - A pure frontend reverse engineering online toolkit",
   "main": "index.html",
   "scripts": {
@@ -35,7 +35,7 @@
   "bugs": {
     "url": "https://github.com/Evil0ctal/Reverse-Engineering-Online-Toolkit/issues"
   },
-  "homepage": "https://evil0ctal.github.io/Reverse-Engineering-Online-Toolkit",
+  "homepage": "https://reot.dev",
   "devDependencies": {
     "eslint": "^8.56.0",
     "jest": "^29.7.0",

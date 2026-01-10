@@ -1,9 +1,104 @@
 # 更新日志
 
+[English](./CHANGELOG_EN.md) | [简体中文](./CHANGELOG.md)
+
+---
+
 本项目的所有重要更改都将记录在此文件中。
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+
+## [1.0.1] - 2026-01-09
+
+### 新增
+
+#### 新工具
+- **Brotli** - Brotli 压缩与解压
+- **Deflate** - Deflate 压缩与解压
+- **BLAKE2** - BLAKE2b, BLAKE2s 哈希计算
+- **SHA-3 系列** - SHA3-224, SHA3-256, SHA3-384, SHA3-512
+- **RIPEMD** - RIPEMD-160 哈希计算
+- **DES/3DES** - DES 和 Triple DES 加解密
+- **RC4** - RC4 流加密
+- **Blowfish** - Blowfish 加解密
+- **ChaCha20** - ChaCha20 加解密
+- **SM4** - 国密 SM4 加解密
+- **XML** - XML 格式化、压缩、校验
+- **YAML** - YAML 格式化与 JSON 互转
+- **TOML** - TOML 格式化与解析
+- **CSV** - CSV 解析与格式化
+- **SQL** - SQL 格式化
+- **HTML** - HTML 格式化与压缩
+- **CSS** - CSS 格式化与压缩
+- **JavaScript** - JavaScript 格式化与压缩
+- **Hex 查看器** - 十六进制查看器，支持大文件虚拟滚动
+- **文件哈希** - 计算文件的各种哈希值
+- **文件类型检测** - 基于 Magic Number 检测文件类型
+- **字节序转换** - 大端序与小端序转换
+- **IEEE 754** - 浮点数 IEEE 754 表示查看
+- **Protobuf** - Protocol Buffers 解码（无 Schema 解析）
+- **ASN.1** - ASN.1 DER/BER 解析
+- **X.509 证书** - X.509 证书解析
+- **PEM** - PEM 格式解析
+- **Cookie 解析** - Cookie 字符串解析与格式化
+- **User-Agent 解析** - User-Agent 字符串解析
+- **HTTP 头解析** - HTTP 请求/响应头解析
+- **cURL 转代码** - cURL 命令转换为各语言代码（Python、JavaScript、PHP、Ruby、Go、Rust 等）
+- **密钥对生成** - RSA/ECC 密钥对生成
+- **字符串提取** - 从二进制数据中提取可读字符串
+- **XOR 分析** - XOR 加密分析与解密
+- **频率分析** - 字符频率分析（密码学分析）
+- **模式搜索** - 二进制模式搜索
+- **偏移计算器** - 内存地址偏移计算
+- **结构体解析** - C 结构体内存布局可视化
+
+#### cURL 转代码工具增强
+- 支持 Python (requests, httpx, aiohttp, curl_cffi)
+- 支持 JavaScript (fetch, axios, node-fetch)
+- 支持 PHP (cURL, Guzzle)
+- 支持 Ruby (Net::HTTP, Faraday)
+- 支持 Go (net/http, resty)
+- 支持 Rust (reqwest, ureq, rnet)
+- 支持 Java (HttpClient, OkHttp)
+- 支持 C# (HttpClient)
+- 支持 Swift (URLSession)
+- 支持 Kotlin (OkHttp)
+- 添加 FastAPI 服务端代码生成（自动类型推断）
+- 添加代码高亮、自动换行和点击复制功能
+- 添加 HTTP 库功能对比表格
+- 支持自定义引号样式
+
+#### 首页升级
+- 全新 Hero 区域设计，添加渐变背景和动画效果
+- 添加 GitHub 实时统计徽章（Stars、Issues、PRs、Forks）
+- 添加可自定义的快速访问区域，支持 localStorage 持久化
+- 添加按分类浏览功能
+- 压缩统计和特性展示为紧凑徽章栏
+- 所有工具支持收藏到快速访问
+
+#### 文档
+- 添加英文版 README (README_EN.md)
+- 添加英文版贡献指南 (CONTRIBUTING_EN.md)
+- 添加官方域名 reot.dev
+
+### 修复
+- 修复自定义域名下刷新页面卡在 "Redirecting..." 的问题
+- 修复 base path 检测逻辑，支持任意子目录部署和自定义域名
+- 修复 SPA 工具按钮点击无响应和跨工具事件干扰问题
+- 修复 GitHub Pages 部署资源路径问题
+- 修复 X.509 证书解析时的空值访问错误
+- 修复 JSON 树形视图右键菜单位置偏移问题
+- 修复 CSS 格式化工具解析压缩代码的问题
+- 修复文本工具 HTML 文件名与工具 ID 不匹配的问题
+
+### 优化
+- 格式化工具（JSON/XML/YAML/CSV）添加语法高亮
+- Hex 查看器支持大文件虚拟滚动
+- 首页布局压缩，优化垂直空间利用
+- cURL 转代码工具重构为功能完整的解析器
+
+---
 
 ## [1.0.0] - 2026-01-07
 
@@ -90,34 +185,17 @@
 
 ## 计划中
 
-### 压缩与解压
-- GZIP 压缩与解压
-- ZSTD 压缩与解压
-- Deflate 压缩与解压
-- Brotli 压缩与解压
-
-### 哈希计算
-- SHA-3 系列（SHA3-224, SHA3-256, SHA3-384, SHA3-512）
-- BLAKE2（BLAKE2b, BLAKE2s）
-- RIPEMD-160
-
 ### 加密与解密
-- DES / 3DES 加解密
-- ChaCha20 加解密
-- 国密 SM2/SM4 加解密
+- ECC 椭圆曲线加密
+- SM2 国密加解密
+- Ed25519 签名验签
 
-### 数据格式化
-- XML 格式化
-- YAML 格式化
-- SQL 格式化
+### 压缩与解压
+- ZSTD 压缩与解压
+- LZ4 压缩与解压
 
 ### 二进制分析
-- Hex 查看器
-- 文件类型检测
-
-### 协议解析
-- Protobuf 解码
-- X.509 证书解析
+- 二进制编辑器
 
 ---
 
