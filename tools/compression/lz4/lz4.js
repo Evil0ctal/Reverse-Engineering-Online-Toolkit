@@ -275,68 +275,6 @@
     }
 
     /**
-     * LZ4 解压
-     */
-    function lz4Decompress(input, originalSize) {
-        const output = new Uint8Array(originalSize || input.length * 10);
-        let op = 0;
-        let ip = 0;
-
-        while (ip < input.length) {
-            // 读取 token
-            const token = input[ip++];
-            let literalLen = token & 0x0F;
-            let matchLen = (token >> 4) & 0x0F;
-
-            // 读取额外字面量长度
-            if (literalLen === 15) {
-                let s;
-                do {
-                    s = input[ip++];
-                    literalLen += s;
-                } while (s === 255 && ip < input.length);
-            }
-
-            // 复制字面量
-            for (let i = 0; i < literalLen; i++) {
-                if (ip >= input.length || op >= output.length) break;
-                output[op++] = input[ip++];
-            }
-
-            // 检查是否到达末尾
-            if (ip >= input.length) break;
-
-            // 读取偏移量
-            const offset = input[ip] | (input[ip + 1] << 8);
-            ip += 2;
-
-            if (offset === 0) {
-                throw new Error('无效的 LZ4 数据：偏移量为 0');
-            }
-
-            // 读取额外匹配长度
-            matchLen += MINMATCH;
-            if ((token >> 4) === 15) {
-                let s;
-                do {
-                    if (ip >= input.length) break;
-                    s = input[ip++];
-                    matchLen += s;
-                } while (s === 255);
-            }
-
-            // 复制匹配
-            let matchStart = op - offset;
-            for (let i = 0; i < matchLen; i++) {
-                if (op >= output.length) break;
-                output[op++] = output[matchStart + i];
-            }
-        }
-
-        return output.slice(0, op);
-    }
-
-    /**
      * 创建 LZ4 帧
      */
     function createLZ4Frame(compressedData, originalSize) {
@@ -413,43 +351,144 @@
 
         // 读取 FLG
         const flg = data[pos++];
+        const blockIndependence = (flg >> 5) & 1;
+        const blockChecksum = (flg >> 4) & 1;
         const hasContentSize = (flg >> 3) & 1;
+        const contentChecksum = (flg >> 2) & 1;
+        const hasDictId = flg & 1;
 
         // 读取 BD
-        pos++;
+        const bd = data[pos++];
 
-        // 读取 Content Size
+        // 读取 Content Size (如果有)
         let contentSize = 0;
         if (hasContentSize) {
             contentSize = data[pos] |
                          (data[pos + 1] << 8) |
                          (data[pos + 2] << 16) |
                          (data[pos + 3] << 24);
-            pos += 8;
+            pos += 8; // Content size 是 8 字节
         }
 
-        // 跳过 Header Checksum
+        // 读取 Dict ID (如果有)
+        if (hasDictId) {
+            pos += 4;
+        }
+
+        // 跳过 Header Checksum (1 byte)
         pos++;
 
-        // 读取块
-        const blockSize = data[pos] |
-                         (data[pos + 1] << 8) |
-                         (data[pos + 2] << 16) |
-                         ((data[pos + 3] & 0x7F) << 24);
-        const isUncompressed = (data[pos + 3] >> 7) & 1;
-        pos += 4;
+        // 解压所有块
+        const output = [];
 
-        if (blockSize === 0) {
-            return new Uint8Array(0);
+        while (pos < data.length) {
+            // 读取块大小 (4 bytes, little-endian)
+            if (pos + 4 > data.length) break;
+
+            const blockSizeRaw = data[pos] |
+                                (data[pos + 1] << 8) |
+                                (data[pos + 2] << 16) |
+                                (data[pos + 3] << 24);
+            pos += 4;
+
+            // 检查是否为结束标记
+            if (blockSizeRaw === 0) {
+                break;
+            }
+
+            const isUncompressed = (blockSizeRaw >> 31) & 1;
+            const blockSize = blockSizeRaw & 0x7FFFFFFF;
+
+            if (blockSize === 0 || pos + blockSize > data.length) {
+                break;
+            }
+
+            const blockData = data.slice(pos, pos + blockSize);
+            pos += blockSize;
+
+            // 跳过块校验和 (如果有)
+            if (blockChecksum) {
+                pos += 4;
+            }
+
+            if (isUncompressed) {
+                // 未压缩块，直接复制
+                for (let i = 0; i < blockData.length; i++) {
+                    output.push(blockData[i]);
+                }
+            } else {
+                // 压缩块，解压
+                const decompressedBlock = lz4DecompressBlock(blockData);
+                for (let i = 0; i < decompressedBlock.length; i++) {
+                    output.push(decompressedBlock[i]);
+                }
+            }
         }
 
-        const blockData = data.slice(pos, pos + blockSize);
+        return new Uint8Array(output);
+    }
 
-        if (isUncompressed) {
-            return blockData;
+    /**
+     * LZ4 块解压
+     */
+    function lz4DecompressBlock(input) {
+        const output = [];
+        let ip = 0;
+
+        while (ip < input.length) {
+            // 读取 token
+            const token = input[ip++];
+            let literalLen = (token >> 4) & 0x0F;
+            let matchLen = token & 0x0F;
+
+            // 读取额外字面量长度
+            if (literalLen === 15) {
+                let s;
+                do {
+                    if (ip >= input.length) break;
+                    s = input[ip++];
+                    literalLen += s;
+                } while (s === 255);
+            }
+
+            // 复制字面量
+            for (let i = 0; i < literalLen; i++) {
+                if (ip >= input.length) break;
+                output.push(input[ip++]);
+            }
+
+            // 检查是否到达末尾
+            if (ip >= input.length) break;
+
+            // 读取偏移量 (2 bytes, little-endian)
+            if (ip + 1 >= input.length) break;
+            const offset = input[ip] | (input[ip + 1] << 8);
+            ip += 2;
+
+            if (offset === 0) {
+                throw new Error('无效的 LZ4 数据：偏移量为 0');
+            }
+
+            // 读取额外匹配长度
+            matchLen += 4; // MINMATCH = 4
+            if ((token & 0x0F) === 15) {
+                let s;
+                do {
+                    if (ip >= input.length) break;
+                    s = input[ip++];
+                    matchLen += s;
+                } while (s === 255);
+            }
+
+            // 复制匹配
+            const matchStart = output.length - offset;
+            for (let i = 0; i < matchLen; i++) {
+                if (matchStart + i < 0) break;
+                output.push(output[matchStart + i]);
+            }
         }
 
-        return lz4Decompress(blockData, contentSize || blockSize * 10);
+        return output;
     }
 
     /**
@@ -678,20 +717,24 @@
                 const output = document.getElementById('output');
                 const format = getOutputFormat();
 
-                if (!input.value.trim()) {
-                    REOT.utils?.showNotification('请输入要解压的内容', 'warning');
-                    return;
-                }
-
                 let compressedData;
-                try {
-                    if (format === 'base64') {
-                        compressedData = base64ToUint8Array(input.value.trim());
-                    } else {
-                        compressedData = hexToUint8Array(input.value.trim());
+                if (currentFileData) {
+                    // 直接使用上传的文件数据
+                    compressedData = currentFileData;
+                } else if (input.value.trim()) {
+                    // 从文本输入解析
+                    try {
+                        if (format === 'base64') {
+                            compressedData = base64ToUint8Array(input.value.trim());
+                        } else {
+                            compressedData = hexToUint8Array(input.value.trim());
+                        }
+                    } catch (e) {
+                        throw new Error('输入格式无效');
                     }
-                } catch (e) {
-                    throw new Error('输入格式无效');
+                } else {
+                    REOT.utils?.showNotification('请输入要解压的内容或上传文件', 'warning');
+                    return;
                 }
 
                 const decompressed = decompress(compressedData);
@@ -707,7 +750,7 @@
 
                 REOT.utils?.showNotification('解压成功', 'success');
             } catch (error) {
-                REOT.utils?.showNotification(error.message, 'error');
+                REOT.utils?.showNotification(error.message || '解压失败', 'error');
             }
         }
 

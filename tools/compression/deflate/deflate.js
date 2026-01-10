@@ -369,19 +369,62 @@
                 const input = document.getElementById('input');
                 const output = document.getElementById('output');
 
-                if (!input.value.trim()) {
-                    REOT.utils?.showNotification('请输入要解压的内容', 'warning');
+                let compressedData;
+                if (currentFileData) {
+                    // 直接使用上传的文件数据
+                    compressedData = currentFileData;
+                } else if (input.value.trim()) {
+                    // 从文本输入解析
+                    const format = getOutputFormat();
+                    try {
+                        if (format === 'base64') {
+                            compressedData = base64ToUint8Array(input.value.trim());
+                        } else {
+                            compressedData = hexToUint8Array(input.value.trim());
+                        }
+                    } catch (e) {
+                        throw new Error('输入格式无效');
+                    }
+                } else {
+                    REOT.utils?.showNotification('请输入要解压的内容或上传文件', 'warning');
                     return;
                 }
 
-                const result = decompress(input.value.trim());
+                // 自动检测是否为 zlib 格式（magic: 78 xx）
+                const isZlib = compressedData[0] === 0x78;
+
+                // 使用对应的解压方法
+                let decompressed;
+                try {
+                    if (isZlib) {
+                        decompressed = window.pako.inflate(compressedData);
+                    } else {
+                        decompressed = window.pako.inflateRaw(compressedData);
+                    }
+                } catch (e) {
+                    // 如果一种方式失败，尝试另一种
+                    try {
+                        decompressed = isZlib
+                            ? window.pako.inflateRaw(compressedData)
+                            : window.pako.inflate(compressedData);
+                    } catch (e2) {
+                        throw new Error('解压失败: 数据格式无效或已损坏');
+                    }
+                }
+
+                updateStats(decompressed.length, compressedData.length);
+
                 if (output) {
-                    output.value = result;
+                    try {
+                        output.value = uint8ArrayToString(decompressed);
+                    } catch (e) {
+                        output.value = uint8ArrayToBase64(decompressed);
+                    }
                 }
 
                 REOT.utils?.showNotification('解压成功', 'success');
             } catch (error) {
-                REOT.utils?.showNotification(error.message, 'error');
+                REOT.utils?.showNotification(error.message || '解压失败', 'error');
             }
         }
 

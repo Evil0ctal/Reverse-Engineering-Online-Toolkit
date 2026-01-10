@@ -1,6 +1,6 @@
 /**
  * Brotli 压缩工具
- * @description Brotli 压缩与解压（纯 JavaScript 实现）
+ * @description Brotli 压缩与解压（使用 Google brotli-wasm）
  * @author Evil0ctal
  * @license Apache-2.0
  */
@@ -9,164 +9,80 @@
     'use strict';
 
     let currentFileData = null;
-
-    // ========== Brotli 解码器（精简实现） ==========
-    // 基于 RFC 7932 的简化 Brotli 解码实现
-
-    const BROTLI_DICTIONARY = null; // 简化版不使用字典
+    let brotliWasm = null;
+    let brotliLoadPromise = null;
 
     /**
-     * Brotli 位读取器
+     * 动态加载 brotli-wasm 库
      */
-    class BitReader {
-        constructor(data) {
-            this.data = data;
-            this.pos = 0;
-            this.bitPos = 0;
-            this.buffer = 0;
-            this.bufferBits = 0;
+    async function loadBrotliWasm() {
+        if (brotliWasm) {
+            return brotliWasm;
         }
 
-        readBits(n) {
-            while (this.bufferBits < n) {
-                if (this.pos >= this.data.length) {
-                    throw new Error('Unexpected end of data');
-                }
-                this.buffer |= this.data[this.pos++] << this.bufferBits;
-                this.bufferBits += 8;
+        if (brotliLoadPromise) {
+            return brotliLoadPromise;
+        }
+
+        brotliLoadPromise = (async () => {
+            try {
+                // 使用动态 import 加载 ESM 模块
+                const module = await import('https://cdn.jsdelivr.net/npm/brotli-wasm@3.0.1/index.web.js');
+                brotliWasm = await module.default;
+                return brotliWasm;
+            } catch (e) {
+                console.error('brotli-wasm ESM 加载失败，尝试备用方案:', e);
+
+                // 备用方案：使用 script 标签加载
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.type = 'module';
+                    script.textContent = `
+                        import brotliPromise from 'https://cdn.jsdelivr.net/npm/brotli-wasm@3.0.1/index.web.js';
+                        window.__brotliWasmPromise = brotliPromise;
+                    `;
+                    script.onload = async () => {
+                        try {
+                            if (window.__brotliWasmPromise) {
+                                brotliWasm = await window.__brotliWasmPromise;
+                                resolve(brotliWasm);
+                            } else {
+                                reject(new Error('brotli-wasm 加载失败'));
+                            }
+                        } catch (err) {
+                            reject(err);
+                        }
+                    };
+                    script.onerror = () => reject(new Error('brotli-wasm 脚本加载失败'));
+                    document.head.appendChild(script);
+                });
             }
-            const result = this.buffer & ((1 << n) - 1);
-            this.buffer >>= n;
-            this.bufferBits -= n;
-            return result;
-        }
+        })();
 
-        readByte() {
-            return this.readBits(8);
-        }
+        return brotliLoadPromise;
     }
 
     /**
-     * 简单的 LZ77 压缩（用于演示 Brotli 压缩原理）
+     * 压缩数据
      */
-    function simpleLZ77Compress(data) {
-        const result = [];
-        let i = 0;
-        const windowSize = 32768;
-        const minMatch = 3;
-        const maxMatch = 258;
-
-        while (i < data.length) {
-            let bestLen = 0;
-            let bestDist = 0;
-
-            // 在滑动窗口中查找匹配
-            const searchStart = Math.max(0, i - windowSize);
-            for (let j = searchStart; j < i; j++) {
-                let len = 0;
-                while (len < maxMatch && i + len < data.length && data[j + len] === data[i + len]) {
-                    len++;
-                }
-                if (len >= minMatch && len > bestLen) {
-                    bestLen = len;
-                    bestDist = i - j;
-                }
-            }
-
-            if (bestLen >= minMatch) {
-                // 输出长度-距离对
-                result.push({ type: 'match', length: bestLen, distance: bestDist });
-                i += bestLen;
-            } else {
-                // 输出字面量
-                result.push({ type: 'literal', value: data[i] });
-                i++;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * 编码压缩数据为二进制格式
-     */
-    function encodeLZ77(tokens) {
-        const output = [];
-
-        // 简化的头部
-        output.push(0x1B); // Brotli 标识
-        output.push(tokens.length & 0xFF);
-        output.push((tokens.length >> 8) & 0xFF);
-        output.push((tokens.length >> 16) & 0xFF);
-
-        for (const token of tokens) {
-            if (token.type === 'literal') {
-                output.push(0x00); // 字面量标记
-                output.push(token.value);
-            } else {
-                output.push(0x01); // 匹配标记
-                output.push(token.length & 0xFF);
-                output.push(token.distance & 0xFF);
-                output.push((token.distance >> 8) & 0xFF);
-            }
-        }
-
-        return new Uint8Array(output);
-    }
-
-    /**
-     * 解码压缩数据
-     */
-    function decodeLZ77(data) {
-        if (data[0] !== 0x1B) {
-            throw new Error('无效的压缩数据格式');
-        }
-
-        const tokenCount = data[1] | (data[2] << 8) | (data[3] << 16);
-        const output = [];
-        let pos = 4;
-
-        for (let i = 0; i < tokenCount && pos < data.length; i++) {
-            const type = data[pos++];
-            if (type === 0x00) {
-                // 字面量
-                output.push(data[pos++]);
-            } else if (type === 0x01) {
-                // 匹配
-                const length = data[pos++];
-                const distance = data[pos] | (data[pos + 1] << 8);
-                pos += 2;
-
-                const start = output.length - distance;
-                for (let j = 0; j < length; j++) {
-                    output.push(output[start + j]);
-                }
-            }
-        }
-
-        return new Uint8Array(output);
-    }
-
-    /**
-     * 压缩数据（简化版 Brotli 风格压缩）
-     */
-    function compress(data) {
+    async function compress(data) {
         let input;
         if (typeof data === 'string') {
             input = new TextEncoder().encode(data);
         } else {
-            input = data;
+            input = new Uint8Array(data);
         }
 
-        const tokens = simpleLZ77Compress(input);
-        return encodeLZ77(tokens);
+        const brotli = await loadBrotliWasm();
+        return brotli.compress(input);
     }
 
     /**
      * 解压数据
      */
-    function decompress(data) {
-        return decodeLZ77(data);
+    async function decompress(data) {
+        const brotli = await loadBrotliWasm();
+        return brotli.decompress(data);
     }
 
     // ========== 工具函数 ==========
@@ -335,11 +251,11 @@
                     return;
                 }
 
-                const compressed = compress(data);
-                updateStats(
-                    typeof data === 'string' ? stringToUint8Array(data).length : data.length,
-                    compressed.length
-                );
+                REOT.utils?.showNotification('正在加载 Brotli 库并压缩...', 'info');
+
+                const inputData = typeof data === 'string' ? stringToUint8Array(data) : data;
+                const compressed = await compress(data);
+                updateStats(inputData.length, compressed.length);
 
                 if (output) {
                     output.value = format === 'base64'
@@ -360,23 +276,27 @@
                 const output = document.getElementById('output');
                 const format = getOutputFormat();
 
-                if (!input.value.trim()) {
-                    REOT.utils?.showNotification('请输入要解压的内容', 'warning');
+                let compressedData;
+                if (currentFileData) {
+                    compressedData = currentFileData;
+                } else if (input.value.trim()) {
+                    try {
+                        if (format === 'base64') {
+                            compressedData = base64ToUint8Array(input.value.trim());
+                        } else {
+                            compressedData = hexToUint8Array(input.value.trim());
+                        }
+                    } catch (e) {
+                        throw new Error('输入格式无效');
+                    }
+                } else {
+                    REOT.utils?.showNotification('请输入要解压的内容或上传文件', 'warning');
                     return;
                 }
 
-                let compressedData;
-                try {
-                    if (format === 'base64') {
-                        compressedData = base64ToUint8Array(input.value.trim());
-                    } else {
-                        compressedData = hexToUint8Array(input.value.trim());
-                    }
-                } catch (e) {
-                    throw new Error('输入格式无效');
-                }
+                REOT.utils?.showNotification('正在加载 Brotli 库并解压...', 'info');
 
-                const decompressed = decompress(compressedData);
+                const decompressed = await decompress(compressedData);
                 updateStats(decompressed.length, compressedData.length);
 
                 if (output) {
@@ -389,7 +309,7 @@
 
                 REOT.utils?.showNotification('解压成功', 'success');
             } catch (error) {
-                REOT.utils?.showNotification(error.message, 'error');
+                REOT.utils?.showNotification(error.message || '解压失败', 'error');
             }
         }
 
@@ -433,24 +353,28 @@
     window.BrotliTool = {
         compress,
         decompress,
-        formatFileSize
+        formatFileSize,
+        loadBrotliWasm
     };
 
     // 设置默认示例数据
     const defaultInput = document.getElementById('input');
     if (defaultInput && !defaultInput.value) {
-        const sampleText = `这是一段示例文本，用于演示压缩功能。
+        const sampleText = `这是一段示例文本，用于演示 Brotli 压缩功能。
 
-本工具使用简化的 LZ77 压缩算法（Brotli 的核心算法之一）进行数据压缩。
+Brotli 是 Google 开发的通用无损压缩算法，结合了 LZ77、霍夫曼编码和二阶上下文建模。
 
 主要特点：
-1. 纯 JavaScript 实现，无需外部依赖
-2. 基于滑动窗口的字典压缩
-3. 适合文本数据压缩
+1. 高压缩率 - 比 GZIP 高约 20-26%
+2. 广泛应用 - 现代浏览器都支持 Brotli
+3. 适合 Web - 特别适合压缩 HTML、CSS、JavaScript
 
-This is sample text for demonstrating compression.
-The tool uses a simplified LZ77 algorithm for compression.`;
+This is sample text for demonstrating Brotli compression.
+Brotli typically achieves better compression than gzip for web content.`;
         defaultInput.value = sampleText;
     }
+
+    // 预加载 brotli-wasm 库
+    loadBrotliWasm().catch(err => console.warn('Brotli 预加载失败:', err.message));
 
 })();

@@ -1,0 +1,8 @@
+This is a test file for compression testing. 这是一个用于测试压缩的文件。
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+The quick brown fox jumps over the lazy dog.
+ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+Repeated content for better compression ratio: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+More repeated content: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+TikHub API Platform - Compression Test File
+Generated at Sat Jan 10 06:05:28 UTC 2026
