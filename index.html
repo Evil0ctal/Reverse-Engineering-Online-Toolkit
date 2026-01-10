@@ -318,104 +318,43 @@
                     </div>
                 </section>
 
-                <!-- Stats Section -->
-                <section class="stats-section">
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7"/>
-                                    <rect x="14" y="3" width="7" height="7"/>
-                                    <rect x="14" y="14" width="7" height="7"/>
-                                    <rect x="3" y="14" width="7" height="7"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-number" id="stat-tools">--</span>
-                                <span class="stat-label" data-i18n="home.stats.tools">实用工具</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-number" id="stat-categories">--</span>
-                                <span class="stat-label" data-i18n="home.stats.categories">工具分类</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-number">100%</span>
-                                <span class="stat-label" data-i18n="home.stats.privacy">本地处理</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <polyline points="12 6 12 12 16 14"/>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-number">0ms</span>
-                                <span class="stat-label" data-i18n="home.stats.latency">网络延迟</span>
-                            </div>
-                        </div>
+                <!-- Compact Stats & Features Bar -->
+                <div class="features-bar">
+                    <div class="feature-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span id="stat-tools">--</span>
+                        <span data-i18n="home.stats.tools">工具</span>
                     </div>
-                </section>
-
-                <!-- Features Section with SVG Icons -->
-                <section class="features">
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                                <line x1="8" y1="21" x2="16" y2="21"/>
-                                <line x1="12" y1="17" x2="12" y2="21"/>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title" data-i18n="home.features.local.title">本地计算</h3>
-                        <p class="feature-desc" data-i18n="home.features.local.desc">所有计算均在浏览器本地完成</p>
+                    <div class="feature-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <span id="stat-categories">--</span>
+                        <span data-i18n="home.stats.categories">分类</span>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title" data-i18n="home.features.fast.title">即开即用</h3>
-                        <p class="feature-desc" data-i18n="home.features.fast.desc">无需安装，打开浏览器即可使用</p>
+                    <div class="feature-badge feature-badge--highlight">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <span data-i18n="home.features.secure.title">隐私安全</span>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title" data-i18n="home.features.secure.title">隐私安全</h3>
-                        <p class="feature-desc" data-i18n="home.features.secure.desc">数据不会上传至服务器</p>
+                    <div class="feature-badge feature-badge--highlight">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                        <span data-i18n="home.features.fast.title">即开即用</span>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                                <line x1="12" y1="18" x2="12.01" y2="18"/>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title" data-i18n="home.features.responsive.title">响应式设计</h3>
-                        <p class="feature-desc" data-i18n="home.features.responsive.desc">适配桌面端和移动端</p>
+                    <div class="feature-badge feature-badge--highlight">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>0ms</span>
+                        <span data-i18n="home.stats.latency">延迟</span>
                     </div>
-                </section>
+                </div>
 
                 <!-- Quick Access Section with Customization -->
                 <section class="quick-access" id="quick-access-section">
