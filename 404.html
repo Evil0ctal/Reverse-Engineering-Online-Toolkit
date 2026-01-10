@@ -5,24 +5,26 @@
     <title>Redirecting...</title>
     <script>
         // GitHub Pages SPA 重定向支持
-        // 仅在 github.io 域名上生效
+        // 支持 github.io 子目录部署和自定义域名
         (function() {
             var l = window.location;
+            var pathname = l.pathname;
 
-            // 只在 GitHub Pages 上执行重定向
-            if (!l.hostname.endsWith('github.io')) {
-                return;
+            // 保存当前路径用于 SPA 恢复
+            sessionStorage.setItem('github_pages_redirect', pathname + l.search + l.hash);
+
+            // 判断是否是 GitHub Pages 子目录部署 (xxx.github.io/repo-name/)
+            if (l.hostname.endsWith('github.io')) {
+                var repo = pathname.split('/')[1];
+                if (repo) {
+                    // 重定向到仓库根路径
+                    l.replace(l.protocol + '//' + l.hostname + '/' + repo + '/');
+                    return;
+                }
             }
 
-            var repo = l.pathname.split('/')[1]; // 获取仓库名
-
-            // 使用特定的 key 避免与其他应用冲突
-            sessionStorage.setItem('github_pages_redirect', l.pathname + l.search + l.hash);
-
-            // 重定向到仓库根路径
-            l.replace(
-                l.protocol + '//' + l.hostname + '/' + repo + '/'
-            );
+            // 自定义域名或根目录部署 - 直接重定向到根路径
+            l.replace(l.protocol + '//' + l.hostname + '/');
         })();
     </script>
 </head>

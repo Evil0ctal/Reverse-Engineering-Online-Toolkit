@@ -472,13 +472,11 @@
                 window.__REDIRECT_PATH__ = redirect;
                 return;
             }
-            // 检查 GitHub Pages 404 重定向
-            if (window.location.hostname.endsWith('github.io')) {
-                redirect = sessionStorage.getItem('github_pages_redirect');
-                if (redirect) {
-                    sessionStorage.removeItem('github_pages_redirect');
-                    window.__REDIRECT_PATH__ = redirect;
-                }
+            // 检查 404.html 重定向（支持 GitHub Pages 和自定义域名）
+            redirect = sessionStorage.getItem('github_pages_redirect');
+            if (redirect) {
+                sessionStorage.removeItem('github_pages_redirect');
+                window.__REDIRECT_PATH__ = redirect;
             }
         })();
     </script>
