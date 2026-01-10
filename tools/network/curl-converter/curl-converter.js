@@ -1923,25 +1923,35 @@
         // 代码生成示例按钮
         if (target.id === 'gen-sample-btn' || target.closest('#gen-sample-btn')) {
             setEditorValue(genInputEditor, 'gen-input', SAMPLE_CURL);
-            const language = document.getElementById('language-select').value;
-            // 重新创建编辑器以应用正确的语言高亮
-            await recreateCodeOutputEditor(language);
-            const code = generateCode(SAMPLE_CURL, language);
-            setEditorValue(codeOutputEditor, 'code-output', code);
+            const selectEl = document.getElementById('code-language-select');
+            const language = selectEl?.value || 'python-requests';
+            try {
+                await recreateCodeOutputEditor(language);
+                const code = generateCode(SAMPLE_CURL, language);
+                setEditorValue(codeOutputEditor, 'code-output', code);
+            } catch (error) {
+                console.error('Sample generation error:', error);
+            }
+            return;
         }
 
         // 生成代码按钮
         if (target.id === 'generate-btn' || target.closest('#generate-btn')) {
             const input = getEditorValue(genInputEditor, 'gen-input');
-            const language = document.getElementById('language-select').value;
+            const selectEl = document.getElementById('code-language-select');
+            const language = selectEl?.value;
 
             if (!input.trim()) {
                 REOT.utils?.showNotification('请输入 cURL 命令', 'warning');
                 return;
             }
 
+            if (!language) {
+                REOT.utils?.showNotification('请选择编程语言', 'warning');
+                return;
+            }
+
             try {
-                // 重新创建编辑器以应用正确的语言高亮
                 await recreateCodeOutputEditor(language);
                 const code = generateCode(input, language);
                 setEditorValue(codeOutputEditor, 'code-output', code);
@@ -1949,6 +1959,7 @@
             } catch (error) {
                 REOT.utils?.showNotification(error.message, 'error');
             }
+            return;
         }
 
         // 复制代码按钮
@@ -1978,7 +1989,7 @@
     document.addEventListener('change', async (e) => {
         if (!isCurlConverterToolActive()) return;
 
-        if (e.target.id === 'language-select') {
+        if (e.target.id === 'code-language-select') {
             const input = getEditorValue(genInputEditor, 'gen-input');
             const language = e.target.value;
 
