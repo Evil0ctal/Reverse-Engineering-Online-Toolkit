@@ -9,6 +9,15 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.3] - 2026-01-11
+
+### 新增
+- **JSON 格式化** - 树视图右键菜单新增代码变量复制功能，支持 Python（严格/安全模式）和 JavaScript（括号/点号/可选链）
+- **Cookie 解析器** - 支持字符串、JSON、Netscape 三种格式互转，兼容 curl 和浏览器导出的 Cookie 文件
+- **HTTP 头解析** - 支持多行格式与 JSON 格式（对象/数组）互转
+
+---
+
 ## [1.0.2] - 2026-01-09
 
 ### 修复
