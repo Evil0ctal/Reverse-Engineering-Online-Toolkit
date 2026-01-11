@@ -1,12 +1,15 @@
 /**
  * HTTP 头解析工具
- * @description 解析和格式化 HTTP 请求/响应头
+ * @description 解析和格式化 HTTP 请求/响应头，支持多行格式和 JSON 格式互转
  * @author Evil0ctal
  * @license Apache-2.0
  */
 
 (function() {
     'use strict';
+
+    let inputFormat = 'text'; // 'text' | 'json' - 记录输入格式
+    let parsedHeaders = null; // 缓存解析结果
 
     // 常见 HTTP 头部说明
     const HEADER_DESCRIPTIONS = {
@@ -115,9 +118,148 @@
     }
 
     /**
-     * 解析 HTTP 头部
+     * 检测输入格式（多行文本或 JSON）
+     */
+    function detectInputFormat(input) {
+        const trimmed = input.trim();
+        // 检查是否以 { 或 [ 开头（JSON 对象或数组）
+        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+            try {
+                JSON.parse(trimmed);
+                return 'json';
+            } catch (e) {
+                // 解析失败，当作文本处理
+            }
+        }
+        return 'text';
+    }
+
+    // 解析 JSON 格式的 Headers
+    // 支持多种格式：
+    // 1. 简单对象: {"Content-Type": "application/json", "Accept": "..."}
+    // 2. 数组格式: [{"name": "Content-Type", "value": "application/json"}]
+    // 3. Postman 导出格式: {"key": "Content-Type", "value": "application/json"}
+    function parseJsonHeaders(jsonString) {
+        const result = {
+            type: 'headers-only',
+            statusLine: null,
+            headers: [],
+            raw: jsonString
+        };
+
+        try {
+            const parsed = JSON.parse(jsonString);
+
+            if (Array.isArray(parsed)) {
+                // 数组格式
+                for (const item of parsed) {
+                    if (typeof item !== 'object' || item === null) continue;
+
+                    // 支持多种字段名
+                    const name = item.name || item.Name || item.key || item.Key || item.header || '';
+                    const value = item.value || item.Value || '';
+
+                    if (!name) continue;
+
+                    const nameLower = name.toLowerCase();
+                    result.headers.push({
+                        name: name,
+                        value: String(value),
+                        description: HEADER_DESCRIPTIONS[nameLower] || ''
+                    });
+                }
+            } else if (typeof parsed === 'object') {
+                // 简单对象格式 {"Header-Name": "value"}
+                for (const [name, value] of Object.entries(parsed)) {
+                    const nameLower = name.toLowerCase();
+                    result.headers.push({
+                        name: name,
+                        value: String(value),
+                        description: HEADER_DESCRIPTIONS[nameLower] || ''
+                    });
+                }
+            }
+        } catch (e) {
+            console.error('Failed to parse JSON headers:', e);
+        }
+
+        return result;
+    }
+
+    /**
+     * 将 Headers 转为 JSON 对象格式
+     */
+    function headersToJsonObject(parsed, pretty = true) {
+        const obj = {};
+        for (const header of parsed.headers) {
+            obj[header.name] = header.value;
+        }
+        return pretty ? JSON.stringify(obj, null, 2) : JSON.stringify(obj);
+    }
+
+    /**
+     * 将 Headers 转为 JSON 数组格式
+     */
+    function headersToJsonArray(parsed, pretty = true) {
+        const arr = parsed.headers.map(h => ({
+            name: h.name,
+            value: h.value
+        }));
+        return pretty ? JSON.stringify(arr, null, 2) : JSON.stringify(arr);
+    }
+
+    /**
+     * 将 Headers 转为多行文本格式
+     */
+    function headersToText(parsed, sorted = false) {
+        let output = '';
+
+        // 添加状态行
+        if (parsed.statusLine) {
+            if (parsed.type === 'request') {
+                output += `${parsed.statusLine.method} ${parsed.statusLine.path} ${parsed.statusLine.version}\n`;
+            } else if (parsed.type === 'response') {
+                output += `${parsed.statusLine.version} ${parsed.statusLine.statusCode} ${parsed.statusLine.statusText}\n`;
+            }
+        }
+
+        // 添加头部字段
+        let headers = parsed.headers;
+        if (sorted) {
+            headers = [...parsed.headers].sort((a, b) =>
+                a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+            );
+        }
+
+        for (const header of headers) {
+            output += `${header.name}: ${header.value}\n`;
+        }
+
+        return output.trim();
+    }
+
+    /**
+     * 解析 HTTP 头部（自动检测格式）
      */
     function parseHeaders(input) {
+        if (!input.trim()) {
+            throw new Error('输入为空');
+        }
+
+        // 检测输入格式
+        inputFormat = detectInputFormat(input);
+
+        if (inputFormat === 'json') {
+            return parseJsonHeaders(input);
+        }
+
+        return parseTextHeaders(input);
+    }
+
+    /**
+     * 解析多行文本格式的 HTTP 头部
+     */
+    function parseTextHeaders(input) {
         const lines = input.trim().split('\n');
         const result = {
             type: null,
@@ -410,9 +552,82 @@ Set-Cookie: session_id=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict`;
             }
 
             try {
-                const parsed = parseHeaders(input.value);
-                renderResult(parsed);
-                REOT.utils?.showNotification('解析成功', 'success');
+                parsedHeaders = parseHeaders(input.value);
+                renderResult(parsedHeaders);
+                const formatMsg = inputFormat === 'json' ? '(JSON 格式)' : '(多行格式)';
+                REOT.utils?.showNotification(`解析成功 ${formatMsg}`, 'success');
+            } catch (error) {
+                REOT.utils?.showNotification(error.message, 'error');
+            }
+        }
+
+        // 转为 JSON（对象格式）
+        if (target.id === 'to-json-btn' || target.closest('#to-json-btn')) {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+
+            if (!input.value.trim()) {
+                REOT.utils?.showNotification('请输入 HTTP 头部内容', 'warning');
+                return;
+            }
+
+            try {
+                if (!parsedHeaders) {
+                    parsedHeaders = parseHeaders(input.value);
+                }
+                const json = headersToJsonObject(parsedHeaders);
+                if (output) {
+                    output.value = json;
+                }
+                REOT.utils?.showNotification('已转换为 JSON 对象格式', 'success');
+            } catch (error) {
+                REOT.utils?.showNotification(error.message, 'error');
+            }
+        }
+
+        // 转为 JSON（数组格式）
+        if (target.id === 'to-json-array-btn' || target.closest('#to-json-array-btn')) {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+
+            if (!input.value.trim()) {
+                REOT.utils?.showNotification('请输入 HTTP 头部内容', 'warning');
+                return;
+            }
+
+            try {
+                if (!parsedHeaders) {
+                    parsedHeaders = parseHeaders(input.value);
+                }
+                const json = headersToJsonArray(parsedHeaders);
+                if (output) {
+                    output.value = json;
+                }
+                REOT.utils?.showNotification('已转换为 JSON 数组格式', 'success');
+            } catch (error) {
+                REOT.utils?.showNotification(error.message, 'error');
+            }
+        }
+
+        // 转为多行文本
+        if (target.id === 'to-text-btn' || target.closest('#to-text-btn')) {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+
+            if (!input.value.trim()) {
+                REOT.utils?.showNotification('请输入 HTTP 头部内容', 'warning');
+                return;
+            }
+
+            try {
+                if (!parsedHeaders) {
+                    parsedHeaders = parseHeaders(input.value);
+                }
+                const text = headersToText(parsedHeaders, false);
+                if (output) {
+                    output.value = text;
+                }
+                REOT.utils?.showNotification('已转换为多行文本格式', 'success');
             } catch (error) {
                 REOT.utils?.showNotification(error.message, 'error');
             }
@@ -448,6 +663,7 @@ Set-Cookie: session_id=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict`;
             if (input) input.value = '';
             if (output) output.value = '';
             if (resultSection) resultSection.style.display = 'none';
+            parsedHeaders = null;
         }
 
         // 复制按钮
@@ -463,6 +679,8 @@ Set-Cookie: session_id=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict`;
             const input = document.getElementById('input');
             if (input) {
                 input.value = SAMPLE_REQUEST;
+                parsedHeaders = null;
+                REOT.utils?.showNotification('已加载示例请求', 'success');
             }
         }
 
@@ -471,6 +689,8 @@ Set-Cookie: session_id=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict`;
             const input = document.getElementById('input');
             if (input) {
                 input.value = SAMPLE_RESPONSE;
+                parsedHeaders = null;
+                REOT.utils?.showNotification('已加载示例响应', 'success');
             }
         }
     });
@@ -479,7 +699,11 @@ Set-Cookie: session_id=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict`;
     window.HttpHeadersTool = {
         parse: parseHeaders,
         format: formatHeaders,
-        detectType: detectHeaderType
+        detectType: detectHeaderType,
+        detectFormat: detectInputFormat,
+        toJsonObject: headersToJsonObject,
+        toJsonArray: headersToJsonArray,
+        toText: headersToText
     };
 
     // 设置默认示例数据

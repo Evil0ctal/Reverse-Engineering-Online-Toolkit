@@ -542,6 +542,21 @@
             case 'copy-key':
                 copyToClipboard(key);
                 break;
+            case 'copy-python-strict':
+                copyToClipboard(toPythonStrict(path));
+                break;
+            case 'copy-python-get':
+                copyToClipboard(toPythonGet(path));
+                break;
+            case 'copy-javascript-bracket':
+                copyToClipboard(toJavaScriptBracket(path));
+                break;
+            case 'copy-javascript-dot':
+                copyToClipboard(toJavaScriptDot(path));
+                break;
+            case 'copy-javascript-optional':
+                copyToClipboard(toJavaScriptOptional(path));
+                break;
             case 'copy-value-formatted':
                 copyToClipboard(JSON.stringify(value, null, getIndent()));
                 break;
@@ -577,6 +592,168 @@
         if (success) {
             REOT.utils?.showNotification(REOT.i18n?.t('common.copied') || '已复制', 'success');
         }
+    }
+
+    // ==================== 代码变量生成 ====================
+
+    /**
+     * 解析 JSON Path 为路径段数组
+     * 将 $.path1.path2[0].key 解析为 [{type: 'key', value: 'path1'}, {type: 'key', value: 'path2'}, {type: 'index', value: 0}, {type: 'key', value: 'key'}]
+     */
+    function parseJsonPath(path) {
+        const segments = [];
+        // 移除开头的 $
+        let remaining = path.startsWith('$') ? path.slice(1) : path;
+
+        while (remaining.length > 0) {
+            if (remaining.startsWith('.')) {
+                // 点号访问 .key
+                remaining = remaining.slice(1);
+                const match = remaining.match(/^([^.\[\]]+)/);
+                if (match) {
+                    segments.push({ type: 'key', value: match[1] });
+                    remaining = remaining.slice(match[1].length);
+                }
+            } else if (remaining.startsWith('[')) {
+                // 括号访问 [0] 或 ["key"]
+                const indexMatch = remaining.match(/^\[(\d+)\]/);
+                if (indexMatch) {
+                    segments.push({ type: 'index', value: parseInt(indexMatch[1], 10) });
+                    remaining = remaining.slice(indexMatch[0].length);
+                } else {
+                    const keyMatch = remaining.match(/^\["([^"]+)"\]/);
+                    if (keyMatch) {
+                        segments.push({ type: 'key', value: keyMatch[1] });
+                        remaining = remaining.slice(keyMatch[0].length);
+                    } else {
+                        // 跳过无法解析的字符
+                        remaining = remaining.slice(1);
+                    }
+                }
+            } else {
+                // 跳过无法解析的字符
+                remaining = remaining.slice(1);
+            }
+        }
+
+        return segments;
+    }
+
+    /**
+     * 生成 Python 严格取值代码
+     * data["path1"]["path2"][0]
+     */
+    function toPythonStrict(path, varName = 'data') {
+        const segments = parseJsonPath(path);
+        if (segments.length === 0) return varName;
+
+        let result = varName;
+        for (const seg of segments) {
+            if (seg.type === 'index') {
+                result += `[${seg.value}]`;
+            } else {
+                result += `["${seg.value}"]`;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 生成 Python 安全取值代码 (使用 .get())
+     * data.get("path1", {}).get("path2", [])[0]
+     */
+    function toPythonGet(path, varName = 'data') {
+        const segments = parseJsonPath(path);
+        if (segments.length === 0) return varName;
+
+        let result = varName;
+        for (let i = 0; i < segments.length; i++) {
+            const seg = segments[i];
+            const nextSeg = segments[i + 1];
+
+            if (seg.type === 'index') {
+                // 数组索引只能用 [] 访问
+                result += `[${seg.value}]`;
+            } else {
+                // 键名使用 .get()，根据下一个段决定默认值类型
+                let defaultVal = '{}';
+                if (nextSeg) {
+                    defaultVal = nextSeg.type === 'index' ? '[]' : '{}';
+                } else {
+                    defaultVal = 'None';
+                }
+                result += `.get("${seg.value}", ${defaultVal})`;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 生成 JavaScript 括号取值代码
+     * data["path1"]["path2"][0]
+     */
+    function toJavaScriptBracket(path, varName = 'data') {
+        const segments = parseJsonPath(path);
+        if (segments.length === 0) return varName;
+
+        let result = varName;
+        for (const seg of segments) {
+            if (seg.type === 'index') {
+                result += `[${seg.value}]`;
+            } else {
+                result += `["${seg.value}"]`;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 检查键名是否是有效的 JavaScript 标识符
+     */
+    function isValidJsIdentifier(key) {
+        return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key);
+    }
+
+    /**
+     * 生成 JavaScript 点号取值代码
+     * data.path1.path2[0] (如果键名不是有效标识符则使用括号)
+     */
+    function toJavaScriptDot(path, varName = 'data') {
+        const segments = parseJsonPath(path);
+        if (segments.length === 0) return varName;
+
+        let result = varName;
+        for (const seg of segments) {
+            if (seg.type === 'index') {
+                result += `[${seg.value}]`;
+            } else if (isValidJsIdentifier(seg.value)) {
+                result += `.${seg.value}`;
+            } else {
+                result += `["${seg.value}"]`;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 生成 JavaScript 可选链取值代码
+     * data?.path1?.path2?.[0]
+     */
+    function toJavaScriptOptional(path, varName = 'data') {
+        const segments = parseJsonPath(path);
+        if (segments.length === 0) return varName;
+
+        let result = varName;
+        for (const seg of segments) {
+            if (seg.type === 'index') {
+                result += `?.[${seg.value}]`;
+            } else if (isValidJsIdentifier(seg.value)) {
+                result += `?.${seg.value}`;
+            } else {
+                result += `?.["${seg.value}"]`;
+            }
+        }
+        return result;
     }
 
     // ==================== 视图切换 ====================

@@ -20,7 +20,7 @@
     <div class="tool-container">
         <header class="tool-header">
             <h1 data-i18n="tools.http-headers.title">HTTP 头解析</h1>
-            <p data-i18n="tools.http-headers.description">解析和格式化 HTTP 请求/响应头</p>
+            <p data-i18n="tools.http-headers.description">解析和格式化 HTTP 请求/响应头，支持多行格式和 JSON 格式互转</p>
         </header>
 
         <main class="tool-main">
@@ -42,17 +42,24 @@
                 <textarea id="input"
                           class="form-input form-textarea form-textarea--code"
                           data-i18n-placeholder="tools.http-headers.inputPlaceholder"
-                          placeholder="粘贴 HTTP 头部内容..."></textarea>
+                          placeholder="粘贴 HTTP 头部内容（支持多行格式或 JSON 格式）..."></textarea>
             </section>
 
             <!-- 操作按钮 -->
             <section class="action-section">
                 <button id="parse-btn" class="btn btn--primary" data-i18n="tools.http-headers.parse">解析</button>
-                <button id="format-btn" class="btn btn--secondary" data-i18n="tools.http-headers.format">格式化</button>
+                <button id="to-json-btn" class="btn btn--secondary" data-i18n="tools.http-headers.toJson">转为 JSON</button>
+                <button id="to-json-array-btn" class="btn btn--secondary" data-i18n="tools.http-headers.toJsonArray">转为 JSON 数组</button>
+                <button id="to-text-btn" class="btn btn--secondary" data-i18n="tools.http-headers.toText">转为多行</button>
+                <button id="format-btn" class="btn btn--outline" data-i18n="tools.http-headers.format">格式化排序</button>
                 <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
                 <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
-                <button id="sample-request-btn" class="btn btn--outline" data-i18n="tools.http-headers.sampleRequest">示例请求</button>
-                <button id="sample-response-btn" class="btn btn--outline" data-i18n="tools.http-headers.sampleResponse">示例响应</button>
+            </section>
+
+            <!-- 示例按钮 -->
+            <section class="action-section action-section--samples">
+                <button id="sample-request-btn" class="btn btn--sm btn--outline" data-i18n="tools.http-headers.sampleRequest">示例请求</button>
+                <button id="sample-response-btn" class="btn btn--sm btn--outline" data-i18n="tools.http-headers.sampleResponse">示例响应</button>
             </section>
 
             <!-- 解析结果 -->

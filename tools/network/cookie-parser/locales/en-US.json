@@ -1,10 +1,12 @@
 {
     "title": "Cookie Parser",
-    "description": "Parse and format Cookie strings with editing and export support",
-    "inputPlaceholder": "Enter Cookie string (format: name=value; name2=value2)",
+    "description": "Parse and convert Cookies between string, JSON and Netscape formats",
+    "inputPlaceholder": "Enter Cookie (string, JSON or Netscape format)...",
     "parse": "Parse",
     "getBrowser": "Get Browser Cookies",
     "toString": "To String",
+    "toJson": "To JSON",
+    "toNetscape": "To Netscape",
     "parsedCookies": "Parsed Cookies",
     "addCookie": "Add",
     "exportJson": "Export JSON",
@@ -15,5 +17,7 @@
     "delete": "Delete",
     "totalCookies": "Total Cookies",
     "totalSize": "Total Size",
-    "cookieString": "Cookie String"
+    "cookieString": "Cookie String",
+    "jsonOutput": "JSON Output",
+    "netscapeOutput": "Netscape Output"
 }

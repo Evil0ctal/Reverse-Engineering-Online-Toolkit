@@ -1,6 +1,6 @@
 /**
  * Cookie 解析器工具
- * @description 解析和格式化 Cookie 字符串
+ * @description 解析和格式化 Cookie 字符串，支持字符串和 JSON 列表格式
  * @author Evil0ctal
  * @license Apache-2.0
  */
@@ -9,11 +9,178 @@
     'use strict';
 
     let cookies = [];
+    let inputFormat = 'string'; // 'string' | 'json' | 'netscape' - 记录输入格式
 
     /**
-     * 解析 Cookie 字符串
+     * 检测输入格式
      */
-    function parseCookieString(cookieString) {
+    function detectInputFormat(input) {
+        const trimmed = input.trim();
+
+        // 检查是否以 [ 开头（JSON 数组）
+        if (trimmed.startsWith('[')) {
+            try {
+                const parsed = JSON.parse(trimmed);
+                if (Array.isArray(parsed)) {
+                    return 'json';
+                }
+            } catch (e) {
+                // 解析失败，继续检测其他格式
+            }
+        }
+
+        // 检查是否是 Netscape 格式
+        // Netscape 格式特征：以 # 开头的注释行，或以域名开头的 tab 分隔行
+        const lines = trimmed.split('\n');
+        let hasNetscapeHeader = false;
+        let hasValidNetscapeLine = false;
+
+        for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) continue;
+
+            // 检查 Netscape 文件头注释
+            if (trimmedLine.startsWith('# Netscape') || trimmedLine.startsWith('# HTTP Cookie File')) {
+                hasNetscapeHeader = true;
+            }
+
+            // 检查是否是有效的 Netscape cookie 行（7个 tab 分隔的字段）
+            if (!trimmedLine.startsWith('#')) {
+                const parts = trimmedLine.split('\t');
+                if (parts.length >= 6) {
+                    hasValidNetscapeLine = true;
+                }
+            }
+        }
+
+        if (hasNetscapeHeader || hasValidNetscapeLine) {
+            return 'netscape';
+        }
+
+        return 'string';
+    }
+
+    /**
+     * 解析 JSON 格式的 Cookie 列表
+     */
+    function parseCookieJson(jsonString) {
+        const result = [];
+        try {
+            const parsed = JSON.parse(jsonString);
+            if (!Array.isArray(parsed)) {
+                return result;
+            }
+
+            for (const item of parsed) {
+                if (typeof item !== 'object' || item === null) continue;
+
+                // 支持多种字段名格式
+                const name = item.name || item.Name || item.key || item.Key || '';
+                const value = item.value || item.Value || '';
+                const domain = item.domain || item.Domain || '';
+                const path = item.path || item.Path || '/';
+                const expires = item.expires || item.Expires || item.expirationDate || '';
+                const httpOnly = item.httpOnly || item.HttpOnly || false;
+                const secure = item.secure || item.Secure || false;
+                const sameSite = item.sameSite || item.SameSite || '';
+
+                if (!name) continue;
+
+                let decoded = value;
+                try {
+                    decoded = decodeURIComponent(value);
+                } catch (e) {
+                    // 解码失败，使用原值
+                }
+
+                result.push({
+                    name,
+                    value,
+                    decoded,
+                    domain,
+                    path,
+                    expires,
+                    httpOnly,
+                    secure,
+                    sameSite
+                });
+            }
+        } catch (e) {
+            console.error('Failed to parse cookie JSON:', e);
+        }
+        return result;
+    }
+
+    // 解析 Netscape 格式的 Cookie
+    // 格式：domain  flag  path  secure  expiration  name  value
+    // 示例：.example.com	TRUE	/	FALSE	1234567890	session_id	abc123
+    function parseCookieNetscape(input) {
+        const result = [];
+        const lines = input.trim().split('\n');
+
+        for (const line of lines) {
+            const trimmedLine = line.trim();
+
+            // 跳过空行和注释行
+            if (!trimmedLine || trimmedLine.startsWith('#')) {
+                continue;
+            }
+
+            const parts = trimmedLine.split('\t');
+
+            // Netscape 格式需要至少 7 个字段，但有时 value 可能为空
+            if (parts.length >= 6) {
+                const domain = parts[0] || '';
+                const flag = parts[1] === 'TRUE';
+                const path = parts[2] || '/';
+                const secure = parts[3] === 'TRUE';
+                const expiration = parts[4] || '0';
+                const name = parts[5] || '';
+                const value = parts[6] || '';
+
+                if (!name) continue;
+
+                let decoded = value;
+                try {
+                    decoded = decodeURIComponent(value);
+                } catch (e) {
+                    // 解码失败，使用原值
+                }
+
+                // 计算过期时间
+                let expires = '';
+                if (expiration && expiration !== '0') {
+                    try {
+                        const timestamp = parseInt(expiration, 10);
+                        if (timestamp > 0) {
+                            expires = new Date(timestamp * 1000).toISOString();
+                        }
+                    } catch (e) {
+                        // 解析失败
+                    }
+                }
+
+                result.push({
+                    name,
+                    value,
+                    decoded,
+                    domain,
+                    path,
+                    expires,
+                    httpOnly: false,
+                    secure,
+                    includeSubdomains: flag
+                });
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 解析 Cookie 字符串格式
+     */
+    function parseCookieStringFormat(cookieString) {
         if (!cookieString.trim()) {
             return [];
         }
@@ -56,12 +223,87 @@
     }
 
     /**
+     * 解析 Cookie（自动检测格式）
+     */
+    function parseCookieString(input) {
+        if (!input.trim()) {
+            return [];
+        }
+
+        inputFormat = detectInputFormat(input);
+
+        if (inputFormat === 'json') {
+            return parseCookieJson(input);
+        } else if (inputFormat === 'netscape') {
+            return parseCookieNetscape(input);
+        } else {
+            return parseCookieStringFormat(input);
+        }
+    }
+
+    /**
      * 将 Cookie 数组转为字符串
      */
     function cookiesToString(cookies) {
         return cookies
             .map(c => `${c.name}=${c.value}`)
             .join('; ');
+    }
+
+    /**
+     * 将 Cookie 数组转为 JSON 格式
+     */
+    function cookiesToJson(cookies, pretty = true) {
+        const output = cookies.map(c => {
+            const obj = {
+                name: c.name,
+                value: c.value
+            };
+            // 包含额外字段（如果存在）
+            if (c.domain) obj.domain = c.domain;
+            if (c.path) obj.path = c.path;
+            if (c.expires) obj.expires = c.expires;
+            if (c.httpOnly) obj.httpOnly = c.httpOnly;
+            if (c.secure) obj.secure = c.secure;
+            if (c.sameSite) obj.sameSite = c.sameSite;
+            return obj;
+        });
+        return pretty ? JSON.stringify(output, null, 2) : JSON.stringify(output);
+    }
+
+    // 将 Cookie 数组转为 Netscape 格式
+    // 格式：domain  flag  path  secure  expiration  name  value
+    function cookiesToNetscape(cookies, defaultDomain = 'localhost') {
+        let output = '# Netscape HTTP Cookie File\n';
+        output += '# https://curl.se/docs/http-cookies.html\n';
+        output += '# Generated by REOT Cookie Parser\n\n';
+
+        for (const c of cookies) {
+            const domain = c.domain || defaultDomain;
+            const flag = c.includeSubdomains ? 'TRUE' : (domain.startsWith('.') ? 'TRUE' : 'FALSE');
+            const path = c.path || '/';
+            const secure = c.secure ? 'TRUE' : 'FALSE';
+
+            // 计算过期时间戳
+            let expiration = '0';
+            if (c.expires) {
+                try {
+                    const date = new Date(c.expires);
+                    if (!isNaN(date.getTime())) {
+                        expiration = Math.floor(date.getTime() / 1000).toString();
+                    }
+                } catch (e) {
+                    // 解析失败，使用 0
+                }
+            }
+
+            const name = c.name || '';
+            const value = c.value || '';
+
+            output += `${domain}\t${flag}\t${path}\t${secure}\t${expiration}\t${name}\t${value}\n`;
+        }
+
+        return output;
     }
 
     /**
@@ -169,6 +411,11 @@
 
     // 检查当前是否在 Cookie Parser 工具页面
     function isCookieParserToolActive() {
+        // 优先检查页面元素是否存在
+        const cookieTable = document.getElementById('cookie-table');
+        if (cookieTable) return true;
+
+        // 备用：检查路由
         const route = REOT.router?.getRoute();
         return route && route.includes('/tools/network/cookie-parser');
     }
@@ -184,7 +431,7 @@
         if (target.id === 'parse-btn' || target.closest('#parse-btn')) {
             const input = document.getElementById('input');
             if (!input.value.trim()) {
-                REOT.utils?.showNotification('请输入 Cookie 字符串', 'warning');
+                REOT.utils?.showNotification('请输入 Cookie', 'warning');
                 return;
             }
 
@@ -192,7 +439,13 @@
             renderCookieTable();
 
             if (cookies.length > 0) {
-                REOT.utils?.showNotification(`成功解析 ${cookies.length} 个 Cookie`, 'success');
+                const formatMap = {
+                    'json': 'JSON 格式',
+                    'netscape': 'Netscape 格式',
+                    'string': '字符串格式'
+                };
+                const formatMsg = `(${formatMap[inputFormat] || '未知格式'})`;
+                REOT.utils?.showNotification(`成功解析 ${cookies.length} 个 Cookie ${formatMsg}`, 'success');
             } else {
                 REOT.utils?.showNotification('未找到有效的 Cookie', 'warning');
             }
@@ -212,10 +465,14 @@
 
             const stringOutput = document.getElementById('string-output');
             const stringSection = document.getElementById('string-output-section');
+            const outputLabel = document.getElementById('output-label');
 
             if (stringOutput && stringSection) {
                 stringOutput.value = cookiesToString(cookies);
                 stringSection.style.display = 'block';
+                if (outputLabel) {
+                    outputLabel.textContent = REOT.i18n?.t('tools.cookie-parser.cookieString') || 'Cookie 字符串';
+                }
             }
         }
 
@@ -259,14 +516,54 @@
             renderCookieTable();
         }
 
-        // 导出 JSON
+        // 转为 JSON
+        if (target.id === 'to-json-btn' || target.closest('#to-json-btn')) {
+            if (cookies.length === 0) {
+                REOT.utils?.showNotification('请先解析 Cookie', 'warning');
+                return;
+            }
+
+            const stringOutput = document.getElementById('string-output');
+            const stringSection = document.getElementById('string-output-section');
+            const outputLabel = document.getElementById('output-label');
+
+            if (stringOutput && stringSection) {
+                stringOutput.value = cookiesToJson(cookies);
+                stringSection.style.display = 'block';
+                if (outputLabel) {
+                    outputLabel.textContent = REOT.i18n?.t('tools.cookie-parser.jsonOutput') || 'JSON 输出';
+                }
+            }
+        }
+
+        // 转为 Netscape 格式
+        if (target.id === 'to-netscape-btn' || target.closest('#to-netscape-btn')) {
+            if (cookies.length === 0) {
+                REOT.utils?.showNotification('请先解析 Cookie', 'warning');
+                return;
+            }
+
+            const stringOutput = document.getElementById('string-output');
+            const stringSection = document.getElementById('string-output-section');
+            const outputLabel = document.getElementById('output-label');
+
+            if (stringOutput && stringSection) {
+                stringOutput.value = cookiesToNetscape(cookies);
+                stringSection.style.display = 'block';
+                if (outputLabel) {
+                    outputLabel.textContent = REOT.i18n?.t('tools.cookie-parser.netscapeOutput') || 'Netscape 输出';
+                }
+            }
+        }
+
+        // 导出 JSON（复制到剪贴板）
         if (target.id === 'export-json-btn' || target.closest('#export-json-btn')) {
             if (cookies.length === 0) {
                 REOT.utils?.showNotification('没有可导出的 Cookie', 'warning');
                 return;
             }
 
-            const json = JSON.stringify(cookies, null, 2);
+            const json = cookiesToJson(cookies);
             copyToClipboard(json);
             REOT.utils?.showNotification('JSON 已复制到剪贴板', 'success');
         }
@@ -324,7 +621,10 @@
     // 导出工具函数
     window.CookieParserTool = {
         parse: parseCookieString,
-        toString: cookiesToString
+        toString: cookiesToString,
+        toJson: cookiesToJson,
+        toNetscape: cookiesToNetscape,
+        detectFormat: detectInputFormat
     };
 
     // 设置默认示例数据

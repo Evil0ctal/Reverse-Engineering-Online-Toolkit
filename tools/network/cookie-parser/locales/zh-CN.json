@@ -1,10 +1,12 @@
 {
     "title": "Cookie 解析器",
-    "description": "解析和格式化 Cookie 字符串，支持编辑和导出",
-    "inputPlaceholder": "请输入 Cookie 字符串（格式：name=value; name2=value2）",
+    "description": "解析和格式化 Cookie，支持字符串、JSON 和 Netscape 格式互转",
+    "inputPlaceholder": "请输入 Cookie（支持字符串、JSON 或 Netscape 格式）...",
     "parse": "解析",
     "getBrowser": "获取浏览器 Cookie",
     "toString": "转为字符串",
+    "toJson": "转为 JSON",
+    "toNetscape": "转为 Netscape",
     "parsedCookies": "解析结果",
     "addCookie": "添加",
     "exportJson": "导出 JSON",
@@ -15,5 +17,7 @@
     "delete": "删除",
     "totalCookies": "Cookie 数量",
     "totalSize": "总大小",
-    "cookieString": "Cookie 字符串"
+    "cookieString": "Cookie 字符串",
+    "jsonOutput": "JSON 输出",
+    "netscapeOutput": "Netscape 输出"
 }
