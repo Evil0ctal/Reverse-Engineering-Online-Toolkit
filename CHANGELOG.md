@@ -9,6 +9,25 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.5] - 2026-01-11
+
+### 新增
+- **文件类型检测** - 扩展文件签名数据库至 100+ 种格式，覆盖逆向工程常用文件类型
+  - 压缩格式：ZSTD、LZ4、Zlib、XZ、7z、RAR5 等
+  - 移动应用：DEX、ODEX、VDEX、OAT、ART、AXML、ARSC、IPA 结构
+  - 可执行文件：Mach-O（32/64/FAT）、WASM、LLVM Bitcode
+  - 字节码：Python PYC、Lua 字节码、Java Class
+  - 调试符号：PDB、Minidump
+  - 网络抓包：PCAP、PCAPNG
+  - 游戏资源：Unity AssetBundle
+  - 密码学：Keystore、PKCS#12
+- **文件类型检测** - 新增分类展示功能，将支持的格式按 17 个类别分组显示
+  - 压缩/容器/镜像、Android/iOS/移动应用、安全/密码学
+  - 二进制/可执行、多媒体、文档/数据等分类
+  - 逆向工程重点类别高亮显示
+
+---
+
 ## [1.0.4] - 2026-01-11
 
 ### 修复

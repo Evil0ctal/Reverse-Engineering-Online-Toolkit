@@ -9,6 +9,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2026-01-11
+
+### Added
+- **File Type Detection** - Expanded file signature database to 100+ formats covering common reverse engineering file types
+  - Compression: ZSTD, LZ4, Zlib, XZ, 7z, RAR5, etc.
+  - Mobile Apps: DEX, ODEX, VDEX, OAT, ART, AXML, ARSC, IPA structure
+  - Executables: Mach-O (32/64/FAT), WASM, LLVM Bitcode
+  - Bytecode: Python PYC, Lua bytecode, Java Class
+  - Debug Symbols: PDB, Minidump
+  - Network Capture: PCAP, PCAPNG
+  - Game Assets: Unity AssetBundle
+  - Cryptography: Keystore, PKCS#12
+- **File Type Detection** - Added categorized display showing supported formats in 17 categories
+  - Compression/Container/Disk Image, Android/iOS/Mobile, Security/Cryptography
+  - Binary/Executable, Multimedia, Document/Data, etc.
+  - Reverse engineering important categories are highlighted
+
+---
+
 ## [1.0.4] - 2026-01-11
 
 ### Fixed
