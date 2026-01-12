@@ -75,7 +75,7 @@
 | **RIPEMD** | RIPEMD-160 哈希计算 | ✅ 已完成 |
 | **xxHash** | xxHash32, xxHash64, xxHash3（高速非加密哈希，常见于指纹生成） | 📋 计划中 |
 | **MurmurHash** | MurmurHash3（常见于移动端指纹算法） | 📋 计划中 |
-| **哈希类型识别** | 根据长度和格式自动识别哈希类型（MD5/SHA1/SHA256/bcrypt 等） | 📋 计划中 |
+| **哈希类型识别** | 根据长度和格式自动识别哈希类型（MD5/SHA1/SHA256/bcrypt 等） | ✅ 已完成 |
 
 ### HMAC 计算 (HMAC)
 
@@ -158,10 +158,10 @@
 | **ASN.1** | ASN.1 DER/BER 解析 | ✅ 已完成 |
 | **X.509 证书** | X.509 证书解析 | ✅ 已完成 |
 | **PEM** | PEM 格式解析 | ✅ 已完成 |
-| **MessagePack** | MessagePack 编解码（TikTok/抖音 API 常用格式） | 📋 计划中 |
+| **MessagePack** | MessagePack 编解码（TikTok/抖音 API 常用格式） | ✅ 已完成 |
 | **CBOR** | CBOR 编解码（IoT 和 WebAuthn 常用） | 📋 计划中 |
 | **BSON** | BSON 解析（MongoDB 格式） | 📋 计划中 |
-| **Plist** | Apple Property List 解析（二进制和 XML 格式） | 📋 计划中 |
+| **Plist** | Apple Property List 解析（二进制和 XML 格式） | ✅ 已完成 |
 | **SAML Token** | SAML 断言解析 | 📋 计划中 |
 | **X.509 证书生成** | 自签名证书生成（测试用途） | 📋 计划中 |
 
@@ -175,7 +175,7 @@
 | **IP 地址转换** | IP 地址格式转换（十进制、整数、十六进制、二进制） | ✅ 已完成 |
 | **URL 解析** | URL 组成部分解析 | ✅ 已完成 |
 | **cURL 转代码** | cURL 命令转换为各语言代码 | ✅ 已完成 |
-| **CIDR/子网计算** | CIDR 子网划分计算器 | 📋 计划中 |
+| **CIDR/子网计算** | CIDR 子网划分计算器 | ✅ 已完成 |
 | **HAR 文件分析** | HTTP Archive 文件解析（Charles/Fiddler/mitmproxy 导出分析） | 📋 计划中 |
 | **WebSocket 帧解析** | WebSocket 帧头和载荷解码 | 📋 计划中 |
 | **DNS 记录解析** | DNS 响应包解析 | 📋 计划中 |
@@ -193,7 +193,7 @@
 | **密钥对生成** | RSA/ECC 密钥对生成 | ✅ 已完成 |
 | **Lorem Ipsum** | 占位文本生成 | ✅ 已完成 |
 | **时间戳格式猜测** | 自动识别时间戳格式（Unix/毫秒/Windows FILETIME/Cocoa 等） | 📋 计划中 |
-| **Snowflake ID 解码** | Twitter/Discord 风格雪花 ID 解析（提取时间戳和节点信息） | 📋 计划中 |
+| **Snowflake ID 解码** | Twitter/Discord 风格雪花 ID 解析（提取时间戳和节点信息） | ✅ 已完成 |
 | **MongoDB ObjectID** | ObjectID 解析（提取创建时间和机器标识） | 📋 计划中 |
 | **ULID 解析/生成** | ULID 解析与生成（可排序的 UUID 替代方案） | 📋 计划中 |
 
@@ -260,8 +260,8 @@
 
 | 功能 | 描述 | 状态 |
 |------|------|------|
-| **Crontab 解析器** | Cron 表达式与人类可读文本互转 | 📋 计划中 |
-| **Unix 权限计算** | chmod 权限计算（755 ↔ rwxr-xr-x） | 📋 计划中 |
+| **Crontab 解析器** | Cron 表达式与人类可读文本互转 | ✅ 已完成 |
+| **Unix 权限计算** | chmod 权限计算（755 ↔ rwxr-xr-x） | ✅ 已完成 |
 
 ---
 

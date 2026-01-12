@@ -555,6 +555,22 @@
         "cidr": {
             "title": "CIDR 子网计算器",
             "description": "CIDR 子网划分与 IP 范围计算"
+        },
+        "snowflake": {
+            "title": "Snowflake ID 解码",
+            "description": "解析 Twitter/Discord 风格雪花 ID，提取时间戳和节点信息"
+        },
+        "msgpack": {
+            "title": "MessagePack 编解码",
+            "description": "MessagePack 二进制序列化格式编码与解码"
+        },
+        "hash-identifier": {
+            "title": "哈希类型识别",
+            "description": "根据长度和格式自动识别哈希类型"
+        },
+        "plist": {
+            "title": "Plist 解析",
+            "description": "Apple Property List 解析（支持 XML 和二进制格式）"
         }
     }
 }

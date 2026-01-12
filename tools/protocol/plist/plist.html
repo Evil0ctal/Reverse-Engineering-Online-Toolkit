@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.plist.title">Plist 解析 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="plist.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.plist.title">Plist 解析</h1>
+            <p data-i18n="tools.plist.description">Apple Property List 解析（支持 XML 和二进制格式）</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <div class="input-group">
+                    <div class="input-header">
+                        <label data-i18n="tools.plist.inputData">输入 Plist 数据</label>
+                        <div class="input-actions">
+                            <select id="input-format" class="form-select">
+                                <option value="auto" data-i18n="tools.plist.autoDetect">自动检测</option>
+                                <option value="xml" data-i18n="tools.plist.xmlFormat">XML 格式</option>
+                                <option value="binary" data-i18n="tools.plist.binaryFormat">二进制格式</option>
+                            </select>
+                            <label class="btn btn--sm btn--outline" for="file-input">
+                                <span data-i18n="common.upload">上传文件</span>
+                            </label>
+                            <input type="file" id="file-input" accept=".plist,.xml" style="display: none;">
+                            <button class="btn btn--sm btn--outline" id="sample-btn" data-i18n="tools.plist.loadSample">加载示例</button>
+                        </div>
+                    </div>
+                    <textarea id="plist-input" class="form-textarea" rows="10"
+                              placeholder="粘贴 Plist XML 数据，或上传 .plist 文件..." data-i18n-placeholder="tools.plist.placeholder"></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn--primary" id="parse-btn" data-i18n="tools.plist.parse">解析</button>
+                    <button class="btn btn--outline" id="clear-btn" data-i18n="common.clear">清除</button>
+                </div>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section" id="output-section" style="display: none;">
+                <div class="output-header">
+                    <h3 data-i18n="common.result">结果</h3>
+                    <div class="view-tabs">
+                        <button class="view-tab active" data-view="tree" data-i18n="tools.plist.treeView">树形视图</button>
+                        <button class="view-tab" data-view="json" data-i18n="tools.plist.jsonView">JSON</button>
+                        <button class="view-tab" data-view="xml" data-i18n="tools.plist.xmlView">XML</button>
+                    </div>
+                </div>
+                <div class="output-info" id="output-info"></div>
+                <div class="output-content" id="output-content"></div>
+                <div class="output-actions">
+                    <button class="btn btn--sm btn--outline" id="copy-btn" data-i18n="common.copy">复制</button>
+                    <button class="btn btn--sm btn--outline" id="download-json-btn" data-i18n="tools.plist.downloadJson">下载 JSON</button>
+                    <button class="btn btn--sm btn--outline" id="download-xml-btn" data-i18n="tools.plist.downloadXml">下载 XML</button>
+                </div>
+            </section>
+
+            <!-- 格式说明 -->
+            <section class="info-section">
+                <h3 data-i18n="tools.plist.about">关于 Plist</h3>
+                <div class="info-content">
+                    <p data-i18n="tools.plist.aboutDesc">
+                        Property List (plist) 是 Apple 用于存储序列化对象的文件格式。常见于 iOS/macOS 应用配置、偏好设置、Info.plist 等。支持 XML 和二进制两种格式。
+                    </p>
+                    <div class="type-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="tools.plist.dataType">数据类型</th>
+                                    <th data-i18n="tools.plist.xmlTag">XML 标签</th>
+                                    <th data-i18n="tools.plist.example">示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>String</td>
+                                    <td><code>&lt;string&gt;</code></td>
+                                    <td><code>&lt;string&gt;Hello&lt;/string&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Integer</td>
+                                    <td><code>&lt;integer&gt;</code></td>
+                                    <td><code>&lt;integer&gt;42&lt;/integer&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Real</td>
+                                    <td><code>&lt;real&gt;</code></td>
+                                    <td><code>&lt;real&gt;3.14&lt;/real&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Boolean</td>
+                                    <td><code>&lt;true/&gt; &lt;false/&gt;</code></td>
+                                    <td><code>&lt;true/&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Date</td>
+                                    <td><code>&lt;date&gt;</code></td>
+                                    <td><code>&lt;date&gt;2024-01-01T00:00:00Z&lt;/date&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Data</td>
+                                    <td><code>&lt;data&gt;</code></td>
+                                    <td><code>&lt;data&gt;SGVsbG8=&lt;/data&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Array</td>
+                                    <td><code>&lt;array&gt;</code></td>
+                                    <td><code>&lt;array&gt;...&lt;/array&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Dictionary</td>
+                                    <td><code>&lt;dict&gt;</code></td>
+                                    <td><code>&lt;dict&gt;&lt;key&gt;...&lt;/dict&gt;</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="plist.js"></script>
+</body>
+</html>

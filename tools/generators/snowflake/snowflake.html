@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.snowflake.title">Snowflake ID 解码 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="snowflake.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.snowflake.title">Snowflake ID 解码</h1>
+            <p data-i18n="tools.snowflake.description">解析 Twitter/Discord 风格雪花 ID，提取时间戳和节点信息</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <h3 data-i18n="tools.snowflake.inputId">输入 Snowflake ID</h3>
+                <div class="input-wrapper">
+                    <input type="text" id="snowflake-input" class="form-input snowflake-input"
+                           placeholder="1234567890123456789" value="">
+                    <button id="decode-btn" class="btn btn--primary" data-i18n="common.decode">解码</button>
+                </div>
+                <div class="epoch-selector">
+                    <label data-i18n="tools.snowflake.epoch">纪元类型</label>
+                    <select id="epoch-type" class="form-select">
+                        <option value="twitter">Twitter (2010-11-04)</option>
+                        <option value="discord" selected>Discord (2015-01-01)</option>
+                        <option value="instagram">Instagram (2011-01-01)</option>
+                        <option value="sony">Sony (2010-11-04)</option>
+                        <option value="custom">自定义...</option>
+                    </select>
+                    <input type="number" id="custom-epoch" class="form-input custom-epoch"
+                           placeholder="毫秒时间戳" style="display: none;">
+                </div>
+            </section>
+
+            <!-- 解码结果 -->
+            <section class="result-section" id="result-section" style="display: none;">
+                <h3 data-i18n="tools.snowflake.decodeResult">解码结果</h3>
+                <div class="result-grid">
+                    <div class="result-item highlight">
+                        <span class="result-label" data-i18n="tools.snowflake.timestamp">时间戳</span>
+                        <span class="result-value" id="result-timestamp">-</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label" data-i18n="tools.snowflake.datetime">创建时间</span>
+                        <span class="result-value" id="result-datetime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.snowflake.relativeTime">相对时间</span>
+                        <span class="result-value" id="result-relative">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.snowflake.workerId">Worker ID</span>
+                        <span class="result-value" id="result-worker">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.snowflake.datacenterId">Datacenter ID</span>
+                        <span class="result-value" id="result-datacenter">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.snowflake.sequence">序列号</span>
+                        <span class="result-value" id="result-sequence">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 二进制表示 -->
+            <section class="binary-section" id="binary-section" style="display: none;">
+                <h3 data-i18n="tools.snowflake.binaryBreakdown">二进制分解</h3>
+                <div class="binary-visual">
+                    <div class="binary-row">
+                        <code id="binary-full">-</code>
+                    </div>
+                    <div class="binary-legend">
+                        <div class="legend-item">
+                            <span class="legend-color timestamp-color"></span>
+                            <span data-i18n="tools.snowflake.timestampBits">时间戳 (41 位)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color datacenter-color"></span>
+                            <span data-i18n="tools.snowflake.datacenterBits">数据中心 (5 位)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color worker-color"></span>
+                            <span data-i18n="tools.snowflake.workerBits">Worker (5 位)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color sequence-color"></span>
+                            <span data-i18n="tools.snowflake.sequenceBits">序列号 (12 位)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 生成 Snowflake ID -->
+            <section class="generate-section">
+                <h3 data-i18n="tools.snowflake.generateId">生成 Snowflake ID</h3>
+                <div class="generate-inputs">
+                    <div class="generate-row">
+                        <label data-i18n="tools.snowflake.datetime">日期时间</label>
+                        <input type="datetime-local" id="gen-datetime" class="form-input">
+                    </div>
+                    <div class="generate-row">
+                        <label data-i18n="tools.snowflake.workerId">Worker ID (0-31)</label>
+                        <input type="number" id="gen-worker" class="form-input" value="0" min="0" max="31">
+                    </div>
+                    <div class="generate-row">
+                        <label data-i18n="tools.snowflake.datacenterId">Datacenter ID (0-31)</label>
+                        <input type="number" id="gen-datacenter" class="form-input" value="0" min="0" max="31">
+                    </div>
+                    <div class="generate-row">
+                        <label data-i18n="tools.snowflake.sequence">序列号 (0-4095)</label>
+                        <input type="number" id="gen-sequence" class="form-input" value="0" min="0" max="4095">
+                    </div>
+                </div>
+                <button id="generate-btn" class="btn btn--primary" data-i18n="common.generate">生成</button>
+                <div class="generated-result" id="generated-result" style="display: none;">
+                    <code id="generated-id">-</code>
+                    <button class="btn btn--sm btn--outline copy-btn" data-target="generated-id" data-i18n="common.copy">复制</button>
+                </div>
+            </section>
+
+            <!-- 示例 ID -->
+            <section class="examples-section">
+                <h3 data-i18n="tools.snowflake.examples">示例 ID</h3>
+                <div class="examples-grid">
+                    <div class="example-item" data-id="1234567890123456789" data-epoch="discord">
+                        <code>1234567890123456789</code>
+                        <span>Discord 示例</span>
+                    </div>
+                    <div class="example-item" data-id="1453831710142480384" data-epoch="twitter">
+                        <code>1453831710142480384</code>
+                        <span>Twitter 示例</span>
+                    </div>
+                    <div class="example-item" data-id="175928847299117063" data-epoch="discord">
+                        <code>175928847299117063</code>
+                        <span>Discord 用户 ID</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 说明 -->
+            <section class="info-section">
+                <h3 data-i18n="tools.snowflake.about">关于 Snowflake ID</h3>
+                <div class="info-content">
+                    <p data-i18n="tools.snowflake.aboutDesc">
+                        Snowflake ID 是 Twitter 开发的分布式唯一 ID 生成算法。64 位整数分为：1 位符号位（始终为 0）、
+                        41 位时间戳、5 位数据中心 ID、5 位 Worker ID、12 位序列号。
+                    </p>
+                    <div class="info-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="tools.snowflake.platform">平台</th>
+                                    <th data-i18n="tools.snowflake.epochDate">纪元日期</th>
+                                    <th data-i18n="tools.snowflake.epochMs">纪元毫秒</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Twitter</td>
+                                    <td>2010-11-04 01:42:54.657 UTC</td>
+                                    <td>1288834974657</td>
+                                </tr>
+                                <tr>
+                                    <td>Discord</td>
+                                    <td>2015-01-01 00:00:00.000 UTC</td>
+                                    <td>1420070400000</td>
+                                </tr>
+                                <tr>
+                                    <td>Instagram</td>
+                                    <td>2011-01-01 00:00:00.000 UTC</td>
+                                    <td>1293840000000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="snowflake.js"></script>
+</body>
+</html>

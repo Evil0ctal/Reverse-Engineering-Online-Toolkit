@@ -1,0 +1,284 @@
+/**
+ * Snowflake ID 解码样式
+ */
+
+/* 输入区域 */
+.input-wrapper {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.snowflake-input {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+}
+
+.epoch-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.epoch-selector label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.epoch-selector .form-select {
+    min-width: 180px;
+}
+
+.custom-epoch {
+    width: 180px;
+    font-family: var(--font-mono);
+}
+
+/* 结果区域 */
+.result-section,
+.binary-section,
+.generate-section,
+.examples-section,
+.info-section {
+    margin-top: 1.5rem;
+}
+
+.result-section h3,
+.binary-section h3,
+.generate-section h3,
+.examples-section h3,
+.info-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.result-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.result-item.highlight {
+    background: linear-gradient(135deg, var(--primary-hover), var(--bg-secondary));
+    border: 1px solid var(--primary);
+}
+
+.result-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.result-value {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    word-break: break-all;
+}
+
+/* 二进制可视化 */
+.binary-visual {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.binary-row {
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.binary-row code {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.binary-row .timestamp { color: #3b82f6; }
+.binary-row .datacenter { color: #8b5cf6; }
+.binary-row .worker { color: #f59e0b; }
+.binary-row .sequence { color: #10b981; }
+
+.binary-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.timestamp-color { background: #3b82f6; }
+.datacenter-color { background: #8b5cf6; }
+.worker-color { background: #f59e0b; }
+.sequence-color { background: #10b981; }
+
+/* 生成区域 */
+.generate-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.generate-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.generate-row label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.generate-row .form-input {
+    font-family: var(--font-mono);
+}
+
+.generated-result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.generated-result code {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    color: var(--primary);
+}
+
+/* 示例 */
+.examples-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.example-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border: 1px solid transparent;
+}
+
+.example-item:hover {
+    border-color: var(--primary);
+    background: var(--primary-hover);
+}
+
+.example-item code {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    color: var(--primary);
+}
+
+.example-item span {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* 说明 */
+.info-content {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.info-content p {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.info-table {
+    overflow-x: auto;
+}
+
+.info-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-table th,
+.info-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.8125rem;
+}
+
+.info-table th {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.info-table td {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .input-wrapper {
+        flex-direction: column;
+    }
+
+    .epoch-selector {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .generate-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .examples-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .binary-legend {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

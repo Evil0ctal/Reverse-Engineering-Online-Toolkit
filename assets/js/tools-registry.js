@@ -1806,6 +1806,50 @@
             icon: '🌐',
             path: '/tools/network/cidr/',
             keywords: ['cidr', 'subnet', 'ip', 'network', 'mask', '子网', '网络', 'IP地址', '子网掩码']
+        },
+
+        // ========== 生成器（扩展） ==========
+        {
+            id: 'snowflake',
+            category: 'generators',
+            name: 'tools.snowflake.title',
+            description: 'tools.snowflake.description',
+            icon: '❄️',
+            path: '/tools/generators/snowflake/',
+            keywords: ['snowflake', 'id', 'twitter', 'discord', '雪花', '分布式', 'unique', '时间戳']
+        },
+
+        // ========== 协议解析（扩展） ==========
+        {
+            id: 'msgpack',
+            category: 'protocol',
+            name: 'tools.msgpack.title',
+            description: 'tools.msgpack.description',
+            icon: '📦',
+            path: '/tools/protocol/msgpack/',
+            keywords: ['msgpack', 'messagepack', 'binary', 'serialize', 'tiktok', '抖音', '序列化', '二进制']
+        },
+
+        // ========== 哈希工具（扩展） ==========
+        {
+            id: 'hash-identifier',
+            category: 'hashing',
+            name: 'tools.hash-identifier.title',
+            description: 'tools.hash-identifier.description',
+            icon: '🔍',
+            path: '/tools/hashing/hash-identifier/',
+            keywords: ['hash', 'identifier', 'detect', 'md5', 'sha', 'bcrypt', 'argon2', '哈希', '识别', '检测']
+        },
+
+        // ========== 协议解析（扩展） ==========
+        {
+            id: 'plist',
+            category: 'protocol',
+            name: 'tools.plist.title',
+            description: 'tools.plist.description',
+            icon: '🍎',
+            path: '/tools/protocol/plist/',
+            keywords: ['plist', 'property list', 'apple', 'ios', 'macos', 'xml', 'binary', '属性列表', '解析']
         }
     ]);
 

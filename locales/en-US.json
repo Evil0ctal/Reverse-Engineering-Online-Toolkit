@@ -555,6 +555,22 @@
         "cidr": {
             "title": "CIDR Subnet Calculator",
             "description": "CIDR subnet division and IP range calculation"
+        },
+        "snowflake": {
+            "title": "Snowflake ID Decoder",
+            "description": "Parse Twitter/Discord style Snowflake IDs to extract timestamp and node info"
+        },
+        "msgpack": {
+            "title": "MessagePack Encoder/Decoder",
+            "description": "Encode and decode MessagePack binary serialization format"
+        },
+        "hash-identifier": {
+            "title": "Hash Type Identifier",
+            "description": "Automatically identify hash types based on length and format"
+        },
+        "plist": {
+            "title": "Plist Parser",
+            "description": "Apple Property List parser (supports XML and binary formats)"
         }
     }
 }

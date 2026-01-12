@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.hash-identifier.title">哈希类型识别 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="hash-identifier.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.hash-identifier.title">哈希类型识别</h1>
+            <p data-i18n="tools.hash-identifier.description">根据长度和格式自动识别哈希类型</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <div class="input-group">
+                    <div class="input-header">
+                        <label data-i18n="tools.hash-identifier.inputHash">输入哈希值</label>
+                        <div class="input-actions">
+                            <button class="btn btn--sm btn--outline" id="paste-btn" data-i18n="common.paste">粘贴</button>
+                            <button class="btn btn--sm btn--outline" id="clear-btn" data-i18n="common.clear">清除</button>
+                        </div>
+                    </div>
+                    <textarea id="hash-input" class="form-textarea" rows="3"
+                              placeholder="输入一个或多个哈希值（每行一个）..." data-i18n-placeholder="tools.hash-identifier.placeholder"></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn--primary" id="identify-btn" data-i18n="tools.hash-identifier.identify">识别</button>
+                </div>
+            </section>
+
+            <!-- 结果区域 -->
+            <section class="result-section" id="result-section" style="display: none;">
+                <h3 data-i18n="tools.hash-identifier.results">识别结果</h3>
+                <div class="result-list" id="result-list"></div>
+            </section>
+
+            <!-- 示例哈希 -->
+            <section class="examples-section">
+                <h3 data-i18n="tools.hash-identifier.examples">示例哈希</h3>
+                <div class="examples-grid">
+                    <div class="example-item" data-hash="5d41402abc4b2a76b9719d911017c592">
+                        <code>5d41402abc4b2a76b9719d911017c592</code>
+                        <span>MD5</span>
+                    </div>
+                    <div class="example-item" data-hash="aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d">
+                        <code>aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d</code>
+                        <span>SHA-1</span>
+                    </div>
+                    <div class="example-item" data-hash="2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824">
+                        <code>2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824</code>
+                        <span>SHA-256</span>
+                    </div>
+                    <div class="example-item" data-hash="$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4E7Ey37GqkQ1z9h5z5F.G.n9qC5m">
+                        <code>$2a$10$N9qo8uLOickgx2ZMRZoMy...</code>
+                        <span>bcrypt</span>
+                    </div>
+                    <div class="example-item" data-hash="$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$RdescudvJCsgt3ub+b+dWRWJTmaaJObG">
+                        <code>$argon2id$v=19$m=65536...</code>
+                        <span>Argon2</span>
+                    </div>
+                    <div class="example-item" data-hash="$6$rounds=5000$saltsalt$IxDD3jeSOb5eB1CX5LBsqZ.Z4M2VXyq7.Fv9J7Q7Q7F9T7m3q8c8c8c8c8c8c8c8">
+                        <code>$6$rounds=5000$...</code>
+                        <span>SHA-512crypt</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 哈希参考表 -->
+            <section class="reference-section">
+                <h3 data-i18n="tools.hash-identifier.reference">哈希类型参考</h3>
+                <div class="reference-content">
+                    <div class="reference-table-wrapper">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="tools.hash-identifier.hashType">哈希类型</th>
+                                    <th data-i18n="tools.hash-identifier.length">长度</th>
+                                    <th data-i18n="tools.hash-identifier.format">格式特征</th>
+                                    <th data-i18n="tools.hash-identifier.usage">常见用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MD5</td>
+                                    <td>32 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.md5Usage">文件校验、旧密码存储</td>
+                                </tr>
+                                <tr>
+                                    <td>SHA-1</td>
+                                    <td>40 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.sha1Usage">Git 提交、旧证书</td>
+                                </tr>
+                                <tr>
+                                    <td>SHA-256</td>
+                                    <td>64 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.sha256Usage">比特币、SSL 证书</td>
+                                </tr>
+                                <tr>
+                                    <td>SHA-384</td>
+                                    <td>96 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.sha384Usage">TLS 证书</td>
+                                </tr>
+                                <tr>
+                                    <td>SHA-512</td>
+                                    <td>128 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.sha512Usage">安全存储、签名</td>
+                                </tr>
+                                <tr>
+                                    <td>bcrypt</td>
+                                    <td>60 字符</td>
+                                    <td>$2a$/$2b$/$2y$ 前缀</td>
+                                    <td data-i18n="tools.hash-identifier.bcryptUsage">密码存储</td>
+                                </tr>
+                                <tr>
+                                    <td>Argon2</td>
+                                    <td>可变</td>
+                                    <td>$argon2i$/$argon2d$/$argon2id$ 前缀</td>
+                                    <td data-i18n="tools.hash-identifier.argon2Usage">现代密码存储</td>
+                                </tr>
+                                <tr>
+                                    <td>NTLM</td>
+                                    <td>32 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.ntlmUsage">Windows 密码</td>
+                                </tr>
+                                <tr>
+                                    <td>MySQL 5.x</td>
+                                    <td>40 字符</td>
+                                    <td>* 前缀 + 十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.mysqlUsage">MySQL 密码</td>
+                                </tr>
+                                <tr>
+                                    <td>CRC32</td>
+                                    <td>8 字符</td>
+                                    <td>十六进制</td>
+                                    <td data-i18n="tools.hash-identifier.crc32Usage">文件校验</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="hash-identifier.js"></script>
+</body>
+</html>

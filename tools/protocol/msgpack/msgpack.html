@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.msgpack.title">MessagePack 编解码 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="msgpack.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.msgpack.title">MessagePack 编解码</h1>
+            <p data-i18n="tools.msgpack.description">MessagePack 二进制序列化格式编码与解码</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 模式选择 -->
+            <section class="mode-section">
+                <div class="mode-tabs">
+                    <button class="mode-tab active" data-mode="decode" data-i18n="common.decode">解码</button>
+                    <button class="mode-tab" data-mode="encode" data-i18n="common.encode">编码</button>
+                </div>
+            </section>
+
+            <!-- 解码模式 -->
+            <section class="decode-section" id="decode-section">
+                <div class="input-group">
+                    <div class="input-header">
+                        <label data-i18n="tools.msgpack.inputData">输入数据</label>
+                        <div class="input-actions">
+                            <select id="input-format" class="form-select">
+                                <option value="auto" data-i18n="tools.msgpack.autoDetect">自动检测</option>
+                                <option value="hex" data-i18n="tools.msgpack.hexFormat">十六进制</option>
+                                <option value="base64" data-i18n="tools.msgpack.base64Format">Base64</option>
+                            </select>
+                            <button class="btn btn--sm btn--outline" id="sample-btn" data-i18n="tools.msgpack.loadSample">加载示例</button>
+                            <label class="btn btn--sm btn--outline" for="file-input">
+                                <span data-i18n="common.upload">上传文件</span>
+                            </label>
+                            <input type="file" id="file-input" style="display: none;">
+                        </div>
+                    </div>
+                    <textarea id="decode-input" class="form-textarea" rows="6"
+                              placeholder="输入十六进制或 Base64 编码的 MessagePack 数据..." data-i18n-placeholder="tools.msgpack.decodePlaceholder"></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn--primary" id="decode-btn" data-i18n="common.decode">解码</button>
+                    <button class="btn btn--outline" id="clear-decode-btn" data-i18n="common.clear">清除</button>
+                </div>
+            </section>
+
+            <!-- 编码模式 -->
+            <section class="encode-section hidden" id="encode-section">
+                <div class="input-group">
+                    <div class="input-header">
+                        <label data-i18n="tools.msgpack.jsonInput">输入 JSON</label>
+                        <div class="input-actions">
+                            <button class="btn btn--sm btn--outline" id="format-json-btn" data-i18n="tools.msgpack.formatJson">格式化 JSON</button>
+                        </div>
+                    </div>
+                    <textarea id="encode-input" class="form-textarea" rows="8"
+                              placeholder='输入 JSON 数据，例如: {"name": "test", "value": 123}' data-i18n-placeholder="tools.msgpack.encodePlaceholder"></textarea>
+                </div>
+
+                <div class="encode-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="compact-output" checked>
+                        <span data-i18n="tools.msgpack.compactOutput">紧凑输出（无空格）</span>
+                    </label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn--primary" id="encode-btn" data-i18n="common.encode">编码</button>
+                    <button class="btn btn--outline" id="clear-encode-btn" data-i18n="common.clear">清除</button>
+                </div>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section" id="output-section" style="display: none;">
+                <div class="output-header">
+                    <h3 data-i18n="common.result">结果</h3>
+                    <div class="view-tabs" id="view-tabs">
+                        <button class="view-tab active" data-view="tree" data-i18n="tools.msgpack.treeView">树形视图</button>
+                        <button class="view-tab" data-view="json" data-i18n="tools.msgpack.jsonView">JSON 视图</button>
+                        <button class="view-tab" data-view="hex" data-i18n="tools.msgpack.hexView">十六进制</button>
+                    </div>
+                </div>
+                <div class="output-info" id="output-info"></div>
+                <div class="output-content" id="output-content"></div>
+                <div class="output-actions">
+                    <button class="btn btn--sm btn--outline copy-btn" id="copy-output-btn" data-i18n="common.copy">复制</button>
+                    <button class="btn btn--sm btn--outline" id="download-btn" data-i18n="common.download">下载</button>
+                </div>
+            </section>
+
+            <!-- 格式说明 -->
+            <section class="info-section">
+                <h3 data-i18n="tools.msgpack.about">关于 MessagePack</h3>
+                <div class="info-content">
+                    <p data-i18n="tools.msgpack.aboutDesc">
+                        MessagePack 是一种高效的二进制序列化格式，类似于 JSON 但更小更快。广泛用于 TikTok/抖音 API、游戏通信、IoT 等场景。
+                    </p>
+                    <div class="type-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="tools.msgpack.type">类型</th>
+                                    <th data-i18n="tools.msgpack.formatByte">格式字节</th>
+                                    <th data-i18n="tools.msgpack.description">描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>nil</td>
+                                    <td><code>0xc0</code></td>
+                                    <td data-i18n="tools.msgpack.nilDesc">空值</td>
+                                </tr>
+                                <tr>
+                                    <td>boolean</td>
+                                    <td><code>0xc2-0xc3</code></td>
+                                    <td data-i18n="tools.msgpack.boolDesc">布尔值 (false/true)</td>
+                                </tr>
+                                <tr>
+                                    <td>positive fixint</td>
+                                    <td><code>0x00-0x7f</code></td>
+                                    <td data-i18n="tools.msgpack.posFixintDesc">0-127 整数</td>
+                                </tr>
+                                <tr>
+                                    <td>negative fixint</td>
+                                    <td><code>0xe0-0xff</code></td>
+                                    <td data-i18n="tools.msgpack.negFixintDesc">-32 到 -1 整数</td>
+                                </tr>
+                                <tr>
+                                    <td>uint 8/16/32/64</td>
+                                    <td><code>0xcc-0xcf</code></td>
+                                    <td data-i18n="tools.msgpack.uintDesc">无符号整数</td>
+                                </tr>
+                                <tr>
+                                    <td>int 8/16/32/64</td>
+                                    <td><code>0xd0-0xd3</code></td>
+                                    <td data-i18n="tools.msgpack.intDesc">有符号整数</td>
+                                </tr>
+                                <tr>
+                                    <td>float 32/64</td>
+                                    <td><code>0xca-0xcb</code></td>
+                                    <td data-i18n="tools.msgpack.floatDesc">浮点数</td>
+                                </tr>
+                                <tr>
+                                    <td>fixstr</td>
+                                    <td><code>0xa0-0xbf</code></td>
+                                    <td data-i18n="tools.msgpack.fixstrDesc">0-31 字节字符串</td>
+                                </tr>
+                                <tr>
+                                    <td>str 8/16/32</td>
+                                    <td><code>0xd9-0xdb</code></td>
+                                    <td data-i18n="tools.msgpack.strDesc">字符串</td>
+                                </tr>
+                                <tr>
+                                    <td>bin 8/16/32</td>
+                                    <td><code>0xc4-0xc6</code></td>
+                                    <td data-i18n="tools.msgpack.binDesc">二进制数据</td>
+                                </tr>
+                                <tr>
+                                    <td>fixarray</td>
+                                    <td><code>0x90-0x9f</code></td>
+                                    <td data-i18n="tools.msgpack.fixarrayDesc">0-15 元素数组</td>
+                                </tr>
+                                <tr>
+                                    <td>array 16/32</td>
+                                    <td><code>0xdc-0xdd</code></td>
+                                    <td data-i18n="tools.msgpack.arrayDesc">数组</td>
+                                </tr>
+                                <tr>
+                                    <td>fixmap</td>
+                                    <td><code>0x80-0x8f</code></td>
+                                    <td data-i18n="tools.msgpack.fixmapDesc">0-15 键值对</td>
+                                </tr>
+                                <tr>
+                                    <td>map 16/32</td>
+                                    <td><code>0xde-0xdf</code></td>
+                                    <td data-i18n="tools.msgpack.mapDesc">映射</td>
+                                </tr>
+                                <tr>
+                                    <td>ext</td>
+                                    <td><code>0xc7-0xc9, 0xd4-0xd8</code></td>
+                                    <td data-i18n="tools.msgpack.extDesc">扩展类型</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="msgpack.js"></script>
+</body>
+</html>
