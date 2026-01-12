@@ -9,6 +9,22 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.7] - 2026-01-12
+
+### 新增
+- **URL 解析工具** - 全面升级
+  - 新增参数类型自动检测，支持 String、Number、Float、Boolean、Timestamp、UUID、Email、URL、Base64、JWT、JSON、Array 等类型
+  - 新增多格式导出功能：Python 字典、JSON、JavaScript 对象、PHP 数组、查询字符串
+  - 集成 CodeMirror 代码高亮编辑器
+  - 点击表格单元格直接复制内容
+  - 全新现代卡片式 UI 设计
+  - 完整深色模式支持
+
+### 优化
+- **URL 解析工具** - 改进表格交互体验，悬停单元格时高亮显示并降低同行其他单元格透明度
+
+---
+
 ## [1.0.6] - 2026-01-11
 
 ### 新增

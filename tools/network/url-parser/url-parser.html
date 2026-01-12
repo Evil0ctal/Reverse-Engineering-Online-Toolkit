@@ -20,93 +20,231 @@
     <div class="tool-container">
         <header class="tool-header">
             <h1 data-i18n="tools.url-parser.title">URL 解析</h1>
-            <p data-i18n="tools.url-parser.description">URL 组成部分解析</p>
         </header>
 
         <main class="tool-main">
+            <!-- 功能介绍 -->
+            <div class="feature-intro">
+                <div class="feature-intro__icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                </div>
+                <div class="feature-intro__content">
+                    <h3 class="feature-intro__title" data-i18n="tools.url-parser.intro.title">URL 组成部分解析</h3>
+                    <p class="feature-intro__desc" data-i18n="tools.url-parser.intro.desc">将 URL 解析为协议、主机、端口、路径、查询参数等组成部分，支持导出为多种格式。</p>
+                    <ul class="feature-intro__list">
+                        <li data-i18n="tools.url-parser.intro.feature1">自动解析 URL 的所有组成部分</li>
+                        <li data-i18n="tools.url-parser.intro.feature2">查询参数表格展示，支持单独复制</li>
+                        <li data-i18n="tools.url-parser.intro.feature3">导出为 Python 字典、JSON、JavaScript 对象等格式</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
             <section class="input-section">
-                <label data-i18n="tools.url-parser.inputUrl">输入 URL</label>
-                <input type="text" id="input" data-i18n-placeholder="tools.url-parser.placeholder" placeholder="https://example.com:8080/path?query=value#hash">
+                <div class="input-header">
+                    <label data-i18n="tools.url-parser.inputUrl">输入 URL</label>
+                    <div class="input-actions">
+                        <button id="sample-btn" class="btn btn--sm btn--outline" data-i18n="tools.url-parser.sample">示例</button>
+                        <button id="clear-btn" class="btn btn--sm btn--outline" data-i18n="common.clear">清除</button>
+                    </div>
+                </div>
+                <input type="text" id="input" class="form-input form-input--lg" data-i18n-placeholder="tools.url-parser.placeholder" placeholder="https://example.com:8080/path?query=value#hash">
             </section>
 
-            <section class="action-section">
-                <button id="parse-btn" class="btn btn--primary" data-i18n="tools.url-parser.parse">解析</button>
-                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
-            </section>
-
+            <!-- 解析结果 -->
             <section class="result-section" id="result-section" style="display: none;">
-                <h3 data-i18n="common.result">解析结果</h3>
-                <div class="url-parts">
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.protocol">协议 (Protocol)</label>
-                        <div class="value-row">
-                            <input type="text" id="protocol" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="protocol" data-i18n="common.copy">复制</button>
+                <!-- URL 组成部分概览 -->
+                <div class="url-overview">
+                    <h3 data-i18n="tools.url-parser.urlParts">URL 组成部分</h3>
+                    <div class="url-parts-grid">
+                        <div class="url-part-card">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.protocol">协议</span>
+                                <span class="url-part-card__badge">Protocol</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="protocol">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="protocol" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.host">主机 (Host)</label>
-                        <div class="value-row">
-                            <input type="text" id="host" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="host" data-i18n="common.copy">复制</button>
+
+                        <div class="url-part-card">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.hostname">主机名</span>
+                                <span class="url-part-card__badge">Hostname</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="hostname">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="hostname" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.hostname">主机名 (Hostname)</label>
-                        <div class="value-row">
-                            <input type="text" id="hostname" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="hostname" data-i18n="common.copy">复制</button>
+
+                        <div class="url-part-card">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.port">端口</span>
+                                <span class="url-part-card__badge">Port</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="port">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="port" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.port">端口 (Port)</label>
-                        <div class="value-row">
-                            <input type="text" id="port" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="port" data-i18n="common.copy">复制</button>
+
+                        <div class="url-part-card">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.pathname">路径</span>
+                                <span class="url-part-card__badge">Pathname</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="pathname">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="pathname" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.pathname">路径 (Pathname)</label>
-                        <div class="value-row">
-                            <input type="text" id="pathname" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="pathname" data-i18n="common.copy">复制</button>
+
+                        <div class="url-part-card url-part-card--wide">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.search">查询字符串</span>
+                                <span class="url-part-card__badge">Search</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="search">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="search" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.search">查询字符串 (Search)</label>
-                        <div class="value-row">
-                            <input type="text" id="search" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="search" data-i18n="common.copy">复制</button>
+
+                        <div class="url-part-card">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.hash">哈希</span>
+                                <span class="url-part-card__badge">Hash</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="hash">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="hash" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.hash">哈希 (Hash)</label>
-                        <div class="value-row">
-                            <input type="text" id="hash" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="hash" data-i18n="common.copy">复制</button>
-                        </div>
-                    </div>
-                    <div class="url-part">
-                        <label data-i18n="tools.url-parser.origin">来源 (Origin)</label>
-                        <div class="value-row">
-                            <input type="text" id="origin" readonly>
-                            <button class="copy-btn btn btn--sm btn--outline" data-target="origin" data-i18n="common.copy">复制</button>
+
+                        <div class="url-part-card url-part-card--wide">
+                            <div class="url-part-card__header">
+                                <span class="url-part-card__label" data-i18n="tools.url-parser.origin">来源</span>
+                                <span class="url-part-card__badge">Origin</span>
+                            </div>
+                            <div class="url-part-card__value">
+                                <code id="origin">-</code>
+                                <button class="btn-icon-mini copy-btn" data-target="origin" title="复制">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="query-params" id="query-params-section" style="display: none;">
-                    <h4 data-i18n="tools.url-parser.queryParams">查询参数</h4>
-                    <table id="query-params-table">
-                        <thead>
-                            <tr>
-                                <th data-i18n="tools.url-parser.paramName">参数名</th>
-                                <th data-i18n="tools.url-parser.paramValue">参数值</th>
-                                <th data-i18n="tools.url-parser.actions">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="query-params-body"></tbody>
-                    </table>
+                <!-- 查询参数表格 -->
+                <div class="query-params-section" id="query-params-section" style="display: none;">
+                    <div class="section-header">
+                        <h3 data-i18n="tools.url-parser.queryParams">查询参数</h3>
+                        <span class="params-count" id="params-count">0 个参数</span>
+                    </div>
+
+                    <div class="params-table-container">
+                        <table class="params-table" id="query-params-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="tools.url-parser.paramName">参数名</th>
+                                    <th data-i18n="tools.url-parser.paramValue">参数值</th>
+                                    <th data-i18n="tools.url-parser.decodedValue">解码值</th>
+                                    <th data-i18n="tools.url-parser.paramType">类型</th>
+                                </tr>
+                            </thead>
+                            <tbody id="query-params-body"></tbody>
+                        </table>
+                        <div class="table-hint">
+                            <span data-i18n="tools.url-parser.clickToCopy">点击单元格复制内容</span>
+                        </div>
+                    </div>
+
+                    <!-- 导出选项 -->
+                    <div class="export-section">
+                        <div class="export-header">
+                            <h4 data-i18n="tools.url-parser.exportParams">导出参数</h4>
+                            <div class="export-format-selector">
+                                <select id="export-format" class="form-select form-select--sm">
+                                    <option value="python-dict">Python 字典</option>
+                                    <option value="json">JSON</option>
+                                    <option value="js-object">JavaScript 对象</option>
+                                    <option value="php-array">PHP 数组</option>
+                                    <option value="query-string">查询字符串</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="export-output">
+                            <div class="export-output-header">
+                                <span class="export-format-badge" id="export-format-badge">Python</span>
+                                <div class="export-actions">
+                                    <button id="copy-export-btn" class="btn-icon" title="复制">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                    </button>
+                                    <button id="save-export-btn" class="btn-icon" title="保存文件">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="export-editor" class="code-editor-container"></div>
+                            <pre id="export-output" class="code-output" style="display: none;"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 无参数提示 -->
+                <div class="no-params-hint" id="no-params-hint" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span data-i18n="tools.url-parser.noParams">此 URL 没有查询参数</span>
                 </div>
             </section>
         </main>
@@ -114,6 +252,7 @@
 
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
+    <script src="../../../assets/js/code-editor.js"></script>
     <script src="url-parser.js"></script>
 </body>
 </html>

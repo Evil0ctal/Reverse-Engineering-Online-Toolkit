@@ -1,61 +1,783 @@
-.url-parts {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-}
+/**
+ * URL 解析器样式
+ */
 
-.url-part {
+/* 功能介绍卡片 */
+.feature-intro {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 20px;
+    padding: 24px;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin-bottom: 28px;
 }
 
-.url-part label {
-    font-weight: 500;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-}
-
-.value-row {
+.feature-intro__icon {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--color-primary), #60a5fa);
+    border-radius: 16px;
+    color: white;
+    flex-shrink: 0;
 }
 
-.value-row input {
+.feature-intro__content {
     flex: 1;
-    font-family: monospace;
-    font-size: 0.875rem;
 }
 
-.query-params {
-    margin-top: 1.5rem;
-}
-
-.query-params h4 {
-    margin-bottom: 0.75rem;
+.feature-intro__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
     color: var(--text-primary);
 }
 
-.query-params table {
+.feature-intro__desc {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.feature-intro__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.feature-intro__list li {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.feature-intro__list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* 输入区域 */
+.input-section {
+    margin-bottom: 24px;
+}
+
+.input-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.input-header label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.input-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.form-input--lg {
+    font-size: 1rem;
+    padding: 14px 18px;
+    font-family: 'Fira Code', 'SF Mono', monospace;
+}
+
+/* URL 概览区域 */
+.url-overview {
+    margin-bottom: 32px;
+}
+
+.url-overview h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.url-parts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+/* URL 组成部分卡片 */
+.url-part-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.2s ease;
+}
+
+.url-part-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.url-part-card--wide {
+    grid-column: span 2;
+}
+
+.url-part-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.url-part-card__label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.url-part-card__badge {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+}
+
+.url-part-card__value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.url-part-card__value code {
+    flex: 1;
+    font-family: 'Fira Code', 'SF Mono', monospace;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 迷你图标按钮 */
+.btn-icon-mini {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-icon-mini:hover {
+    background: var(--bg-tertiary);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-icon-mini:active {
+    transform: scale(0.95);
+}
+
+/* 查询参数区域 */
+.query-params-section {
+    margin-top: 32px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.params-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* 参数表格 */
+.params-table-container {
+    overflow-x: auto;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.params-table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 0.85rem;
+    table-layout: fixed;
 }
 
-.query-params th,
-.query-params td {
-    padding: 0.5rem;
+.params-table th,
+.params-table td {
+    padding: 10px 12px;
     text-align: left;
-    border: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.query-params th {
+/* 固定列宽 */
+.params-table th:nth-child(1),
+.params-table td:nth-child(1) {
+    width: 20%;
+}
+
+.params-table th:nth-child(2),
+.params-table td:nth-child(2) {
+    width: 30%;
+}
+
+.params-table th:nth-child(3),
+.params-table td:nth-child(3) {
+    width: 35%;
+}
+
+.params-table th:nth-child(4),
+.params-table td:nth-child(4) {
+    width: 15%;
+    text-align: center;
+}
+
+.params-table th {
     background: var(--bg-secondary);
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.query-params code {
+.params-table th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.params-table th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.params-table td {
+    background: var(--bg-primary);
+}
+
+.params-table tr:last-child td {
+    border-bottom: none;
+}
+
+.params-table tr:hover td {
+    background: var(--bg-secondary);
+}
+
+/* 当悬停在可点击单元格时，降低同行其他单元格的高亮 */
+.params-table tr:hover td:not(:hover) {
+    opacity: 0.7;
+}
+
+.params-table code {
+    font-family: 'Fira Code', 'SF Mono', monospace;
+    font-size: 0.8rem;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.params-table .param-key {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.params-table .param-value {
+    color: var(--text-muted);
+}
+
+.params-table .decoded-value {
+    color: #10b981;
+}
+
+/* 可点击的单元格 */
+.params-table td.clickable-cell {
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+}
+
+.params-table td.clickable-cell:hover {
+    background: rgba(37, 99, 235, 0.12) !important;
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.3);
+    opacity: 1 !important;
+}
+
+.params-table td.clickable-cell:hover code {
+    color: var(--color-primary) !important;
+}
+
+.params-table td.clickable-cell:active {
+    background: rgba(37, 99, 235, 0.2) !important;
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.5);
+}
+
+.params-table td.clickable-cell.copied::after {
+    content: '已复制';
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    color: #10b981;
+    font-weight: 500;
+    animation: fadeOut 0.8s ease forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* 表格提示 */
+.table-hint {
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .table-hint {
     background: var(--bg-tertiary);
-    padding: 0.125rem 0.375rem;
-    border-radius: 3px;
-    font-size: 0.875rem;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 参数类型徽章 */
+.type-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.type-badge.string {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.type-badge.number {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.type-badge.boolean {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.type-badge.array {
+    background: #f3e8ff;
+    color: #6b21a8;
+}
+
+.type-badge.json {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+.type-badge.base64 {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.type-badge.uuid {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.type-badge.timestamp {
+    background: #cffafe;
+    color: #0e7490;
+}
+
+.type-badge.url {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.type-badge.email {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* 导出区域 */
+.export-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.export-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.export-header h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.export-format-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-select--sm {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+.export-output {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.export-output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.export-format-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: rgba(37, 99, 235, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.export-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* 图标按钮 */
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-icon:active {
+    transform: scale(0.95);
+}
+
+/* 代码编辑器容器 */
+.export-output .code-editor-container {
+    min-height: 120px;
+    max-height: 250px;
+    overflow: auto;
+}
+
+.export-output .code-editor-container .cm-editor {
+    border-radius: 0 0 8px 8px;
+    max-height: 250px;
+}
+
+.export-output .code-editor-container .cm-scroller {
+    overflow: auto !important;
+}
+
+/* 代码输出（回退方案） */
+.code-output {
+    padding: 16px;
+    margin: 0;
+    font-family: 'Fira Code', 'SF Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    overflow-x: auto;
+    white-space: pre;
+    min-height: 60px;
+    max-height: 250px;
+}
+
+/* 无参数提示 */
+.no-params-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    background: var(--bg-secondary);
+    border: 1px dashed var(--border-color);
+    border-radius: 12px;
+    color: var(--text-muted);
+    margin-top: 24px;
+}
+
+.no-params-hint svg {
+    opacity: 0.5;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .feature-intro {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .feature-intro__icon {
+        margin: 0 auto;
+    }
+
+    .feature-intro__list {
+        justify-content: center;
+    }
+
+    .url-parts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .url-part-card--wide {
+        grid-column: span 1;
+    }
+
+    .export-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+}
+
+/* 深色模式 */
+[data-theme="dark"] .feature-intro {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .feature-intro__icon {
+    background: linear-gradient(135deg, var(--color-primary), #3b82f6);
+}
+
+[data-theme="dark"] .url-part-card {
+    background: var(--bg-tertiary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .url-part-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .url-part-card__value code {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .btn-icon-mini {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .btn-icon-mini:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .params-table th {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .params-table td {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .params-table tr:hover td {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .params-table tr:hover td:not(:hover) {
+    opacity: 0.7;
+}
+
+[data-theme="dark"] .params-table code {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .export-section {
+    background: var(--bg-tertiary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .export-output {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .export-output-header {
+    background: var(--bg-tertiary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .export-format-badge {
+    background: rgba(96, 165, 250, 0.15);
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .btn-icon {
+    background: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .btn-icon:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .code-output {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .no-params-hint {
+    background: var(--bg-tertiary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 深色模式 - 类型徽章 */
+[data-theme="dark"] .type-badge.string {
+    background: #1e3a5f;
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .type-badge.number {
+    background: #14532d;
+    color: #86efac;
+}
+
+[data-theme="dark"] .type-badge.boolean {
+    background: #451a03;
+    color: #fcd34d;
+}
+
+[data-theme="dark"] .type-badge.array {
+    background: #3b0764;
+    color: #c4b5fd;
+}
+
+[data-theme="dark"] .type-badge.json {
+    background: #500724;
+    color: #f9a8d4;
+}
+
+[data-theme="dark"] .type-badge.base64 {
+    background: #431407;
+    color: #fdba74;
+}
+
+[data-theme="dark"] .type-badge.uuid {
+    background: #312e81;
+    color: #a5b4fc;
+}
+
+[data-theme="dark"] .type-badge.timestamp {
+    background: #083344;
+    color: #67e8f9;
+}
+
+[data-theme="dark"] .type-badge.url {
+    background: #064e3b;
+    color: #6ee7b7;
+}
+
+[data-theme="dark"] .type-badge.email {
+    background: #450a0a;
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .params-table td.clickable-cell:hover {
+    background: rgba(96, 165, 250, 0.15) !important;
+    box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.3);
+    opacity: 1 !important;
+}
+
+[data-theme="dark"] .params-table td.clickable-cell:hover code {
+    color: #60a5fa !important;
+}
+
+[data-theme="dark"] .params-table td.clickable-cell:active {
+    background: rgba(96, 165, 250, 0.25) !important;
+    box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.5);
 }

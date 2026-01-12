@@ -334,7 +334,7 @@
                     </div>
                 </div>
 
-                <section class="input-section">
+                <section class="input-section gen-input-section">
                     <div class="input-header">
                         <label data-i18n="tools.curl-converter.curlCommand">cURL 命令</label>
                         <button id="gen-sample-btn" class="btn btn--sm btn--outline" data-i18n="tools.curl-converter.sample">示例</button>
@@ -347,110 +347,147 @@
                               style="display: none;"></textarea>
                 </section>
 
-                <section class="options-section">
-                    <div class="option-group">
-                        <label data-i18n="tools.curl-converter.language">编程语言</label>
-                        <div class="language-select-wrapper">
-                            <select id="code-language-select" class="form-select">
-                            <optgroup label="Python">
-                                <option value="python-requests" selected>Python - requests</option>
-                                <option value="python-httpx">Python - httpx (同步)</option>
-                                <option value="python-httpx-async">Python - httpx (异步)</option>
-                                <option value="python-curl-cffi">Python - curl_cffi (同步)</option>
-                                <option value="python-curl-cffi-async">Python - curl_cffi (异步)</option>
-                                <option value="python-rnet">Python - rnet (同步)</option>
-                                <option value="python-rnet-async">Python - rnet (异步)</option>
-                                <option value="python-aiohttp">Python - aiohttp</option>
-                                <option value="python-urllib">Python - urllib</option>
-                                <option value="python-fastapi-httpx">Python - FastAPI + httpx</option>
-                            </optgroup>
-                            <optgroup label="JavaScript">
-                                <option value="js-fetch">JavaScript - fetch</option>
-                                <option value="js-axios">JavaScript - axios</option>
-                                <option value="js-xhr">JavaScript - XMLHttpRequest</option>
-                                <option value="node-axios">Node.js - axios</option>
-                                <option value="node-fetch">Node.js - node-fetch</option>
-                                <option value="node-http">Node.js - http/https</option>
-                            </optgroup>
-                            <optgroup label="PHP">
-                                <option value="php-curl">PHP - cURL</option>
-                                <option value="php-guzzle">PHP - Guzzle</option>
-                            </optgroup>
-                            <optgroup label="Go">
-                                <option value="go-http">Go - net/http</option>
-                                <option value="go-resty">Go - resty</option>
-                            </optgroup>
-                            <optgroup label="Java">
-                                <option value="java-httpclient">Java - HttpClient</option>
-                                <option value="java-okhttp">Java - OkHttp</option>
-                            </optgroup>
-                            <optgroup label="C#">
-                                <option value="csharp-httpclient">C# - HttpClient</option>
-                                <option value="csharp-restsharp">C# - RestSharp</option>
-                            </optgroup>
-                            <optgroup label="Rust">
-                                <option value="rust-reqwest">Rust - reqwest</option>
-                            </optgroup>
-                            <optgroup label="Ruby">
-                                <option value="ruby-net-http">Ruby - Net::HTTP</option>
-                                <option value="ruby-faraday">Ruby - Faraday</option>
-                            </optgroup>
-                            <optgroup label="Swift">
-                                <option value="swift-urlsession">Swift - URLSession</option>
-                            </optgroup>
-                            <optgroup label="Kotlin">
-                                <option value="kotlin-okhttp">Kotlin - OkHttp</option>
-                            </optgroup>
-                        </select>
-                            <button id="gen-options-toggle" class="btn btn--icon btn--outline" title="代码生成选项">
-                                ⚙
+                <!-- 代码生成控制面板 -->
+                <section class="gen-control-panel">
+                    <div class="gen-control-row">
+                        <div class="gen-language-group">
+                            <label data-i18n="tools.curl-converter.language">编程语言</label>
+                            <select id="code-language-select" class="form-select form-select--enhanced">
+                                <optgroup label="Python">
+                                    <option value="python-requests" selected>Python - requests</option>
+                                    <option value="python-httpx">Python - httpx (同步)</option>
+                                    <option value="python-httpx-async">Python - httpx (异步)</option>
+                                    <option value="python-curl-cffi">Python - curl_cffi (同步)</option>
+                                    <option value="python-curl-cffi-async">Python - curl_cffi (异步)</option>
+                                    <option value="python-rnet">Python - rnet (同步)</option>
+                                    <option value="python-rnet-async">Python - rnet (异步)</option>
+                                    <option value="python-aiohttp">Python - aiohttp</option>
+                                    <option value="python-urllib">Python - urllib</option>
+                                    <option value="python-fastapi-httpx">Python - FastAPI + httpx</option>
+                                </optgroup>
+                                <optgroup label="JavaScript">
+                                    <option value="js-fetch">JavaScript - fetch</option>
+                                    <option value="js-axios">JavaScript - axios</option>
+                                    <option value="js-xhr">JavaScript - XMLHttpRequest</option>
+                                    <option value="node-axios">Node.js - axios</option>
+                                    <option value="node-fetch">Node.js - node-fetch</option>
+                                    <option value="node-http">Node.js - http/https</option>
+                                </optgroup>
+                                <optgroup label="PHP">
+                                    <option value="php-curl">PHP - cURL</option>
+                                    <option value="php-guzzle">PHP - Guzzle</option>
+                                </optgroup>
+                                <optgroup label="Go">
+                                    <option value="go-http">Go - net/http</option>
+                                    <option value="go-resty">Go - resty</option>
+                                </optgroup>
+                                <optgroup label="Java">
+                                    <option value="java-httpclient">Java - HttpClient</option>
+                                    <option value="java-okhttp">Java - OkHttp</option>
+                                </optgroup>
+                                <optgroup label="C#">
+                                    <option value="csharp-httpclient">C# - HttpClient</option>
+                                    <option value="csharp-restsharp">C# - RestSharp</option>
+                                </optgroup>
+                                <optgroup label="Rust">
+                                    <option value="rust-reqwest">Rust - reqwest</option>
+                                </optgroup>
+                                <optgroup label="Ruby">
+                                    <option value="ruby-net-http">Ruby - Net::HTTP</option>
+                                    <option value="ruby-faraday">Ruby - Faraday</option>
+                                </optgroup>
+                                <optgroup label="Swift">
+                                    <option value="swift-urlsession">Swift - URLSession</option>
+                                </optgroup>
+                                <optgroup label="Kotlin">
+                                    <option value="kotlin-okhttp">Kotlin - OkHttp</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <!-- 设置按钮与浮动面板 -->
+                        <div class="gen-options-wrapper">
+                            <button id="gen-options-toggle" class="btn btn--outline btn--settings-text" title="代码生成选项" data-i18n-title="tools.curl-converter.options.title">
+                                <svg class="settings-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                <span data-i18n="tools.curl-converter.options.title">选项</span>
+                            </button>
+
+                                <!-- 浮动选项面板 -->
+                                <div id="gen-options-panel" class="gen-options-popover" style="display: none;">
+                                    <div class="popover-arrow"></div>
+                                    <div class="popover-header">
+                                        <span class="popover-title" data-i18n="tools.curl-converter.options.title">代码生成选项</span>
+                                        <button class="popover-close" id="gen-options-close">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="popover-body">
+                                        <div class="popover-option">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="opt-use-params-dict">
+                                                <span data-i18n="tools.curl-converter.options.useParamsDict">使用参数字典</span>
+                                            </label>
+                                            <small class="option-hint" data-i18n="tools.curl-converter.options.useParamsDictHint">将查询参数提取为独立变量</small>
+                                        </div>
+                                        <div class="popover-divider"></div>
+                                        <div class="popover-option-row">
+                                            <div class="popover-option popover-option--inline">
+                                                <label for="opt-indent-size">缩进</label>
+                                                <select id="opt-indent-size" class="form-select form-select--mini">
+                                                    <option value="2">2</option>
+                                                    <option value="4" selected>4</option>
+                                                    <option value="8">8</option>
+                                                </select>
+                                            </div>
+                                            <div class="popover-option popover-option--inline">
+                                                <label for="opt-indent-char">字符</label>
+                                                <select id="opt-indent-char" class="form-select form-select--mini">
+                                                    <option value="space" selected>空格</option>
+                                                    <option value="tab">Tab</option>
+                                                </select>
+                                            </div>
+                                            <div class="popover-option popover-option--inline">
+                                                <label for="opt-quote-char">引号</label>
+                                                <select id="opt-quote-char" class="form-select form-select--mini">
+                                                    <option value="single" selected>'</option>
+                                                    <option value="double">"</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="output-section gen-output-section">
+                    <div class="output-header">
+                        <div class="output-header-left">
+                            <label data-i18n="tools.curl-converter.generatedCode">生成的代码</label>
+                            <span class="output-lang-badge" id="output-lang-badge"></span>
+                        </div>
+                        <div class="output-header-actions">
+                            <button id="copy-code-btn" class="btn-icon" title="复制代码" data-i18n-title="common.copy">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                            <button id="save-code-btn" class="btn-icon" title="保存文件" data-i18n-title="common.save">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
                             </button>
                         </div>
                     </div>
-
-                    <!-- 代码生成选项面板 -->
-                    <div id="gen-options-panel" class="gen-options-panel" style="display: none;">
-                        <div class="gen-options-grid">
-                            <div class="gen-option-item">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="opt-use-params-dict">
-                                    <span data-i18n="tools.curl-converter.options.useParamsDict">使用参数字典</span>
-                                </label>
-                                <small class="option-hint" data-i18n="tools.curl-converter.options.useParamsDictHint">将 URL 查询参数提取为单独的字典变量</small>
-                            </div>
-                            <div class="gen-option-item">
-                                <label for="opt-indent-size" data-i18n="tools.curl-converter.options.indentSize">缩进数量</label>
-                                <select id="opt-indent-size" class="form-select form-select--sm">
-                                    <option value="2">2</option>
-                                    <option value="4" selected>4</option>
-                                    <option value="8">8</option>
-                                </select>
-                            </div>
-                            <div class="gen-option-item">
-                                <label for="opt-indent-char" data-i18n="tools.curl-converter.options.indentChar">缩进字符</label>
-                                <select id="opt-indent-char" class="form-select form-select--sm">
-                                    <option value="space" selected data-i18n="tools.curl-converter.options.space">空格 (Space)</option>
-                                    <option value="tab" data-i18n="tools.curl-converter.options.tab">制表符 (Tab)</option>
-                                </select>
-                            </div>
-                            <div class="gen-option-item">
-                                <label for="opt-quote-char" data-i18n="tools.curl-converter.options.quoteChar">引号样式</label>
-                                <select id="opt-quote-char" class="form-select form-select--sm">
-                                    <option value="single" selected>单引号 (')</option>
-                                    <option value="double">双引号 (")</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="action-section">
-                    <button id="generate-btn" class="btn btn--primary" data-i18n="tools.curl-converter.generate">生成代码</button>
-                    <button id="copy-code-btn" class="btn btn--outline" data-i18n="common.copy">复制代码</button>
-                </section>
-
-                <section class="output-section">
-                    <label data-i18n="tools.curl-converter.generatedCode">生成的代码</label>
                     <div id="code-output-editor" class="code-editor-container"></div>
                     <pre id="code-output" class="code-output" style="display: none;"></pre>
                 </section>

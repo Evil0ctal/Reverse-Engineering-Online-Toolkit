@@ -200,6 +200,141 @@
         'nonce': '随机数/防重放'
     };
 
+    // ==================== 选项面板控制 ====================
+
+    /**
+     * 切换选项面板显示
+     */
+    function toggleOptionsPanel() {
+        const panel = document.getElementById('gen-options-panel');
+        const btn = document.getElementById('gen-options-toggle');
+        if (!panel) return;
+
+        const isHidden = panel.style.display === 'none' || !panel.style.display;
+        if (isHidden) {
+            panel.style.display = 'block';
+            panel.classList.remove('closing');
+            if (btn) btn.classList.add('active');
+            // 添加点击外部关闭的监听
+            setTimeout(() => {
+                document.addEventListener('click', handleOutsideClick);
+            }, 0);
+        } else {
+            closeOptionsPanel();
+        }
+    }
+
+    /**
+     * 关闭选项面板
+     */
+    function closeOptionsPanel() {
+        const panel = document.getElementById('gen-options-panel');
+        const btn = document.getElementById('gen-options-toggle');
+        if (!panel || panel.style.display === 'none') return;
+
+        panel.classList.add('closing');
+        if (btn) btn.classList.remove('active');
+        document.removeEventListener('click', handleOutsideClick);
+
+        setTimeout(() => {
+            panel.style.display = 'none';
+            panel.classList.remove('closing');
+        }, 150);
+    }
+
+    /**
+     * 处理点击外部区域
+     */
+    function handleOutsideClick(e) {
+        const panel = document.getElementById('gen-options-panel');
+        const btn = document.getElementById('gen-options-toggle');
+        if (!panel || !btn) return;
+
+        // 如果点击的不是面板内部也不是按钮，则关闭面板
+        if (!panel.contains(e.target) && !btn.contains(e.target)) {
+            closeOptionsPanel();
+        }
+    }
+
+    // ==================== 文件名生成 ====================
+
+    /**
+     * 根据 cURL 命令和语言生成文件名
+     * @param {string} curlCommand - cURL 命令
+     * @param {string} language - 编程语言
+     * @returns {string} 生成的文件名
+     */
+    function generateFilename(curlCommand, language) {
+        // 语言到文件扩展名的映射
+        const extMap = {
+            'python-requests': 'py',
+            'python-httpx': 'py',
+            'python-httpx-async': 'py',
+            'python-curl-cffi': 'py',
+            'python-curl-cffi-async': 'py',
+            'python-rnet': 'py',
+            'python-rnet-async': 'py',
+            'python-aiohttp': 'py',
+            'python-urllib': 'py',
+            'python-fastapi-httpx': 'py',
+            'js-fetch': 'js',
+            'js-axios': 'js',
+            'js-xhr': 'js',
+            'node-axios': 'js',
+            'node-fetch': 'js',
+            'node-http': 'js',
+            'php-curl': 'php',
+            'php-guzzle': 'php',
+            'go-http': 'go',
+            'go-resty': 'go',
+            'java-httpclient': 'java',
+            'java-okhttp': 'java',
+            'csharp-httpclient': 'cs',
+            'csharp-restsharp': 'cs',
+            'rust-reqwest': 'rs',
+            'ruby-net-http': 'rb',
+            'ruby-faraday': 'rb',
+            'swift-urlsession': 'swift',
+            'kotlin-okhttp': 'kt'
+        };
+
+        const ext = extMap[language] || 'txt';
+
+        // 尝试从 cURL 命令中提取 URL
+        let baseName = 'request';
+        try {
+            // 简单提取 URL
+            const urlMatch = curlCommand.match(/['"]?(https?:\/\/[^\s'"]+)['"]?/i);
+            if (urlMatch) {
+                const url = new URL(urlMatch[1]);
+                // 从路径中提取有意义的名称
+                let pathname = url.pathname.replace(/^\/+|\/+$/g, '');
+                if (pathname) {
+                    // 取最后一个路径段
+                    const segments = pathname.split('/').filter(s => s);
+                    if (segments.length > 0) {
+                        let lastSegment = segments[segments.length - 1];
+                        // 移除扩展名
+                        lastSegment = lastSegment.replace(/\.[^/.]+$/, '');
+                        // 移除特殊字符，只保留字母数字和下划线
+                        lastSegment = lastSegment.replace(/[^a-zA-Z0-9_-]/g, '_');
+                        if (lastSegment && lastSegment.length > 0 && lastSegment.length <= 50) {
+                            baseName = lastSegment;
+                        }
+                    }
+                }
+                // 如果路径没有有意义的名称，使用主机名
+                if (baseName === 'request') {
+                    baseName = url.hostname.replace(/\./g, '_').replace(/^www_/, '');
+                }
+            }
+        } catch (e) {
+            // 解析失败，使用默认名称
+        }
+
+        return `${baseName}.${ext}`;
+    }
+
     // ==================== cURL 解析器 ====================
 
     /**
@@ -1443,33 +1578,6 @@
             return;
         }
 
-        // 生成代码按钮
-        if (target.id === 'generate-btn' || target.closest('#generate-btn')) {
-            const input = getEditorValue(genInputEditor, 'gen-input');
-            const selectEl = document.getElementById('code-language-select');
-            const language = selectEl?.value;
-
-            if (!input.trim()) {
-                REOT.utils?.showNotification('请输入 cURL 命令', 'warning');
-                return;
-            }
-
-            if (!language) {
-                REOT.utils?.showNotification('请选择编程语言', 'warning');
-                return;
-            }
-
-            try {
-                await recreateCodeOutputEditor(language);
-                const code = await generateCode(input, language);
-                setEditorValue(codeOutputEditor, 'code-output', code);
-                REOT.utils?.showNotification('代码生成成功', 'success');
-            } catch (error) {
-                REOT.utils?.showNotification(error.message, 'error');
-            }
-            return;
-        }
-
         // 复制代码按钮
         if (target.id === 'copy-code-btn' || target.closest('#copy-code-btn')) {
             const code = getEditorValue(codeOutputEditor, 'code-output');
@@ -1477,20 +1585,49 @@
                 await REOT.utils?.copyToClipboard(code);
                 REOT.utils?.showNotification('代码已复制', 'success');
             }
+            return;
+        }
+
+        // 保存代码文件按钮
+        if (target.id === 'save-code-btn' || target.closest('#save-code-btn')) {
+            const code = getEditorValue(codeOutputEditor, 'code-output');
+            if (!code || !code.trim()) {
+                REOT.utils?.showNotification('没有可保存的代码', 'warning');
+                return;
+            }
+
+            const selectEl = document.getElementById('code-language-select');
+            const language = selectEl?.value || 'python-requests';
+            const input = getEditorValue(genInputEditor, 'gen-input');
+
+            // 生成文件名
+            const filename = generateFilename(input, language);
+
+            // 下载文件
+            const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            REOT.utils?.showNotification('代码已保存: ' + filename, 'success');
+            return;
         }
 
         // 选项面板切换按钮
         if (target.id === 'gen-options-toggle' || target.closest('#gen-options-toggle')) {
-            const panel = document.getElementById('gen-options-panel');
-            if (panel) {
-                const isHidden = panel.style.display === 'none' || !panel.style.display;
-                panel.style.display = isHidden ? 'block' : 'none';
-                // 更新按钮状态
-                const btn = document.getElementById('gen-options-toggle');
-                if (btn) {
-                    btn.classList.toggle('active', isHidden);
-                }
-            }
+            e.stopPropagation();
+            toggleOptionsPanel();
+        }
+
+        // 选项面板关闭按钮
+        if (target.id === 'gen-options-close' || target.closest('#gen-options-close')) {
+            e.stopPropagation();
+            closeOptionsPanel();
         }
 
         // 点击单元格复制内容
@@ -1514,6 +1651,13 @@
         if (e.target.id === 'code-language-select') {
             const input = getEditorValue(genInputEditor, 'gen-input');
             const language = e.target.value;
+
+            // 更新语言标签
+            const langBadge = document.getElementById('output-lang-badge');
+            if (langBadge) {
+                const selectedOption = e.target.options[e.target.selectedIndex];
+                langBadge.textContent = selectedOption?.text || language;
+            }
 
             // 重新创建编辑器以应用新的语言高亮
             await recreateCodeOutputEditor(language);
