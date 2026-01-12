@@ -96,7 +96,8 @@
         "generators": "生成器",
         "converters": "数值转换",
         "text": "文本处理",
-        "reverse": "逆向专用"
+        "reverse": "逆向专用",
+        "system": "系统工具"
     },
     "footer": {
         "rights": "保留所有权利。",
@@ -542,6 +543,18 @@
         "binary-editor": {
             "title": "二进制编辑器",
             "description": "查看和编辑二进制文件"
+        },
+        "crontab": {
+            "title": "Crontab 解析器",
+            "description": "Cron 表达式与人类可读文本互转"
+        },
+        "chmod": {
+            "title": "Unix 权限计算器",
+            "description": "chmod 权限数字与符号表示法互转"
+        },
+        "cidr": {
+            "title": "CIDR 子网计算器",
+            "description": "CIDR 子网划分与 IP 范围计算"
         }
     }
 }

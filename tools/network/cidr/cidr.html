@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.cidr.title">CIDR 子网计算器 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="cidr.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.cidr.title">CIDR 子网计算器</h1>
+            <p data-i18n="tools.cidr.description">CIDR 子网划分与 IP 范围计算</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <h3 data-i18n="tools.cidr.inputCidr">输入 CIDR</h3>
+                <div class="cidr-input-wrapper">
+                    <input type="text" id="cidr-input" class="form-input cidr-input"
+                           placeholder="192.168.1.0/24" value="192.168.1.0/24">
+                    <button id="calculate-btn" class="btn btn--primary" data-i18n="common.convert">计算</button>
+                </div>
+                <div class="preset-buttons">
+                    <button class="btn btn--sm btn--outline preset-btn" data-cidr="10.0.0.0/8">A 类私有</button>
+                    <button class="btn btn--sm btn--outline preset-btn" data-cidr="172.16.0.0/12">B 类私有</button>
+                    <button class="btn btn--sm btn--outline preset-btn" data-cidr="192.168.0.0/16">C 类私有</button>
+                    <button class="btn btn--sm btn--outline preset-btn" data-cidr="192.168.1.0/24">/24</button>
+                    <button class="btn btn--sm btn--outline preset-btn" data-cidr="192.168.1.0/28">/28</button>
+                </div>
+            </section>
+
+            <!-- 计算结果 -->
+            <section class="result-section" id="result-section" style="display: none;">
+                <h3 data-i18n="tools.cidr.networkInfo">网络信息</h3>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.networkAddress">网络地址</span>
+                        <span class="result-value" id="network-address">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.broadcastAddress">广播地址</span>
+                        <span class="result-value" id="broadcast-address">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.subnetMask">子网掩码</span>
+                        <span class="result-value" id="subnet-mask">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.wildcardMask">通配符掩码</span>
+                        <span class="result-value" id="wildcard-mask">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.firstHost">第一个可用 IP</span>
+                        <span class="result-value" id="first-host">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.lastHost">最后一个可用 IP</span>
+                        <span class="result-value" id="last-host">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.totalHosts">总 IP 数</span>
+                        <span class="result-value" id="total-hosts">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.usableHosts">可用主机数</span>
+                        <span class="result-value" id="usable-hosts">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.ipClass">IP 类别</span>
+                        <span class="result-value" id="ip-class">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" data-i18n="tools.cidr.ipType">IP 类型</span>
+                        <span class="result-value" id="ip-type">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 二进制表示 -->
+            <section class="binary-section" id="binary-section" style="display: none;">
+                <h3 data-i18n="tools.cidr.binaryRepresentation">二进制表示</h3>
+                <div class="binary-grid">
+                    <div class="binary-row">
+                        <span class="binary-label" data-i18n="tools.cidr.ipAddress">IP 地址</span>
+                        <code class="binary-value" id="ip-binary">-</code>
+                    </div>
+                    <div class="binary-row">
+                        <span class="binary-label" data-i18n="tools.cidr.subnetMask">子网掩码</span>
+                        <code class="binary-value" id="mask-binary">-</code>
+                    </div>
+                    <div class="binary-row">
+                        <span class="binary-label" data-i18n="tools.cidr.networkAddress">网络地址</span>
+                        <code class="binary-value" id="network-binary">-</code>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IP 范围检查 -->
+            <section class="check-section">
+                <h3 data-i18n="tools.cidr.checkIpInRange">检查 IP 是否在范围内</h3>
+                <div class="check-input-wrapper">
+                    <input type="text" id="check-ip-input" class="form-input"
+                           placeholder="192.168.1.100">
+                    <button id="check-btn" class="btn btn--primary" data-i18n="tools.cidr.check">检查</button>
+                </div>
+                <div class="check-result" id="check-result" style="display: none;">
+                    <span id="check-result-text">-</span>
+                </div>
+            </section>
+
+            <!-- 子网划分 -->
+            <section class="subnet-section">
+                <h3 data-i18n="tools.cidr.subnetDivision">子网划分</h3>
+                <div class="subnet-input-wrapper">
+                    <label data-i18n="tools.cidr.divideInto">划分为</label>
+                    <select id="subnet-count" class="form-select">
+                        <option value="2">2 个子网 (+1 位)</option>
+                        <option value="4">4 个子网 (+2 位)</option>
+                        <option value="8">8 个子网 (+3 位)</option>
+                        <option value="16">16 个子网 (+4 位)</option>
+                        <option value="32">32 个子网 (+5 位)</option>
+                        <option value="64">64 个子网 (+6 位)</option>
+                    </select>
+                    <button id="divide-btn" class="btn btn--primary" data-i18n="tools.cidr.divide">划分</button>
+                </div>
+                <div class="subnet-results" id="subnet-results" style="display: none;">
+                    <!-- 动态生成 -->
+                </div>
+            </section>
+
+            <!-- CIDR 参考表 -->
+            <section class="reference-section">
+                <h3 data-i18n="tools.cidr.cidrReference">CIDR 参考表</h3>
+                <div class="reference-table-wrapper">
+                    <table class="reference-table">
+                        <thead>
+                            <tr>
+                                <th>CIDR</th>
+                                <th data-i18n="tools.cidr.subnetMask">子网掩码</th>
+                                <th data-i18n="tools.cidr.hosts">主机数</th>
+                                <th data-i18n="tools.cidr.usage">用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/32">
+                                <td>/32</td>
+                                <td>255.255.255.255</td>
+                                <td>1</td>
+                                <td data-i18n="tools.cidr.singleHost">单个主机</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/31">
+                                <td>/31</td>
+                                <td>255.255.255.254</td>
+                                <td>2</td>
+                                <td data-i18n="tools.cidr.pointToPoint">点对点链路</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/30">
+                                <td>/30</td>
+                                <td>255.255.255.252</td>
+                                <td>4 (2)</td>
+                                <td data-i18n="tools.cidr.smallLink">小型链路</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/29">
+                                <td>/29</td>
+                                <td>255.255.255.248</td>
+                                <td>8 (6)</td>
+                                <td data-i18n="tools.cidr.smallNetwork">小型网络</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/28">
+                                <td>/28</td>
+                                <td>255.255.255.240</td>
+                                <td>16 (14)</td>
+                                <td data-i18n="tools.cidr.smallOffice">小型办公室</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/27">
+                                <td>/27</td>
+                                <td>255.255.255.224</td>
+                                <td>32 (30)</td>
+                                <td data-i18n="tools.cidr.departmentNet">部门网络</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/26">
+                                <td>/26</td>
+                                <td>255.255.255.192</td>
+                                <td>64 (62)</td>
+                                <td data-i18n="tools.cidr.floorNet">楼层网络</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/25">
+                                <td>/25</td>
+                                <td>255.255.255.128</td>
+                                <td>128 (126)</td>
+                                <td data-i18n="tools.cidr.buildingNet">建筑网络</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.1.0/24">
+                                <td>/24</td>
+                                <td>255.255.255.0</td>
+                                <td>256 (254)</td>
+                                <td data-i18n="tools.cidr.classC">C 类网络</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="192.168.0.0/16">
+                                <td>/16</td>
+                                <td>255.255.0.0</td>
+                                <td>65,536</td>
+                                <td data-i18n="tools.cidr.classB">B 类网络</td>
+                            </tr>
+                            <tr class="clickable-row" data-cidr="10.0.0.0/8">
+                                <td>/8</td>
+                                <td>255.0.0.0</td>
+                                <td>16,777,216</td>
+                                <td data-i18n="tools.cidr.classA">A 类网络</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="cidr.js"></script>
+</body>
+</html>

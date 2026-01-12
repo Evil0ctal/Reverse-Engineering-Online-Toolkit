@@ -31,6 +31,8 @@
 
 ## 🛠️ 功能列表
 
+> 图例：✅ 已完成 | 📋 计划中
+
 ### 编码与解码 (Encoding & Decoding)
 
 | 功能 | 描述 | 状态 |
@@ -56,6 +58,9 @@
 | **ZSTD** | Zstandard 压缩与解压 | ✅ 已完成 |
 | **Brotli** | Brotli 压缩与解压 | ✅ 已完成 |
 | **LZ4** | LZ4 压缩与解压 | ✅ 已完成 |
+| **LZMA/XZ** | LZMA 和 XZ 格式解压（常见于 APK 资源和原生库） | 📋 计划中 |
+| **bzip2** | bzip2 压缩与解压 | 📋 计划中 |
+| **Snappy** | Snappy 压缩与解压（Google 开发，常见于大数据场景） | 📋 计划中 |
 
 ### 哈希计算 (Hashing)
 
@@ -68,12 +73,25 @@
 | **BLAKE2** | BLAKE2b, BLAKE2s 哈希计算 | ✅ 已完成 |
 | **CRC** | CRC8, CRC16, CRC32, CRC32C 校验计算 | ✅ 已完成 |
 | **RIPEMD** | RIPEMD-160 哈希计算 | ✅ 已完成 |
+| **xxHash** | xxHash32, xxHash64, xxHash3（高速非加密哈希，常见于指纹生成） | 📋 计划中 |
+| **MurmurHash** | MurmurHash3（常见于移动端指纹算法） | 📋 计划中 |
+| **哈希类型识别** | 根据长度和格式自动识别哈希类型（MD5/SHA1/SHA256/bcrypt 等） | 📋 计划中 |
 
 ### HMAC 计算 (HMAC)
 
 | 功能 | 描述 | 状态 |
 |------|------|------|
 | **HMAC** | HMAC-SHA1, HMAC-SHA256, HMAC-SHA384, HMAC-SHA512 计算 | ✅ 已完成 |
+
+### 密钥派生函数 (Key Derivation Functions)
+
+| 功能 | 描述 | 状态 |
+|------|------|------|
+| **PBKDF2** | PBKDF2-SHA1/SHA256/SHA512 密钥派生（移动 App 常用） | 📋 计划中 |
+| **HKDF** | HKDF 密钥派生（API 签名密钥生成常用） | 📋 计划中 |
+| **scrypt** | scrypt 密钥派生 | 📋 计划中 |
+| **Argon2** | Argon2id 密钥派生（现代密码哈希算法） | 📋 计划中 |
+| **bcrypt** | bcrypt 密码验证与测试 | 📋 计划中 |
 
 ### 对称加密 (Symmetric Encryption)
 
@@ -86,6 +104,7 @@
 | **Blowfish** | Blowfish 加解密 | ✅ 已完成 |
 | **ChaCha20** | ChaCha20 加解密 | ✅ 已完成 |
 | **SM4** | 国密 SM4 加解密 | ✅ 已完成 |
+| **加密类型识别** | 根据密文特征猜测加密类型（块大小、填充、熵值分析） | 📋 计划中 |
 
 ### 非对称加密 (Asymmetric Encryption)
 
@@ -95,6 +114,9 @@
 | **ECC** | 椭圆曲线加密 | ✅ 已完成 |
 | **SM2** | 国密 SM2 加解密 | ✅ 已完成 |
 | **Ed25519** | Ed25519 签名验签 | ✅ 已完成 |
+| **RSA 密钥计算器** | 已知部分 RSA 参数（p, q）计算其他参数（n, d, e） | 📋 计划中 |
+| **JWK ↔ PEM 转换** | JSON Web Key 与 PEM 格式互转（RSA/EC/OKP） | 📋 计划中 |
+| **PKCS#1 ↔ PKCS#8** | RSA 密钥格式互转 | 📋 计划中 |
 
 ### 数据格式化 (Data Formatting)
 
@@ -109,6 +131,7 @@
 | **HTML** | HTML 格式化与压缩 | ✅ 已完成 |
 | **CSS** | CSS 格式化与压缩 | ✅ 已完成 |
 | **JavaScript** | JavaScript 格式化与压缩 | ✅ 已完成 |
+| **GraphQL** | GraphQL 查询格式化与解析 | 📋 计划中 |
 
 ### 二进制分析 (Binary Analysis)
 
@@ -119,6 +142,12 @@
 | **文件哈希** | 计算文件的各种哈希值 | ✅ 已完成 |
 | **文件类型检测** | 基于 Magic Number 检测文件类型 | ✅ 已完成 |
 | **字节序转换** | 大端序与小端序转换 | ✅ 已完成 |
+| **熵值可视化** | 计算并可视化文件的 Shannon 熵值（识别加密/压缩/明文区域） | 📋 计划中 |
+| **二进制差异对比** | 两个文件的十六进制对比（类似 HxD 对比功能） | 📋 计划中 |
+| **PE 头解析** | Windows PE 可执行文件头解析（节区、导入、导出表） | 📋 计划中 |
+| **ELF 头解析** | Linux ELF 可执行文件头解析 | 📋 计划中 |
+| **Mach-O 头解析** | macOS/iOS Mach-O 可执行文件头解析 | 📋 计划中 |
+| **DEX 头解析** | Android DEX 文件头解析 | 📋 计划中 |
 
 ### 协议解析 (Protocol Parsing)
 
@@ -129,6 +158,12 @@
 | **ASN.1** | ASN.1 DER/BER 解析 | ✅ 已完成 |
 | **X.509 证书** | X.509 证书解析 | ✅ 已完成 |
 | **PEM** | PEM 格式解析 | ✅ 已完成 |
+| **MessagePack** | MessagePack 编解码（TikTok/抖音 API 常用格式） | 📋 计划中 |
+| **CBOR** | CBOR 编解码（IoT 和 WebAuthn 常用） | 📋 计划中 |
+| **BSON** | BSON 解析（MongoDB 格式） | 📋 计划中 |
+| **Plist** | Apple Property List 解析（二进制和 XML 格式） | 📋 计划中 |
+| **SAML Token** | SAML 断言解析 | 📋 计划中 |
+| **X.509 证书生成** | 自签名证书生成（测试用途） | 📋 计划中 |
 
 ### 网络工具 (Network Tools)
 
@@ -140,6 +175,10 @@
 | **IP 地址转换** | IP 地址格式转换（十进制、整数、十六进制、二进制） | ✅ 已完成 |
 | **URL 解析** | URL 组成部分解析 | ✅ 已完成 |
 | **cURL 转代码** | cURL 命令转换为各语言代码 | ✅ 已完成 |
+| **CIDR/子网计算** | CIDR 子网划分计算器 | 📋 计划中 |
+| **HAR 文件分析** | HTTP Archive 文件解析（Charles/Fiddler/mitmproxy 导出分析） | 📋 计划中 |
+| **WebSocket 帧解析** | WebSocket 帧头和载荷解码 | 📋 计划中 |
+| **DNS 记录解析** | DNS 响应包解析 | 📋 计划中 |
 
 ### 生成器 (Generators)
 
@@ -153,6 +192,10 @@
 | **密码生成** | 安全密码生成器 | ✅ 已完成 |
 | **密钥对生成** | RSA/ECC 密钥对生成 | ✅ 已完成 |
 | **Lorem Ipsum** | 占位文本生成 | ✅ 已完成 |
+| **时间戳格式猜测** | 自动识别时间戳格式（Unix/毫秒/Windows FILETIME/Cocoa 等） | 📋 计划中 |
+| **Snowflake ID 解码** | Twitter/Discord 风格雪花 ID 解析（提取时间戳和节点信息） | 📋 计划中 |
+| **MongoDB ObjectID** | ObjectID 解析（提取创建时间和机器标识） | 📋 计划中 |
+| **ULID 解析/生成** | ULID 解析与生成（可排序的 UUID 替代方案） | 📋 计划中 |
 
 ### 数值转换 (Number Conversion)
 
@@ -185,6 +228,40 @@
 | **模式搜索** | 二进制模式搜索 | ✅ 已完成 |
 | **偏移计算器** | 内存地址偏移计算 | ✅ 已完成 |
 | **结构体解析** | C 结构体内存布局可视化 | ✅ 已完成 |
+| **在线反汇编器** | Hex/Binary 转汇编指令（x86, x64, ARM, MIPS），基于 Capstone.js | 📋 计划中 |
+| **在线汇编器** | 汇编指令转机器码，基于 Keystone.js | 📋 计划中 |
+| **Shellcode 助手** | Shellcode 格式化（C数组、Python字符串等）、坏字符检测 | 📋 计划中 |
+| **IDA 模式生成器** | 生成 IDA 风格的字节模式搜索字符串（支持通配符） | 📋 计划中 |
+
+### JavaScript 逆向 (JavaScript Reverse Engineering)
+
+| 功能 | 描述 | 状态 |
+|------|------|------|
+| **JS 反混淆器** | JavaScript 反混淆（变量重命名、字符串数组还原、控制流平坦化还原） | 📋 计划中 |
+| **Source Map 解包** | 从 .js.map 文件还原原始源代码目录结构 | 📋 计划中 |
+| **JS AST 查看器** | JavaScript 抽象语法树可视化 | 📋 计划中 |
+
+### 取证与隐写 (Forensics & Steganography)
+
+| 功能 | 描述 | 状态 |
+|------|------|------|
+| **图片 EXIF 查看** | 查看和清除图片元数据 | 📋 计划中 |
+| **LSB 隐写分析** | 图片最低有效位隐写分析（支持不同颜色通道） | 📋 计划中 |
+
+### 移动端逆向 (Mobile Reverse Engineering)
+
+| 功能 | 描述 | 状态 |
+|------|------|------|
+| **设备指纹解码** | 解析 Android ID、GAID、IDFA、OAID 等常见设备标识格式 | 📋 计划中 |
+| **Deep Link 验证** | Android Intent 和 iOS URL Scheme 解析与验证 | 📋 计划中 |
+| **Frida 代码生成** | 常用 Frida Hook 代码片段生成（SSL Pinning Bypass、方法追踪等） | 📋 计划中 |
+
+### 系统工具 (System Tools)
+
+| 功能 | 描述 | 状态 |
+|------|------|------|
+| **Crontab 解析器** | Cron 表达式与人类可读文本互转 | 📋 计划中 |
+| **Unix 权限计算** | chmod 权限计算（755 ↔ rwxr-xr-x） | 📋 计划中 |
 
 ---
 

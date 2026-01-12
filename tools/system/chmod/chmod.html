@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.chmod.title">Unix 权限计算器 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="chmod.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.chmod.title">Unix 权限计算器</h1>
+            <p data-i18n="tools.chmod.description">chmod 权限数字与符号表示法互转</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 数字输入 -->
+            <section class="input-section">
+                <h3 data-i18n="tools.chmod.numericMode">数字模式</h3>
+                <div class="numeric-input-wrapper">
+                    <input type="text" id="numeric-input" class="form-input numeric-input"
+                           placeholder="755" value="755" maxlength="4">
+                    <div class="preset-buttons">
+                        <button class="btn btn--sm btn--outline preset-btn" data-mode="644">644</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-mode="755">755</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-mode="777">777</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-mode="600">600</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-mode="700">700</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 符号表示 -->
+            <section class="result-section">
+                <h3 data-i18n="tools.chmod.symbolicMode">符号模式</h3>
+                <div class="symbolic-display">
+                    <code id="symbolic-output">-rwxr-xr-x</code>
+                    <button class="btn btn--sm btn--outline copy-btn" data-target="symbolic-output" data-i18n="common.copy">复制</button>
+                </div>
+            </section>
+
+            <!-- 权限矩阵 -->
+            <section class="matrix-section">
+                <h3 data-i18n="tools.chmod.permissionMatrix">权限矩阵</h3>
+                <div class="permission-matrix">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-i18n="tools.chmod.read">读 (r)</th>
+                                <th data-i18n="tools.chmod.write">写 (w)</th>
+                                <th data-i18n="tools.chmod.execute">执行 (x)</th>
+                                <th data-i18n="tools.chmod.value">值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-role="owner">
+                                <td class="role-label" data-i18n="tools.chmod.owner">所有者 (u)</td>
+                                <td><input type="checkbox" id="owner-r" class="perm-checkbox" data-role="owner" data-perm="r"></td>
+                                <td><input type="checkbox" id="owner-w" class="perm-checkbox" data-role="owner" data-perm="w"></td>
+                                <td><input type="checkbox" id="owner-x" class="perm-checkbox" data-role="owner" data-perm="x"></td>
+                                <td class="perm-value" id="owner-value">7</td>
+                            </tr>
+                            <tr data-role="group">
+                                <td class="role-label" data-i18n="tools.chmod.group">组 (g)</td>
+                                <td><input type="checkbox" id="group-r" class="perm-checkbox" data-role="group" data-perm="r"></td>
+                                <td><input type="checkbox" id="group-w" class="perm-checkbox" data-role="group" data-perm="w"></td>
+                                <td><input type="checkbox" id="group-x" class="perm-checkbox" data-role="group" data-perm="x"></td>
+                                <td class="perm-value" id="group-value">5</td>
+                            </tr>
+                            <tr data-role="others">
+                                <td class="role-label" data-i18n="tools.chmod.others">其他 (o)</td>
+                                <td><input type="checkbox" id="others-r" class="perm-checkbox" data-role="others" data-perm="r"></td>
+                                <td><input type="checkbox" id="others-w" class="perm-checkbox" data-role="others" data-perm="w"></td>
+                                <td><input type="checkbox" id="others-x" class="perm-checkbox" data-role="others" data-perm="x"></td>
+                                <td class="perm-value" id="others-value">5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 特殊权限 -->
+            <section class="special-section">
+                <h3 data-i18n="tools.chmod.specialPermissions">特殊权限</h3>
+                <div class="special-permissions">
+                    <label class="special-perm">
+                        <input type="checkbox" id="setuid" class="perm-checkbox" data-special="setuid">
+                        <span class="perm-name">SUID (4)</span>
+                        <span class="perm-desc" data-i18n="tools.chmod.setuidDesc">以所有者身份执行</span>
+                    </label>
+                    <label class="special-perm">
+                        <input type="checkbox" id="setgid" class="perm-checkbox" data-special="setgid">
+                        <span class="perm-name">SGID (2)</span>
+                        <span class="perm-desc" data-i18n="tools.chmod.setgidDesc">以组身份执行/继承组</span>
+                    </label>
+                    <label class="special-perm">
+                        <input type="checkbox" id="sticky" class="perm-checkbox" data-special="sticky">
+                        <span class="perm-name">Sticky (1)</span>
+                        <span class="perm-desc" data-i18n="tools.chmod.stickyDesc">仅所有者可删除</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- chmod 命令 -->
+            <section class="command-section">
+                <h3 data-i18n="tools.chmod.chmodCommand">chmod 命令</h3>
+                <div class="command-display">
+                    <code id="chmod-command">chmod 755 filename</code>
+                    <button class="btn btn--sm btn--outline copy-btn" data-target="chmod-command" data-i18n="common.copy">复制</button>
+                </div>
+            </section>
+
+            <!-- 文件类型选择 -->
+            <section class="filetype-section">
+                <h3 data-i18n="tools.chmod.fileType">文件类型</h3>
+                <div class="filetype-options">
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="-" checked>
+                        <span>- <span data-i18n="tools.chmod.regularFile">普通文件</span></span>
+                    </label>
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="d">
+                        <span>d <span data-i18n="tools.chmod.directory">目录</span></span>
+                    </label>
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="l">
+                        <span>l <span data-i18n="tools.chmod.symbolicLink">符号链接</span></span>
+                    </label>
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="c">
+                        <span>c <span data-i18n="tools.chmod.charDevice">字符设备</span></span>
+                    </label>
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="b">
+                        <span>b <span data-i18n="tools.chmod.blockDevice">块设备</span></span>
+                    </label>
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="s">
+                        <span>s <span data-i18n="tools.chmod.socket">套接字</span></span>
+                    </label>
+                    <label class="filetype-option">
+                        <input type="radio" name="filetype" value="p">
+                        <span>p <span data-i18n="tools.chmod.pipe">管道</span></span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 常用权限参考 -->
+            <section class="reference-section">
+                <h3 data-i18n="tools.chmod.commonPermissions">常用权限</h3>
+                <div class="reference-grid">
+                    <div class="reference-item" data-mode="644">
+                        <code>644</code>
+                        <span>rw-r--r--</span>
+                        <span class="desc" data-i18n="tools.chmod.perm644">普通文件默认</span>
+                    </div>
+                    <div class="reference-item" data-mode="755">
+                        <code>755</code>
+                        <span>rwxr-xr-x</span>
+                        <span class="desc" data-i18n="tools.chmod.perm755">可执行文件/目录</span>
+                    </div>
+                    <div class="reference-item" data-mode="777">
+                        <code>777</code>
+                        <span>rwxrwxrwx</span>
+                        <span class="desc" data-i18n="tools.chmod.perm777">完全开放（谨慎使用）</span>
+                    </div>
+                    <div class="reference-item" data-mode="600">
+                        <code>600</code>
+                        <span>rw-------</span>
+                        <span class="desc" data-i18n="tools.chmod.perm600">私有文件（SSH密钥）</span>
+                    </div>
+                    <div class="reference-item" data-mode="700">
+                        <code>700</code>
+                        <span>rwx------</span>
+                        <span class="desc" data-i18n="tools.chmod.perm700">私有目录</span>
+                    </div>
+                    <div class="reference-item" data-mode="666">
+                        <code>666</code>
+                        <span>rw-rw-rw-</span>
+                        <span class="desc" data-i18n="tools.chmod.perm666">所有人可读写</span>
+                    </div>
+                    <div class="reference-item" data-mode="400">
+                        <code>400</code>
+                        <span>r--------</span>
+                        <span class="desc" data-i18n="tools.chmod.perm400">只读（敏感配置）</span>
+                    </div>
+                    <div class="reference-item" data-mode="1777">
+                        <code>1777</code>
+                        <span>rwxrwxrwt</span>
+                        <span class="desc" data-i18n="tools.chmod.perm1777">/tmp 目录</span>
+                    </div>
+                    <div class="reference-item" data-mode="4755">
+                        <code>4755</code>
+                        <span>rwsr-xr-x</span>
+                        <span class="desc" data-i18n="tools.chmod.perm4755">SUID 程序</span>
+                    </div>
+                    <div class="reference-item" data-mode="2755">
+                        <code>2755</code>
+                        <span>rwxr-sr-x</span>
+                        <span class="desc" data-i18n="tools.chmod.perm2755">SGID 目录</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="chmod.js"></script>
+</body>
+</html>

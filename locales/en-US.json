@@ -96,7 +96,8 @@
         "generators": "Generators",
         "converters": "Converters",
         "text": "Text Processing",
-        "reverse": "Reverse Engineering"
+        "reverse": "Reverse Engineering",
+        "system": "System Tools"
     },
     "footer": {
         "rights": "All rights reserved.",
@@ -542,6 +543,18 @@
         "binary-editor": {
             "title": "Binary Editor",
             "description": "View and edit binary files at byte level"
+        },
+        "crontab": {
+            "title": "Crontab Parser",
+            "description": "Convert between cron expressions and human-readable text"
+        },
+        "chmod": {
+            "title": "Unix Permission Calculator",
+            "description": "Convert between chmod numeric and symbolic notation"
+        },
+        "cidr": {
+            "title": "CIDR Subnet Calculator",
+            "description": "CIDR subnet division and IP range calculation"
         }
     }
 }

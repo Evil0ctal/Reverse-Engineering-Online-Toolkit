@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.crontab.title">Crontab 解析器 - REOT</title>
+    <!-- 检测直接访问，重定向到主框架 -->
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="crontab.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.crontab.title">Crontab 解析器</h1>
+            <p data-i18n="tools.crontab.description">Cron 表达式与人类可读文本互转</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- Cron 表达式输入 -->
+            <section class="input-section">
+                <div class="section-header">
+                    <h3 data-i18n="tools.crontab.cronExpression">Cron 表达式</h3>
+                    <div class="preset-buttons">
+                        <button class="btn btn--sm btn--outline preset-btn" data-cron="* * * * *" title="每分钟">* * * * *</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-cron="0 * * * *" title="每小时">0 * * * *</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-cron="0 0 * * *" title="每天午夜">0 0 * * *</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-cron="0 0 * * 0" title="每周日">0 0 * * 0</button>
+                        <button class="btn btn--sm btn--outline preset-btn" data-cron="0 0 1 * *" title="每月1号">0 0 1 * *</button>
+                    </div>
+                </div>
+                <div class="cron-input-wrapper">
+                    <input type="text" id="cron-input" class="form-input cron-input"
+                           placeholder="* * * * *" value="0 9 * * 1-5">
+                    <button id="parse-btn" class="btn btn--primary" data-i18n="tools.crontab.parse">解析</button>
+                </div>
+                <div class="cron-fields">
+                    <div class="cron-field">
+                        <span class="field-label" data-i18n="tools.crontab.minute">分钟</span>
+                        <span class="field-range">0-59</span>
+                    </div>
+                    <div class="cron-field">
+                        <span class="field-label" data-i18n="tools.crontab.hour">小时</span>
+                        <span class="field-range">0-23</span>
+                    </div>
+                    <div class="cron-field">
+                        <span class="field-label" data-i18n="tools.crontab.dayOfMonth">日</span>
+                        <span class="field-range">1-31</span>
+                    </div>
+                    <div class="cron-field">
+                        <span class="field-label" data-i18n="tools.crontab.month">月</span>
+                        <span class="field-range">1-12</span>
+                    </div>
+                    <div class="cron-field">
+                        <span class="field-label" data-i18n="tools.crontab.dayOfWeek">星期</span>
+                        <span class="field-range">0-7</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 解析结果 -->
+            <section class="result-section">
+                <h3 data-i18n="tools.crontab.humanReadable">人类可读格式</h3>
+                <div class="result-card" id="result-card">
+                    <div class="result-text" id="result-text">
+                        <span data-i18n="tools.crontab.enterExpression">请输入 Cron 表达式</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 下次执行时间 -->
+            <section class="next-runs-section">
+                <h3 data-i18n="tools.crontab.nextRuns">下次执行时间</h3>
+                <div class="next-runs-list" id="next-runs-list">
+                    <div class="placeholder-text" data-i18n="tools.crontab.parseFirst">解析表达式后显示</div>
+                </div>
+            </section>
+
+            <!-- 可视化编辑器 -->
+            <section class="visual-editor-section">
+                <h3 data-i18n="tools.crontab.visualEditor">可视化编辑器</h3>
+                <div class="editor-grid">
+                    <!-- 分钟 -->
+                    <div class="editor-row">
+                        <label data-i18n="tools.crontab.minute">分钟</label>
+                        <select id="minute-type" class="form-select">
+                            <option value="*" data-i18n="tools.crontab.every">每</option>
+                            <option value="specific" data-i18n="tools.crontab.specific">指定</option>
+                            <option value="range" data-i18n="tools.crontab.range">范围</option>
+                            <option value="step" data-i18n="tools.crontab.step">间隔</option>
+                        </select>
+                        <input type="text" id="minute-value" class="form-input" placeholder="0" disabled>
+                    </div>
+                    <!-- 小时 -->
+                    <div class="editor-row">
+                        <label data-i18n="tools.crontab.hour">小时</label>
+                        <select id="hour-type" class="form-select">
+                            <option value="*" data-i18n="tools.crontab.every">每</option>
+                            <option value="specific" data-i18n="tools.crontab.specific">指定</option>
+                            <option value="range" data-i18n="tools.crontab.range">范围</option>
+                            <option value="step" data-i18n="tools.crontab.step">间隔</option>
+                        </select>
+                        <input type="text" id="hour-value" class="form-input" placeholder="0" disabled>
+                    </div>
+                    <!-- 日 -->
+                    <div class="editor-row">
+                        <label data-i18n="tools.crontab.dayOfMonth">日</label>
+                        <select id="day-type" class="form-select">
+                            <option value="*" data-i18n="tools.crontab.every">每</option>
+                            <option value="specific" data-i18n="tools.crontab.specific">指定</option>
+                            <option value="range" data-i18n="tools.crontab.range">范围</option>
+                            <option value="step" data-i18n="tools.crontab.step">间隔</option>
+                        </select>
+                        <input type="text" id="day-value" class="form-input" placeholder="1" disabled>
+                    </div>
+                    <!-- 月 -->
+                    <div class="editor-row">
+                        <label data-i18n="tools.crontab.month">月</label>
+                        <select id="month-type" class="form-select">
+                            <option value="*" data-i18n="tools.crontab.every">每</option>
+                            <option value="specific" data-i18n="tools.crontab.specific">指定</option>
+                            <option value="range" data-i18n="tools.crontab.range">范围</option>
+                            <option value="step" data-i18n="tools.crontab.step">间隔</option>
+                        </select>
+                        <input type="text" id="month-value" class="form-input" placeholder="1" disabled>
+                    </div>
+                    <!-- 星期 -->
+                    <div class="editor-row">
+                        <label data-i18n="tools.crontab.dayOfWeek">星期</label>
+                        <select id="weekday-type" class="form-select">
+                            <option value="*" data-i18n="tools.crontab.every">每</option>
+                            <option value="specific" data-i18n="tools.crontab.specific">指定</option>
+                            <option value="range" data-i18n="tools.crontab.range">范围</option>
+                            <option value="step" data-i18n="tools.crontab.step">间隔</option>
+                        </select>
+                        <input type="text" id="weekday-value" class="form-input" placeholder="0" disabled>
+                    </div>
+                </div>
+                <button id="generate-btn" class="btn btn--primary" data-i18n="tools.crontab.generate">生成表达式</button>
+            </section>
+
+            <!-- 常用表达式参考 -->
+            <section class="reference-section">
+                <h3 data-i18n="tools.crontab.commonExpressions">常用表达式</h3>
+                <div class="reference-grid">
+                    <div class="reference-item" data-cron="* * * * *">
+                        <code>* * * * *</code>
+                        <span data-i18n="tools.crontab.everyMinute">每分钟</span>
+                    </div>
+                    <div class="reference-item" data-cron="*/5 * * * *">
+                        <code>*/5 * * * *</code>
+                        <span data-i18n="tools.crontab.every5Minutes">每 5 分钟</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 * * * *">
+                        <code>0 * * * *</code>
+                        <span data-i18n="tools.crontab.everyHour">每小时整点</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 0 * * *">
+                        <code>0 0 * * *</code>
+                        <span data-i18n="tools.crontab.everyDay">每天午夜</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 9 * * 1-5">
+                        <code>0 9 * * 1-5</code>
+                        <span data-i18n="tools.crontab.weekdays9am">工作日上午 9 点</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 0 * * 0">
+                        <code>0 0 * * 0</code>
+                        <span data-i18n="tools.crontab.everySunday">每周日午夜</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 0 1 * *">
+                        <code>0 0 1 * *</code>
+                        <span data-i18n="tools.crontab.everyMonth">每月 1 号午夜</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 0 1 1 *">
+                        <code>0 0 1 1 *</code>
+                        <span data-i18n="tools.crontab.everyYear">每年 1 月 1 日</span>
+                    </div>
+                    <div class="reference-item" data-cron="30 4 1,15 * *">
+                        <code>30 4 1,15 * *</code>
+                        <span data-i18n="tools.crontab.twiceMonthly">每月 1 号和 15 号凌晨 4:30</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 22 * * 1-5">
+                        <code>0 22 * * 1-5</code>
+                        <span data-i18n="tools.crontab.weeknights">工作日晚上 10 点</span>
+                    </div>
+                    <div class="reference-item" data-cron="0 */2 * * *">
+                        <code>0 */2 * * *</code>
+                        <span data-i18n="tools.crontab.every2Hours">每 2 小时</span>
+                    </div>
+                    <div class="reference-item" data-cron="@reboot">
+                        <code>@reboot</code>
+                        <span data-i18n="tools.crontab.atReboot">系统启动时</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 语法说明 -->
+            <section class="syntax-section">
+                <h3 data-i18n="tools.crontab.syntaxGuide">语法说明</h3>
+                <div class="syntax-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="tools.crontab.symbol">符号</th>
+                                <th data-i18n="tools.crontab.meaning">含义</th>
+                                <th data-i18n="tools.crontab.example">示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>*</code></td>
+                                <td data-i18n="tools.crontab.anyValue">任意值</td>
+                                <td><code>* * * * *</code> = 每分钟</td>
+                            </tr>
+                            <tr>
+                                <td><code>,</code></td>
+                                <td data-i18n="tools.crontab.valueList">值列表</td>
+                                <td><code>1,15 * * * *</code> = 第 1 和 15 分钟</td>
+                            </tr>
+                            <tr>
+                                <td><code>-</code></td>
+                                <td data-i18n="tools.crontab.valueRange">值范围</td>
+                                <td><code>1-5 * * * *</code> = 第 1 到 5 分钟</td>
+                            </tr>
+                            <tr>
+                                <td><code>/</code></td>
+                                <td data-i18n="tools.crontab.stepValue">步进值</td>
+                                <td><code>*/15 * * * *</code> = 每 15 分钟</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="crontab.js"></script>
+</body>
+</html>

@@ -90,6 +90,11 @@
                 id: 'reverse',
                 icon: '🔧',
                 order: 13
+            },
+            system: {
+                id: 'system',
+                icon: '⚙️',
+                order: 14
             }
         },
 
@@ -1770,6 +1775,37 @@
             path: '/tools/crypto/x509-certificate/',
             keywords: ['x509', 'certificate', 'csr', 'ca', 'ssl', 'tls', 'pem', 'keypair', 'self-signed', '证书', '密钥对', '自签名', '签发'],
             popular: true
+        },
+
+        // ========== 系统工具 ==========
+        {
+            id: 'crontab',
+            category: 'system',
+            name: 'tools.crontab.title',
+            description: 'tools.crontab.description',
+            icon: '⏰',
+            path: '/tools/system/crontab/',
+            keywords: ['crontab', 'cron', 'schedule', 'timer', '定时任务', '计划任务', '调度']
+        },
+        {
+            id: 'chmod',
+            category: 'system',
+            name: 'tools.chmod.title',
+            description: 'tools.chmod.description',
+            icon: '🔐',
+            path: '/tools/system/chmod/',
+            keywords: ['chmod', 'permission', 'unix', 'linux', '权限', '文件权限', '755', '644']
+        },
+
+        // ========== 网络工具（扩展） ==========
+        {
+            id: 'cidr',
+            category: 'network',
+            name: 'tools.cidr.title',
+            description: 'tools.cidr.description',
+            icon: '🌐',
+            path: '/tools/network/cidr/',
+            keywords: ['cidr', 'subnet', 'ip', 'network', 'mask', '子网', '网络', 'IP地址', '子网掩码']
         }
     ]);
 
