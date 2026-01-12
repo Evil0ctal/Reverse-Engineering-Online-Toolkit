@@ -68,6 +68,7 @@
 | **BLAKE2** | BLAKE2b, BLAKE2s hash calculation | ✅ Done |
 | **CRC** | CRC8, CRC16, CRC32, CRC32C checksum calculation | ✅ Done |
 | **RIPEMD** | RIPEMD-160 hash calculation | ✅ Done |
+| **Hash Type Identifier** | Automatically identify hash types based on length and format | ✅ Done |
 
 ### HMAC
 
@@ -129,6 +130,8 @@
 | **ASN.1** | ASN.1 DER/BER parsing | ✅ Done |
 | **X.509 Certificate** | X.509 certificate parsing | ✅ Done |
 | **PEM** | PEM format parsing | ✅ Done |
+| **MessagePack** | MessagePack binary serialization encoding/decoding | ✅ Done |
+| **Plist** | Apple Property List parsing (XML and binary formats) | ✅ Done |
 
 ### Network Tools
 
@@ -140,6 +143,7 @@
 | **IP Address Converter** | IP address format conversion (decimal, integer, hex, binary) | ✅ Done |
 | **URL Parser** | URL component parsing | ✅ Done |
 | **cURL to Code** | Convert cURL commands to various language code | ✅ Done |
+| **CIDR Calculator** | CIDR subnet division and IP range calculation | ✅ Done |
 
 ### Generators
 
@@ -153,6 +157,7 @@
 | **Password Generator** | Secure password generator | ✅ Done |
 | **Key Pair Generator** | RSA/ECC key pair generation | ✅ Done |
 | **Lorem Ipsum** | Placeholder text generation | ✅ Done |
+| **Snowflake ID Decoder** | Parse Twitter/Discord style Snowflake IDs | ✅ Done |
 
 ### Number Conversion
 
@@ -185,6 +190,13 @@
 | **Pattern Search** | Binary pattern search | ✅ Done |
 | **Offset Calculator** | Memory address offset calculation | ✅ Done |
 | **Struct Parser** | C struct memory layout visualization | ✅ Done |
+
+### System Tools
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **Crontab Parser** | Convert between cron expressions and human-readable text | ✅ Done |
+| **Unix Permission Calculator** | Convert between chmod numeric and symbolic notation | ✅ Done |
 
 ---
 

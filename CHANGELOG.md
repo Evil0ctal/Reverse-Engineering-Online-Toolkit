@@ -9,6 +9,19 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.6] - 2026-01-11
+
+### 新增
+- **Snowflake ID 解码** - 解析 Twitter/Discord/Instagram 风格雪花 ID，提取时间戳、数据中心、Worker 和序列号
+- **MessagePack 编解码** - 二进制序列化格式编码与解码，支持树形视图、JSON 视图和十六进制视图
+- **哈希类型识别** - 根据长度和格式自动识别 50+ 种哈希类型，包括 MD5、SHA 系列、bcrypt、Argon2 等
+- **Plist 解析** - Apple Property List 解析，支持 XML 和二进制两种格式
+- **Crontab 解析器** - Cron 表达式与人类可读文本互转，支持预设模板
+- **Unix 权限计算器** - chmod 权限数字与符号表示法互转
+- **CIDR 子网计算器** - CIDR 子网划分与 IP 范围计算
+
+---
+
 ## [1.0.5] - 2026-01-11
 
 ### 新增

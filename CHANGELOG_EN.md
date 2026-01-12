@@ -9,6 +9,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-01-11
+
+### Added
+- **Snowflake ID Decoder** - Parse Twitter/Discord/Instagram style Snowflake IDs to extract timestamp, datacenter, worker, and sequence
+- **MessagePack Encoder/Decoder** - Binary serialization format encoding and decoding with tree view, JSON view, and hex view
+- **Hash Type Identifier** - Automatically identify 50+ hash types based on length and format, including MD5, SHA series, bcrypt, Argon2, etc.
+- **Plist Parser** - Apple Property List parser supporting both XML and binary formats
+- **Crontab Parser** - Convert between cron expressions and human-readable text with preset templates
+- **Unix Permission Calculator** - Convert between chmod numeric and symbolic notation
+- **CIDR Subnet Calculator** - CIDR subnet division and IP range calculation
+
+---
+
 ## [1.0.5] - 2026-01-11
 
 ### Added
