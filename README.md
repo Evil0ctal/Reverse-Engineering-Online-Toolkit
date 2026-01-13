@@ -115,8 +115,6 @@
 | **SM2** | 国密 SM2 加解密 | ✅ 已完成 |
 | **Ed25519** | Ed25519 签名验签 | ✅ 已完成 |
 | **RSA 密钥计算器** | 已知部分 RSA 参数（p, q）计算其他参数（n, d, e） | 📋 计划中 |
-| **JWK ↔ PEM 转换** | JSON Web Key 与 PEM 格式互转（RSA/EC/OKP） | 📋 计划中 |
-| **PKCS#1 ↔ PKCS#8** | RSA 密钥格式互转 | 📋 计划中 |
 
 ### 数据格式化 (Data Formatting)
 
@@ -163,7 +161,14 @@
 | **BSON** | BSON 解析（MongoDB 格式） | 📋 计划中 |
 | **Plist** | Apple Property List 解析（二进制和 XML 格式） | ✅ 已完成 |
 | **SAML Token** | SAML 断言解析 | 📋 计划中 |
-| **X.509 证书生成** | 自签名证书生成（测试用途） | 📋 计划中 |
+
+### 证书与密钥 (Certificates & Keys)
+
+| 功能 | 描述 | 状态 |
+|------|------|------|
+| **X.509 证书工具** | 综合证书管理：密钥对生成、CSR 创建、自签名证书、CA 签发、证书链验证、证书解析 | ✅ 已完成 |
+| **JWK ↔ PEM 转换** | JSON Web Key 与 PEM 格式互转（RSA/EC/OKP） | 📋 计划中 |
+| **PKCS#1 ↔ PKCS#8** | RSA 密钥格式互转 | 📋 计划中 |
 
 ### 网络工具 (Network Tools)
 

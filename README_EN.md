@@ -133,6 +133,12 @@
 | **MessagePack** | MessagePack binary serialization encoding/decoding | ✅ Done |
 | **Plist** | Apple Property List parsing (XML and binary formats) | ✅ Done |
 
+### Certificates & Keys
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **X.509 Certificate Tool** | Comprehensive certificate management: key pair generation, CSR creation, self-signed certificates, CA signing, certificate chain validation, certificate parsing | ✅ Done |
+
 ### Network Tools
 
 | Feature | Description | Status |
