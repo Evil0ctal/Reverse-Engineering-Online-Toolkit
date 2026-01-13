@@ -9,6 +9,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-01-12
+
+### Added
+- **cURL Parser** - Multi-shell format compatibility
+  - Auto-detect shell type: Bash, CMD, PowerShell
+  - Correctly handle different shell line continuation characters: `\` (Bash), `^` (CMD), `` ` `` (PowerShell)
+  - Support CMD special escapes: `^&`, `^%`, `^"`, `^!`, etc.
+  - Display detected shell type badge in parse results
+- **Code Generator** - Added "Generate Code" button for first-time code generation after pasting cURL command
+
+### Fixed
+- Fixed version number and changelog button text not showing on mobile homepage
+
+---
+
 ## [1.0.7] - 2026-01-12
 
 ### Added

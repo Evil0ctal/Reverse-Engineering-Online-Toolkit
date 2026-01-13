@@ -15,6 +15,7 @@
     },
     "overview": "请求概览",
     "method": "方法",
+    "shellType": "Shell 类型",
     "url": "URL",
     "host": "主机",
     "path": "路径",
@@ -49,5 +50,6 @@
     "firstValue": "第一个值",
     "secondValue": "第二个值",
     "status": "状态",
-    "generatedCode": "生成的代码"
+    "generatedCode": "生成的代码",
+    "generateCode": "生成代码"
 }

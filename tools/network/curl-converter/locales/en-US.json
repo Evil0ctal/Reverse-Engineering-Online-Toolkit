@@ -15,6 +15,7 @@
     },
     "overview": "Request Overview",
     "method": "Method",
+    "shellType": "Shell Type",
     "url": "URL",
     "host": "Host",
     "path": "Path",
@@ -49,5 +50,6 @@
     "firstValue": "First Value",
     "secondValue": "Second Value",
     "status": "Status",
-    "generatedCode": "Generated Code"
+    "generatedCode": "Generated Code",
+    "generateCode": "Generate Code"
 }

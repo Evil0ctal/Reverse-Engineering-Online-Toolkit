@@ -335,6 +335,145 @@
         return `${baseName}.${ext}`;
     }
 
+    // ==================== Shell 类型检测 ====================
+
+    /**
+     * Shell 类型枚举
+     */
+    const SHELL_TYPES = {
+        BASH: 'bash',
+        CMD: 'cmd',
+        POWERSHELL: 'powershell'
+    };
+
+    /**
+     * 检测 cURL 命令来自哪种 Shell
+     * @param {string} curlCommand - cURL 命令字符串
+     * @returns {string} Shell 类型
+     */
+    function detectShellType(curlCommand) {
+        // PowerShell 特征检测
+        // 1. 使用反引号作为续行符
+        // 2. 使用 curl.exe 而非 curl
+        // 3. 使用 --% 停止解析符号
+        // 4. 使用 `" 或 `' 转义
+        if (/`\r?\n/.test(curlCommand) ||
+            /curl\.exe\s/i.test(curlCommand) ||
+            /\s--%\s/.test(curlCommand) ||
+            /`["']/.test(curlCommand)) {
+            return SHELL_TYPES.POWERSHELL;
+        }
+
+        // CMD 特征检测
+        // 1. 使用 ^ 作为续行符
+        // 2. 使用 ^" 包裹参数（CMD 特有的转义引号格式）
+        // 3. 使用 ^$ 或 ^^ 转义特殊字符
+        if (/\^\s*\r?\n/.test(curlCommand) ||
+            (/\^$/.test(curlCommand.split('\n')[0]) && curlCommand.includes('\n'))) {
+            return SHELL_TYPES.CMD;
+        }
+
+        // CMD 特有格式: ^" 包裹的参数
+        if (/\^"[^"]*\^"/.test(curlCommand) || /\^\^/.test(curlCommand) || /\^\$/.test(curlCommand)) {
+            return SHELL_TYPES.CMD;
+        }
+
+        // 检测 -H ^" 或 -b ^" 等 CMD 格式
+        if (/-[HbXdu]\s+\^"/.test(curlCommand)) {
+            return SHELL_TYPES.CMD;
+        }
+
+        // 进一步检测 CMD: 如果完全没有单引号，但有双引号，可能是 CMD
+        const hasSingleQuotes = /'[^']*'/.test(curlCommand);
+        const hasDoubleQuotes = /"[^"]*"/.test(curlCommand);
+        const hasBackslashContinuation = /\\\r?\n/.test(curlCommand);
+
+        // CMD 通常不使用单引号，且不使用反斜杠续行
+        if (!hasSingleQuotes && hasDoubleQuotes && !hasBackslashContinuation && curlCommand.includes('^')) {
+            return SHELL_TYPES.CMD;
+        }
+
+        // 默认为 Bash（Unix/Linux/macOS）
+        return SHELL_TYPES.BASH;
+    }
+
+    /**
+     * 根据 Shell 类型预处理 cURL 命令
+     * @param {string} curlCommand - 原始 cURL 命令
+     * @param {string} shellType - Shell 类型
+     * @returns {string} 预处理后的命令
+     */
+    function preprocessCurlCommand(curlCommand, shellType) {
+        let cmd = curlCommand;
+
+        switch (shellType) {
+            case SHELL_TYPES.POWERSHELL:
+                // PowerShell: 处理反引号续行符
+                cmd = cmd.replace(/`\r?\n/g, ' ');
+                // 移除 curl.exe 改为 curl
+                cmd = cmd.replace(/curl\.exe\s/i, 'curl ');
+                // 处理 --% (停止解析) 后的内容
+                cmd = cmd.replace(/\s--%\s/, ' ');
+                // 处理 PowerShell 的反引号转义: `" -> "
+                cmd = cmd.replace(/`"/g, '"');
+                cmd = cmd.replace(/`'/g, "'");
+                // 处理 PowerShell 的 $(...) 变量（简单移除）
+                cmd = cmd.replace(/\$\([^)]*\)/g, '');
+                break;
+
+            case SHELL_TYPES.CMD:
+                // CMD: 处理 ^ 续行符（行尾的 ^ 后跟换行）
+                cmd = cmd.replace(/\^\s*\r?\n\s*/g, ' ');
+                // 移除独立行尾的 ^（没有跟换行的情况）
+                cmd = cmd.replace(/\^$/gm, '');
+
+                // CMD 特殊处理: ^ 是转义字符，用于转义特殊字符
+                // 先处理 ^^ 转义的 ^ 符号（用占位符保护）
+                cmd = cmd.replace(/\^\^/g, '\x00CARET\x00');
+
+                // 处理 ^\^" 这种嵌套转义（表示字面的 \"）
+                cmd = cmd.replace(/\^\\\^"/g, '\\"');
+
+                // 处理 CMD 中常见的转义字符
+                // ^& → & (URL 参数分隔符)
+                cmd = cmd.replace(/\^&/g, '&');
+                // ^% → % (URL 编码前缀)
+                cmd = cmd.replace(/\^%/g, '%');
+                // ^! → ! (感叹号)
+                cmd = cmd.replace(/\^!/g, '!');
+                // ^| → | (管道符)
+                cmd = cmd.replace(/\^\|/g, '|');
+                // ^< → <
+                cmd = cmd.replace(/\^</g, '<');
+                // ^> → >
+                cmd = cmd.replace(/\^>/g, '>');
+                // ^( → (
+                cmd = cmd.replace(/\^\(/g, '(');
+                // ^) → )
+                cmd = cmd.replace(/\^\)/g, ')');
+                // ^$ → $
+                cmd = cmd.replace(/\^\$/g, '$');
+
+                // 处理 ^" 作为引号边界
+                cmd = cmd.replace(/\^"/g, '"');
+
+                // 恢复 ^^ 为单个 ^
+                cmd = cmd.replace(/\x00CARET\x00/g, '^');
+                break;
+
+            case SHELL_TYPES.BASH:
+            default:
+                // Bash: 处理 \ 续行符
+                cmd = cmd.replace(/\\\r?\n/g, ' ');
+                break;
+        }
+
+        // 通用处理：合并多余空格
+        cmd = cmd.replace(/\s+/g, ' ').trim();
+
+        return cmd;
+    }
+
     // ==================== cURL 解析器 ====================
 
     /**
@@ -343,6 +482,9 @@
      * @returns {Object} 解析结果
      */
     function parseCurl(curlCommand) {
+        // 检测 Shell 类型
+        const shellType = detectShellType(curlCommand);
+
         const result = {
             method: 'GET',
             url: '',
@@ -356,20 +498,18 @@
             followRedirects: false,
             compressed: false,
             queryParams: {},
-            bodyParams: {}
+            bodyParams: {},
+            shellType: shellType  // 保存检测到的 Shell 类型
         };
 
-        // 预处理命令
-        let cmd = curlCommand
-            .replace(/\\\r?\n/g, ' ')  // 处理续行符
-            .replace(/\s+/g, ' ')
-            .trim();
+        // 根据 Shell 类型预处理命令
+        let cmd = preprocessCurlCommand(curlCommand, shellType);
 
         // 移除 curl 命令本身
         cmd = cmd.replace(/^curl\s+/i, '');
 
-        // 分词解析
-        const tokens = tokenize(cmd);
+        // 分词解析（传入 Shell 类型以正确处理引号）
+        const tokens = tokenize(cmd, shellType);
 
         // 解析参数
         for (let i = 0; i < tokens.length; i++) {
@@ -436,8 +576,11 @@
 
     /**
      * 分词解析
+     * @param {string} cmd - 预处理后的命令字符串
+     * @param {string} shellType - Shell 类型
+     * @returns {string[]} 分词结果
      */
-    function tokenize(cmd) {
+    function tokenize(cmd, shellType = SHELL_TYPES.BASH) {
         const tokens = [];
         let current = '';
         let inQuote = false;
@@ -446,8 +589,23 @@
         for (let i = 0; i < cmd.length; i++) {
             const char = cmd[i];
 
+            // 处理转义字符
             if (char === '\\' && i + 1 < cmd.length) {
                 const nextChar = cmd[i + 1];
+
+                if (shellType === SHELL_TYPES.CMD) {
+                    // CMD: \" 是转义双引号
+                    if (nextChar === '"') {
+                        current += '"';
+                        i++;
+                        continue;
+                    }
+                    // CMD 中其他反斜杠不是转义
+                    current += char;
+                    continue;
+                }
+
+                // Bash/PowerShell 转义处理
                 if (inQuote) {
                     // 在引号内，保留反斜杠和被转义的字符
                     if (nextChar === quoteChar || nextChar === '\\') {
@@ -467,7 +625,15 @@
                 continue;
             }
 
-            if ((char === '"' || char === "'")) {
+            // 处理引号
+            if (char === '"' || char === "'") {
+                // CMD 只支持双引号
+                if (shellType === SHELL_TYPES.CMD && char === "'") {
+                    // CMD 中单引号作为普通字符
+                    current += char;
+                    continue;
+                }
+
                 if (!inQuote) {
                     inQuote = true;
                     quoteChar = char;
@@ -714,6 +880,18 @@
     // ==================== 渲染函数 ====================
 
     /**
+     * 获取 Shell 类型显示名称
+     */
+    function getShellDisplayName(shellType) {
+        const names = {
+            [SHELL_TYPES.BASH]: 'Bash',
+            [SHELL_TYPES.CMD]: 'CMD',
+            [SHELL_TYPES.POWERSHELL]: 'PowerShell'
+        };
+        return names[shellType] || 'Bash';
+    }
+
+    /**
      * 渲染解析结果
      */
     function renderParseResult(parsed) {
@@ -725,6 +903,15 @@
         // 概览
         document.getElementById('overview-method').textContent = parsed.method;
         document.getElementById('overview-method').className = `overview-value method-badge ${parsed.method}`;
+
+        // Shell 类型
+        const shellEl = document.getElementById('overview-shell');
+        if (shellEl) {
+            const shellName = getShellDisplayName(parsed.shellType);
+            shellEl.textContent = shellName;
+            shellEl.className = `overview-value shell-badge shell-${parsed.shellType}`;
+        }
+
         document.getElementById('overview-url').textContent = parsed.url || '-';
         document.getElementById('overview-host').textContent = parsed.urlParts?.host || '-';
         document.getElementById('overview-path').textContent = parsed.urlParts?.pathname || '-';
@@ -1563,6 +1750,35 @@
             renderCompareResult(diff);
         }
 
+        // 代码生成按钮
+        if (target.id === 'gen-code-btn' || target.closest('#gen-code-btn')) {
+            const input = getEditorValue(genInputEditor, 'gen-input');
+            if (!input.trim()) {
+                REOT.utils?.showNotification('请输入 cURL 命令', 'warning');
+                return;
+            }
+            const selectEl = document.getElementById('code-language-select');
+            const language = selectEl?.value || 'python-requests';
+
+            // 更新语言标签
+            const langBadge = document.getElementById('output-lang-badge');
+            if (langBadge) {
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                langBadge.textContent = selectedOption?.text || language;
+            }
+
+            try {
+                await recreateCodeOutputEditor(language);
+                const code = await generateCode(input, language);
+                setEditorValue(codeOutputEditor, 'code-output', code);
+                REOT.utils?.showNotification('代码生成成功', 'success');
+            } catch (error) {
+                setEditorValue(codeOutputEditor, 'code-output', '错误: ' + error.message);
+                REOT.utils?.showNotification(error.message, 'error');
+            }
+            return;
+        }
+
         // 代码生成示例按钮
         if (target.id === 'gen-sample-btn' || target.closest('#gen-sample-btn')) {
             setEditorValue(genInputEditor, 'gen-input', SAMPLE_CURL);
@@ -1719,7 +1935,9 @@
         generateCode,
         compareCurls,
         inferDataType,
-        initializeEditors
+        initializeEditors,
+        detectShellType,
+        SHELL_TYPES
     };
 
 })();

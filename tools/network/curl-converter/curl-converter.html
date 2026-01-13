@@ -76,6 +76,10 @@
                                 <span class="overview-label" data-i18n="tools.curl-converter.method">方法</span>
                                 <span class="overview-value method-badge" id="overview-method">GET</span>
                             </div>
+                            <div class="overview-item">
+                                <span class="overview-label" data-i18n="tools.curl-converter.shellType">Shell 类型</span>
+                                <span class="overview-value shell-badge" id="overview-shell">Bash</span>
+                            </div>
                             <div class="overview-item overview-item--wide">
                                 <span class="overview-label" data-i18n="tools.curl-converter.url">URL</span>
                                 <span class="overview-value url-value" id="overview-url">-</span>
@@ -404,6 +408,15 @@
                                 </optgroup>
                             </select>
                         </div>
+
+                        <!-- 生成按钮 -->
+                        <button id="gen-code-btn" class="btn btn--primary btn--settings-text" data-i18n="tools.curl-converter.generateCode">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                            <span data-i18n="tools.curl-converter.generateCode">生成代码</span>
+                        </button>
 
                         <!-- 设置按钮与浮动面板 -->
                         <div class="gen-options-wrapper">

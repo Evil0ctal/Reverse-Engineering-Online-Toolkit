@@ -1518,7 +1518,8 @@ ol {
         font-size: 11px;
     }
 
-    .github-stat-badge span:not(.github-stat-count) {
+    /* 只隐藏 Star/Fork 徽章的文字，保留版本和更新日志文字 */
+    .github-stats:not(.github-stats--secondary) .github-stat-badge span:not(.github-stat-count) {
         display: none;
     }
 

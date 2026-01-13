@@ -273,6 +273,47 @@
 .method-badge.HEAD { background: #6b7280; color: white; }
 .method-badge.OPTIONS { background: #ec4899; color: white; }
 
+/* Shell 类型标签 */
+.shell-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    width: fit-content;
+}
+
+.shell-badge.shell-bash {
+    background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+    color: #dfe6e9;
+}
+
+.shell-badge.shell-cmd {
+    background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+    color: white;
+}
+
+.shell-badge.shell-powershell {
+    background: linear-gradient(135deg, #012456 0%, #1e3a5f 100%);
+    color: #89d4f5;
+}
+
+/* 暗色主题下的 Shell 标签 */
+[data-theme="dark"] .shell-badge.shell-bash {
+    background: linear-gradient(135deg, #636e72 0%, #b2bec3 100%);
+    color: #2d3436;
+}
+
+[data-theme="dark"] .shell-badge.shell-cmd {
+    background: linear-gradient(135deg, #0078d4 0%, #4fc3f7 100%);
+    color: white;
+}
+
+[data-theme="dark"] .shell-badge.shell-powershell {
+    background: linear-gradient(135deg, #1e3a5f 0%, #5e81ac 100%);
+    color: #eceff4;
+}
+
 .url-value {
     color: var(--color-primary);
 }

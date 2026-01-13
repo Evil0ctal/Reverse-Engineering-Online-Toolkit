@@ -1,6 +1,6 @@
 {
   "name": "reverse-engineering-online-toolkit",
-  "version": "1.0.1",
+  "version": "1.0.8",
   "description": "纯前端逆向工程在线工具箱 - A pure frontend reverse engineering online toolkit",
   "main": "index.html",
   "scripts": {
