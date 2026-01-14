@@ -1,6 +1,7 @@
 {
     "title": "JSON 格式化",
     "description": "JSON 格式化、压缩、校验、可视化，右键JSON节点可复制JSON Path。",
+    "supportedFormats": "支持格式：",
     "indent": "缩进",
     "spaces2": "2 空格",
     "spaces4": "4 空格",

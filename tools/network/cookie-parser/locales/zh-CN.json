@@ -5,7 +5,8 @@
     "parse": "解析",
     "getBrowser": "获取浏览器 Cookie",
     "toString": "转为字符串",
-    "toJson": "转为 JSON",
+    "toJsonList": "转为 JSON 列表",
+    "toJsonObject": "转为 JSON 对象",
     "toNetscape": "转为 Netscape",
     "parsedCookies": "解析结果",
     "addCookie": "添加",
@@ -18,6 +19,7 @@
     "totalCookies": "Cookie 数量",
     "totalSize": "总大小",
     "cookieString": "Cookie 字符串",
-    "jsonOutput": "JSON 输出",
+    "jsonListOutput": "JSON 列表输出",
+    "jsonObjectOutput": "JSON 对象输出",
     "netscapeOutput": "Netscape 输出"
 }

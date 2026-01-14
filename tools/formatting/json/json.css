@@ -2,6 +2,31 @@
  * JSON 格式化工具样式
  */
 
+/* 支持格式提示 */
+.tool-header__formats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.tool-header__formats .format-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.tool-header__formats code {
+    padding: 2px 8px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
 /* 高亮输出区域 */
 .json-highlighted-output {
     width: 100%;

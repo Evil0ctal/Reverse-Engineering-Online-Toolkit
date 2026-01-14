@@ -181,7 +181,7 @@
         },
         "json": {
             "title": "JSON Formatter",
-            "description": "JSON formatting, minification, validation, and visualization"
+            "description": "JSON formatting, minification, validation, and visualization. Right-click nodes to copy JSON Path."
         },
         "jwt": {
             "title": "JWT Decoder",

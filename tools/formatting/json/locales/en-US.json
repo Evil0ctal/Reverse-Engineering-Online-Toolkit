@@ -1,6 +1,7 @@
 {
     "title": "JSON Formatter",
     "description": "JSON formatting, compression, validation, and visualization, right-click on a JSON node to copy its JSON Path.",
+    "supportedFormats": "Supported formats:",
     "indent": "Indent",
     "spaces2": "2 Spaces",
     "spaces4": "4 Spaces",

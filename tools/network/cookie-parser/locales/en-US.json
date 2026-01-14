@@ -5,7 +5,8 @@
     "parse": "Parse",
     "getBrowser": "Get Browser Cookies",
     "toString": "To String",
-    "toJson": "To JSON",
+    "toJsonList": "To JSON List",
+    "toJsonObject": "To JSON Object",
     "toNetscape": "To Netscape",
     "parsedCookies": "Parsed Cookies",
     "addCookie": "Add",
@@ -18,6 +19,7 @@
     "totalCookies": "Total Cookies",
     "totalSize": "Total Size",
     "cookieString": "Cookie String",
-    "jsonOutput": "JSON Output",
+    "jsonListOutput": "JSON List Output",
+    "jsonObjectOutput": "JSON Object Output",
     "netscapeOutput": "Netscape Output"
 }

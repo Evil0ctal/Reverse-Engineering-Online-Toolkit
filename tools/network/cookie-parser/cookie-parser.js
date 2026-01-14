@@ -251,7 +251,8 @@
     }
 
     /**
-     * 将 Cookie 数组转为 JSON 格式
+     * 将 Cookie 数组转为 JSON 列表格式
+     * 输出格式: [{name, value, ...}, ...]
      */
     function cookiesToJson(cookies, pretty = true) {
         const output = cookies.map(c => {
@@ -268,6 +269,18 @@
             if (c.sameSite) obj.sameSite = c.sameSite;
             return obj;
         });
+        return pretty ? JSON.stringify(output, null, 2) : JSON.stringify(output);
+    }
+
+    /**
+     * 将 Cookie 数组转为纯 JSON 对象格式
+     * 输出格式: {key1: value1, key2: value2, ...}
+     */
+    function cookiesToJsonObject(cookies, pretty = true) {
+        const output = {};
+        for (const c of cookies) {
+            output[c.name] = c.value;
+        }
         return pretty ? JSON.stringify(output, null, 2) : JSON.stringify(output);
     }
 
@@ -516,7 +529,7 @@
             renderCookieTable();
         }
 
-        // 转为 JSON
+        // 转为 JSON 列表
         if (target.id === 'to-json-btn' || target.closest('#to-json-btn')) {
             if (cookies.length === 0) {
                 REOT.utils?.showNotification('请先解析 Cookie', 'warning');
@@ -531,7 +544,27 @@
                 stringOutput.value = cookiesToJson(cookies);
                 stringSection.style.display = 'block';
                 if (outputLabel) {
-                    outputLabel.textContent = REOT.i18n?.t('tools.cookie-parser.jsonOutput') || 'JSON 输出';
+                    outputLabel.textContent = REOT.i18n?.t('tools.cookie-parser.jsonListOutput') || 'JSON 列表输出';
+                }
+            }
+        }
+
+        // 转为 JSON 对象
+        if (target.id === 'to-json-object-btn' || target.closest('#to-json-object-btn')) {
+            if (cookies.length === 0) {
+                REOT.utils?.showNotification('请先解析 Cookie', 'warning');
+                return;
+            }
+
+            const stringOutput = document.getElementById('string-output');
+            const stringSection = document.getElementById('string-output-section');
+            const outputLabel = document.getElementById('output-label');
+
+            if (stringOutput && stringSection) {
+                stringOutput.value = cookiesToJsonObject(cookies);
+                stringSection.style.display = 'block';
+                if (outputLabel) {
+                    outputLabel.textContent = REOT.i18n?.t('tools.cookie-parser.jsonObjectOutput') || 'JSON 对象输出';
                 }
             }
         }
@@ -623,6 +656,7 @@
         parse: parseCookieString,
         toString: cookiesToString,
         toJson: cookiesToJson,
+        toJsonObject: cookiesToJsonObject,
         toNetscape: cookiesToNetscape,
         detectFormat: detectInputFormat
     };

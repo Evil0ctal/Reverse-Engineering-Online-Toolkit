@@ -146,7 +146,48 @@
     }
 
     /**
-     * 尝试解析输入（支持 JSON 和 Python Dict）
+     * 检测并解析转义的 JSON 字符串（JSON dump 格式）
+     * 例如: {\"key\":\"value\"} -> {"key":"value"}
+     */
+    function unescapeJsonString(input) {
+        const trimmed = input.trim();
+
+        // 检测是否是转义的 JSON 字符串
+        // 特征：以 {\ 或 [\ 开头，包含 \" 模式
+        if ((trimmed.startsWith('{\\') || trimmed.startsWith('[\\')) && trimmed.includes('\\"')) {
+            // 方法1：尝试作为 JSON 字符串值解析
+            try {
+                return JSON.parse('"' + trimmed + '"');
+            } catch (e) {
+                // 方法2：手动替换转义字符
+                let result = trimmed;
+                // 先处理双反斜杠（\\\\）为临时占位符
+                result = result.replace(/\\\\\\\\/g, '\x00DOUBLE_BACKSLASH\x00');
+                // 处理转义的双引号
+                result = result.replace(/\\"/g, '"');
+                // 处理转义的反斜杠
+                result = result.replace(/\\\\/g, '\\');
+                // 恢复双反斜杠
+                result = result.replace(/\x00DOUBLE_BACKSLASH\x00/g, '\\\\');
+                return result;
+            }
+        }
+
+        // 检测更宽松的转义 JSON 格式（可能没有以 {\ 开头但包含 \" 模式）
+        if ((trimmed.startsWith('{') || trimmed.startsWith('[')) && /\\"[^"]*\\":/.test(trimmed)) {
+            let result = trimmed;
+            result = result.replace(/\\\\\\\\/g, '\x00DOUBLE_BACKSLASH\x00');
+            result = result.replace(/\\"/g, '"');
+            result = result.replace(/\\\\/g, '\\');
+            result = result.replace(/\x00DOUBLE_BACKSLASH\x00/g, '\\\\');
+            return result;
+        }
+
+        return null; // 不是转义格式
+    }
+
+    /**
+     * 尝试解析输入（支持 JSON、转义 JSON 和 Python Dict）
      */
     function parseInput(input) {
         if (!input.trim()) {
@@ -157,6 +198,16 @@
         try {
             return JSON.parse(input);
         } catch (e) {
+            // 尝试解析转义的 JSON 字符串（JSON dump 格式）
+            const unescaped = unescapeJsonString(input);
+            if (unescaped) {
+                try {
+                    return JSON.parse(unescaped);
+                } catch (e2) {
+                    // 转义解析也失败，继续尝试其他格式
+                }
+            }
+
             // 如果启用了 Python 自动转换，尝试转换
             const autoPython = document.getElementById('auto-python');
             if (autoPython && autoPython.checked) {
@@ -906,6 +957,7 @@
         minify,
         sortObjectKeys,
         pythonDictToJson,
+        unescapeJsonString,
         syntaxHighlight
     };
 
