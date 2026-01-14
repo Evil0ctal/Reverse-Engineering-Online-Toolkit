@@ -9,6 +9,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.11] - 2026-01-13
+
+### Added
+- **Cookie Parser** - Added two JSON output formats
+  - JSON List format: `[{name, value, ...}, ...]` - includes full attribute information
+  - JSON Object format: `{key: value, ...}` - simple key-value pairs
+- **JSON Formatter** - Added escaped JSON string auto-detection and parsing
+  - Support `{\"key\":\"value\"}` JSON dump string format
+  - Auto-detect and convert without manual processing
+  - Added supported format examples below the tool title
+
+---
+
 ## [1.0.10] - 2026-01-12
 
 ### Fixed

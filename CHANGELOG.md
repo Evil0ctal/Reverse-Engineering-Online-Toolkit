@@ -9,6 +9,19 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.11] - 2026-01-13
+
+### 新增
+- **Cookie 解析器** - 新增两种 JSON 输出格式
+  - JSON 列表格式：`[{name, value, ...}, ...]` - 包含完整属性信息
+  - JSON 对象格式：`{key: value, ...}` - 简洁的键值对格式
+- **JSON 格式化** - 新增转义 JSON 字符串自动识别和解析
+  - 支持 `{\"key\":\"value\"}` 格式的 JSON dump 字符串
+  - 自动检测并转换，无需手动处理
+  - 在工具标题下方添加支持格式示例展示
+
+---
+
 ## [1.0.10] - 2026-01-12
 
 ### 修复
