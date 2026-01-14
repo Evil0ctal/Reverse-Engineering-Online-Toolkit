@@ -1,0 +1,180 @@
+/**
+ * CBOR 编解码工具样式
+ */
+
+/* 模式切换标签 */
+.mode-tabs {
+    display: flex;
+    gap: var(--spacing-xs);
+    background-color: var(--bg-secondary);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-md);
+}
+
+.mode-tab {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.mode-tab:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+.mode-tab.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* 输入区域头部 */
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.input-header label {
+    font-weight: 500;
+}
+
+.input-options {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+/* 输出选项 */
+.output-options,
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.format-options {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+/* 输出信息 */
+.output-info {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.info-label {
+    font-weight: 500;
+}
+
+/* 输出区域样式 */
+.output-area {
+    font-family: var(--font-mono);
+    background-color: var(--bg-secondary);
+}
+
+/* 文件上传区域 */
+.file-upload-area {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-secondary);
+}
+
+.file-upload-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover {
+    background-color: var(--bg-hover);
+}
+
+/* 模式区域 */
+.mode-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* 操作区域 */
+.operation-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* 参考区域 */
+.reference-section {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.reference-section h3 {
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.reference-content {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.reference-content p {
+    margin-bottom: var(--spacing-sm);
+}
+
+.reference-list {
+    list-style: disc;
+    padding-left: var(--spacing-lg);
+}
+
+.reference-list li {
+    margin-bottom: var(--spacing-xs);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .mode-tabs {
+        flex-direction: column;
+    }
+
+    .input-header,
+    .output-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .output-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .file-upload-area {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}

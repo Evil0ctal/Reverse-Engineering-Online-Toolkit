@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.cbor.title">CBOR 编解码 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="cbor.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.cbor.title">CBOR 编解码</h1>
+            <p data-i18n="tools.cbor.description">Concise Binary Object Representation (RFC 8949) 编码与解码</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- Mode Selection -->
+            <section class="mode-section">
+                <div class="mode-tabs">
+                    <button id="encode-tab" class="mode-tab active" data-mode="encode" data-i18n="tools.cbor.encodeMode">
+                        编码 (JSON → CBOR)
+                    </button>
+                    <button id="decode-tab" class="mode-tab" data-mode="decode" data-i18n="tools.cbor.decodeMode">
+                        解码 (CBOR → JSON)
+                    </button>
+                </div>
+            </section>
+
+            <!-- Encode Mode -->
+            <div id="encode-section" class="operation-section">
+                <!-- Input Section -->
+                <section class="input-section">
+                    <div class="input-header">
+                        <label for="encode-input" data-i18n="tools.cbor.jsonInput">JSON 输入</label>
+                    </div>
+                    <textarea id="encode-input" class="form-input form-textarea"
+                              rows="8"
+                              data-i18n-placeholder="tools.cbor.jsonInputPlaceholder"
+                              placeholder="输入 JSON 数据..."></textarea>
+                </section>
+
+                <!-- Action Buttons -->
+                <section class="action-section">
+                    <button id="encode-btn" class="btn btn--primary" data-i18n="tools.cbor.encode">
+                        编码为 CBOR
+                    </button>
+                    <button id="encode-clear-btn" class="btn btn--outline" data-i18n="common.clear">
+                        清除
+                    </button>
+                    <button id="encode-copy-btn" class="btn btn--outline" data-i18n="common.copy">
+                        复制
+                    </button>
+                    <button id="encode-download-btn" class="btn btn--outline" data-i18n="tools.cbor.download">
+                        下载
+                    </button>
+                </section>
+
+                <!-- Output Section -->
+                <section class="output-section">
+                    <div class="output-header">
+                        <label data-i18n="tools.cbor.cborOutput">CBOR 输出</label>
+                        <div class="format-options">
+                            <label class="form-radio">
+                                <input type="radio" name="encode-format" value="hex" checked>
+                                <span>Hex</span>
+                            </label>
+                            <label class="form-radio">
+                                <input type="radio" name="encode-format" value="base64">
+                                <span>Base64</span>
+                            </label>
+                        </div>
+                    </div>
+                    <textarea id="encode-output" class="form-input form-textarea form-textarea--code"
+                              rows="6"
+                              readonly></textarea>
+                    <div class="output-info" id="encode-info" style="display: none;">
+                        <span class="info-label" data-i18n="tools.cbor.byteSize">字节大小：</span>
+                        <span id="encode-byte-size">0</span>
+                        <span> bytes</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Decode Mode -->
+            <div id="decode-section" class="operation-section" style="display: none;">
+                <!-- Input Section -->
+                <section class="input-section">
+                    <div class="input-header">
+                        <label for="decode-input" data-i18n="tools.cbor.cborInput">CBOR 输入</label>
+                        <div class="input-options">
+                            <label class="form-radio">
+                                <input type="radio" name="decode-input-format" value="hex" checked>
+                                <span>Hex</span>
+                            </label>
+                            <label class="form-radio">
+                                <input type="radio" name="decode-input-format" value="base64">
+                                <span>Base64</span>
+                            </label>
+                        </div>
+                    </div>
+                    <textarea id="decode-input" class="form-input form-textarea"
+                              rows="6"
+                              data-i18n-placeholder="tools.cbor.cborInputPlaceholder"
+                              placeholder="输入 CBOR 数据 (Hex 或 Base64)..."></textarea>
+                    <div class="file-upload-area">
+                        <span class="file-upload-label" data-i18n="tools.cbor.uploadFile">
+                            或上传 CBOR 文件
+                        </span>
+                        <input type="file" id="cbor-file-input" accept=".cbor,.bin" style="display: none;">
+                        <button id="upload-file-btn" class="btn btn--sm btn--outline" data-i18n="tools.cbor.selectFile">
+                            选择文件
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Action Buttons -->
+                <section class="action-section">
+                    <button id="decode-btn" class="btn btn--primary" data-i18n="tools.cbor.decode">
+                        解码为 JSON
+                    </button>
+                    <button id="decode-clear-btn" class="btn btn--outline" data-i18n="common.clear">
+                        清除
+                    </button>
+                    <button id="decode-copy-btn" class="btn btn--outline" data-i18n="common.copy">
+                        复制
+                    </button>
+                </section>
+
+                <!-- Output Section -->
+                <section class="output-section">
+                    <div class="output-header">
+                        <label data-i18n="tools.cbor.jsonOutput">JSON 输出</label>
+                        <div class="format-options">
+                            <label class="form-checkbox">
+                                <input type="checkbox" id="pretty-output" checked>
+                                <span data-i18n="tools.cbor.prettyPrint">格式化输出</span>
+                            </label>
+                        </div>
+                    </div>
+                    <textarea id="decode-output" class="form-input form-textarea form-textarea--code"
+                              rows="8"
+                              readonly></textarea>
+                </section>
+            </div>
+
+            <!-- Reference Section -->
+            <section class="reference-section">
+                <h3 data-i18n="tools.cbor.reference">CBOR 参考</h3>
+                <div class="reference-content">
+                    <p data-i18n="tools.cbor.referenceDesc">CBOR (Concise Binary Object Representation) 是一种二进制数据序列化格式，类似于 JSON 但更紧凑。</p>
+                    <ul class="reference-list">
+                        <li><strong>RFC 8949</strong> - CBOR 规范</li>
+                        <li><strong>Major Types:</strong> 0-7 (unsigned int, negative int, byte string, text string, array, map, tag, simple/float)</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="cbor.js"></script>
+</body>
+</html>

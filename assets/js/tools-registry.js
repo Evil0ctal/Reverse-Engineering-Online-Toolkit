@@ -1013,6 +1013,15 @@
             path: '/tools/encoding/html-entity/',
             keywords: ['html', 'entity', '实体', '转义']
         },
+        {
+            id: 'cbor',
+            category: 'encoding',
+            name: 'tools.cbor.title',
+            description: 'tools.cbor.description',
+            icon: '📦',
+            path: '/tools/encoding/cbor/',
+            keywords: ['cbor', 'binary', 'json', 'rfc8949', 'encode', 'decode', '二进制', '编码', '解码']
+        },
 
         // ========== 哈希计算 ==========
         {
@@ -1576,6 +1585,17 @@
             keywords: ['binary', 'editor', 'hex', 'edit', '二进制', '编辑器', '十六进制', '编辑']
         },
 
+        // EXIF 查看器
+        {
+            id: 'exif-viewer',
+            category: 'binary',
+            name: 'tools.exif-viewer.title',
+            description: 'tools.exif-viewer.description',
+            icon: '📷',
+            path: '/tools/media/exif-viewer/',
+            keywords: ['exif', 'image', 'photo', 'metadata', 'gps', 'camera', '图片', '元数据', '相机', '位置']
+        },
+
         // IEEE 754 浮点数
         {
             id: 'ieee754',
@@ -1875,6 +1895,24 @@
             icon: '🔑',
             path: '/tools/hashing/kdf/',
             keywords: ['kdf', 'pbkdf2', 'bcrypt', 'password', 'key', 'derivation', '密钥派生', '密码哈希', '派生函数']
+        },
+        {
+            id: 'hkdf',
+            category: 'hashing',
+            name: 'tools.hkdf.title',
+            description: 'tools.hkdf.description',
+            icon: '🔑',
+            path: '/tools/hashing/hkdf/',
+            keywords: ['hkdf', 'hmac', 'kdf', 'key', 'derivation', 'rfc5869', '密钥派生', 'HMAC']
+        },
+        {
+            id: 'xxhash',
+            category: 'hashing',
+            name: 'tools.xxhash.title',
+            description: 'tools.xxhash.description',
+            icon: '⚡',
+            path: '/tools/hashing/xxhash/',
+            keywords: ['xxhash', 'xxhash32', 'xxhash64', 'hash', 'fast', 'non-cryptographic', '哈希', '高性能']
         },
 
         // ========== 协议解析（扩展） ==========

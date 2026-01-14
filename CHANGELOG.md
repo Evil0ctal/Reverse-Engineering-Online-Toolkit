@@ -9,6 +9,32 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.12] - 2026-01-13
+
+### 新增
+- **HKDF 密钥派生** - HMAC-based Key Derivation Function (RFC 5869)
+  - 支持 SHA-256、SHA-384、SHA-512 算法
+  - Extract and Expand 两步骤密钥派生
+  - 支持十六进制和 UTF-8 格式输入
+  - 可配置输出密钥长度（1-512 字节）
+- **xxHash 哈希** - 超快速非加密哈希算法
+  - 支持 XXH32 和 XXH64 变体
+  - 自定义种子值（seed）支持
+  - 哈希比对功能
+  - 批量计算多输入哈希值
+- **CBOR 编解码** - Concise Binary Object Representation (RFC 7049)
+  - JSON 到 CBOR 编码，支持十六进制和 Base64 输出
+  - CBOR 到 JSON 解码，支持格式化输出
+  - 文件上传解码支持
+  - 编码数据文件下载
+- **EXIF 查看器** - 图片元数据提取工具
+  - 支持 JPEG、TIFF、HEIC、PNG、WebP、AVIF 格式
+  - 显示基本信息、相机参数、GPS 定位
+  - OpenStreetMap 位置链接（如有 GPS 数据）
+  - 数据导出为 JSON 格式
+
+---
+
 ## [1.0.11] - 2026-01-13
 
 ### 新增

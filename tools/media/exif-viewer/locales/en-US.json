@@ -1,0 +1,22 @@
+{
+    "title": "EXIF Viewer",
+    "description": "Read image EXIF metadata, extract camera parameters, GPS location and more",
+    "uploadText": "Drag and drop an image here or click to select",
+    "uploadHint": "Supports JPEG, TIFF, HEIC, PNG, WebP, AVIF formats",
+    "imagePreview": "Image Preview",
+    "exifData": "EXIF Data",
+    "basicInfo": "Basic Info",
+    "cameraInfo": "Camera Info",
+    "gpsInfo": "GPS Info",
+    "allData": "All Data",
+    "thumbnail": "Thumbnail",
+    "copyJson": "Copy JSON",
+    "export": "Export",
+    "viewOnMap": "View on Map",
+    "noExifData": "This image does not contain EXIF data or the format is not supported.",
+    "noData": "No data",
+    "extractSuccess": "EXIF data extracted successfully",
+    "exportSuccess": "Export successful",
+    "unsupportedFormat": "Unsupported image format",
+    "extractError": "Extraction failed: "
+}

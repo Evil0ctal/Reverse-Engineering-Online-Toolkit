@@ -588,6 +588,45 @@
         "timestamp-guesser": {
             "title": "时间戳格式猜测",
             "description": "自动识别时间戳格式"
+        },
+        "hkdf": {
+            "title": "HKDF 密钥派生",
+            "description": "HMAC-based Key Derivation Function (RFC 5869)"
+        },
+        "xxhash": {
+            "title": "xxHash 哈希",
+            "description": "高性能非加密哈希算法，支持 xxHash32/xxHash64"
+        },
+        "cbor": {
+            "title": "CBOR 编解码",
+            "description": "Concise Binary Object Representation 二进制数据格式编解码"
+        },
+        "exif-viewer": {
+            "title": "EXIF 查看器",
+            "description": "提取图片 EXIF 元数据，支持 JPEG/TIFF/HEIC/PNG/WebP/AVIF 格式",
+            "uploadText": "拖拽图片到此处或点击选择文件",
+            "uploadHint": "支持 JPEG、TIFF、HEIC、PNG、WebP、AVIF 格式",
+            "imagePreview": "图片预览",
+            "exifData": "EXIF 数据",
+            "copyJson": "复制 JSON",
+            "export": "导出",
+            "basicInfo": "基本信息",
+            "cameraInfo": "相机信息",
+            "gpsInfo": "GPS 信息",
+            "allData": "全部数据",
+            "viewOnMap": "在地图上查看",
+            "noExifData": "此图片不包含 EXIF 数据或格式不支持。",
+            "thumbnail": "缩略图",
+            "noData": "无数据",
+            "unsupportedFormat": "不支持的图片格式",
+            "extractSuccess": "EXIF 数据提取成功",
+            "extractError": "提取失败: ",
+            "exportSuccess": "导出成功",
+            "aboutTitle": "关于 EXIF",
+            "aboutDesc": "EXIF (Exchangeable Image File Format) 是一种图片元数据标准，用于存储拍摄参数、相机信息、GPS 位置等数据。",
+            "supportedFormats": "支持格式",
+            "dataCategories": "数据分类",
+            "privacyNote": "隐私提示：EXIF 数据可能包含敏感的位置信息，分享图片前请注意检查。"
         }
     }
 }

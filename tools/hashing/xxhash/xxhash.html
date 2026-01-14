@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.xxhash.title">xxHash 哈希 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="xxhash.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.xxhash.title">xxHash 哈希</h1>
+            <p data-i18n="tools.xxhash.description">超快速非加密哈希算法，支持 XXH32 和 XXH64</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- Options Section -->
+            <section class="options-section">
+                <div class="option-group">
+                    <label for="xxhash-variant" data-i18n="tools.xxhash.variant">Hash 变体</label>
+                    <select id="xxhash-variant" class="form-select">
+                        <option value="xxh32">xxHash32 (32-bit)</option>
+                        <option value="xxh64" selected>xxHash64 (64-bit)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label for="xxhash-seed" data-i18n="tools.xxhash.seed">种子值</label>
+                    <input type="text" id="xxhash-seed" class="form-input form-input--sm" value="0" placeholder="0">
+                </div>
+                <div class="option-group">
+                    <label for="xxhash-output-format" data-i18n="tools.xxhash.outputFormat">输出格式</label>
+                    <select id="xxhash-output-format" class="form-select">
+                        <option value="hex" selected>Hex</option>
+                        <option value="decimal">Decimal</option>
+                        <option value="binary">Binary</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="input-header">
+                    <label for="xxhash-input" data-i18n="tools.xxhash.input">输入数据</label>
+                    <div class="input-options">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="input-is-hex">
+                            <span data-i18n="tools.xxhash.isHex">Hex 输入</span>
+                        </label>
+                    </div>
+                </div>
+                <textarea id="xxhash-input" class="form-input form-textarea"
+                          rows="6"
+                          data-i18n-placeholder="tools.xxhash.inputPlaceholder"
+                          placeholder="输入要计算哈希的数据..."></textarea>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-section">
+                <button id="hash-btn" class="btn btn--primary" data-i18n="tools.xxhash.calculate">
+                    计算哈希
+                </button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">
+                    清除
+                </button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">
+                    复制
+                </button>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section">
+                <label data-i18n="tools.xxhash.result">哈希结果</label>
+                <textarea id="xxhash-output" class="form-input form-textarea form-textarea--code"
+                          rows="3"
+                          readonly></textarea>
+            </section>
+
+            <!-- Comparison Section -->
+            <section class="input-section">
+                <div class="input-header">
+                    <label for="xxhash-compare" data-i18n="tools.xxhash.compareLabel">哈希比对</label>
+                </div>
+                <div class="compare-row">
+                    <input type="text" id="xxhash-compare" class="form-input"
+                           data-i18n-placeholder="tools.xxhash.comparePlaceholder"
+                           placeholder="输入预期的哈希值进行比对...">
+                    <button id="compare-btn" class="btn btn--secondary" data-i18n="tools.xxhash.compare">
+                        比对
+                    </button>
+                </div>
+                <div id="compare-result" class="compare-result" style="display: none;"></div>
+            </section>
+
+            <!-- Batch Hash Section -->
+            <section class="input-section">
+                <div class="input-header">
+                    <label for="xxhash-batch" data-i18n="tools.xxhash.batchLabel">批量计算</label>
+                </div>
+                <textarea id="xxhash-batch" class="form-input form-textarea"
+                          rows="4"
+                          data-i18n-placeholder="tools.xxhash.batchPlaceholder"
+                          placeholder="每行输入一个值，批量计算哈希..."></textarea>
+                <div class="action-section" style="margin-top: var(--spacing-sm);">
+                    <button id="batch-hash-btn" class="btn btn--secondary" data-i18n="tools.xxhash.batchCalculate">
+                        批量计算
+                    </button>
+                </div>
+                <textarea id="xxhash-batch-output" class="form-input form-textarea form-textarea--code"
+                          rows="4"
+                          readonly
+                          style="margin-top: var(--spacing-sm); display: none;"></textarea>
+            </section>
+
+            <!-- About Section -->
+            <section class="about-section">
+                <h3 data-i18n="tools.xxhash.aboutTitle">关于 xxHash</h3>
+                <div class="about-content">
+                    <p data-i18n="tools.xxhash.aboutDesc">xxHash 是一种极速非加密哈希算法，专为高性能数据完整性检查而设计。</p>
+
+                    <div class="about-grid">
+                        <div class="about-item">
+                            <h4 data-i18n="tools.xxhash.variants">算法变体</h4>
+                            <ul>
+                                <li><strong>XXH32</strong> - 32 位输出，适合 32 位系统</li>
+                                <li><strong>XXH64</strong> - 64 位输出，在 64 位系统上更快</li>
+                                <li><strong>XXH3</strong> - 最新版本，支持 64/128 位</li>
+                            </ul>
+                        </div>
+                        <div class="about-item">
+                            <h4 data-i18n="tools.xxhash.useCases">使用场景</h4>
+                            <ul>
+                                <li>文件完整性校验</li>
+                                <li>哈希表/字典键生成</li>
+                                <li>数据去重</li>
+                                <li>缓存键生成</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="about-note">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span data-i18n="tools.xxhash.securityNote">安全提示：xxHash 是非加密哈希，不适用于密码存储或安全签名等密码学用途。</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="xxhash.js"></script>
+</body>
+</html>

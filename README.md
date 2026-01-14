@@ -73,7 +73,7 @@
 | **BLAKE2** | BLAKE2b, BLAKE2s 哈希计算 | ✅ 已完成 |
 | **CRC** | CRC8, CRC16, CRC32, CRC32C 校验计算 | ✅ 已完成 |
 | **RIPEMD** | RIPEMD-160 哈希计算 | ✅ 已完成 |
-| **xxHash** | xxHash32, xxHash64, xxHash3（高速非加密哈希，常见于指纹生成） | 📋 计划中 |
+| **xxHash** | xxHash32, xxHash64, xxHash3（高速非加密哈希，常见于指纹生成） | ✅ 已完成 |
 | **MurmurHash** | MurmurHash3（常见于移动端指纹算法） | 📋 计划中 |
 | **哈希类型识别** | 根据长度和格式自动识别哈希类型（MD5/SHA1/SHA256/bcrypt 等） | ✅ 已完成 |
 
@@ -87,11 +87,11 @@
 
 | 功能 | 描述 | 状态 |
 |------|------|------|
-| **PBKDF2** | PBKDF2-SHA1/SHA256/SHA512 密钥派生（移动 App 常用） | 📋 计划中 |
-| **HKDF** | HKDF 密钥派生（API 签名密钥生成常用） | 📋 计划中 |
+| **PBKDF2** | PBKDF2-SHA1/SHA256/SHA512 密钥派生（移动 App 常用） | ✅ 已完成 |
+| **bcrypt** | bcrypt 密码哈希生成与验证 | ✅ 已完成 |
+| **HKDF** | HKDF 密钥派生（API 签名密钥生成常用） | ✅ 已完成 |
 | **scrypt** | scrypt 密钥派生 | 📋 计划中 |
 | **Argon2** | Argon2id 密钥派生（现代密码哈希算法） | 📋 计划中 |
-| **bcrypt** | bcrypt 密码验证与测试 | 📋 计划中 |
 
 ### 对称加密 (Symmetric Encryption)
 
@@ -157,7 +157,7 @@
 | **X.509 证书** | X.509 证书解析 | ✅ 已完成 |
 | **PEM** | PEM 格式解析 | ✅ 已完成 |
 | **MessagePack** | MessagePack 编解码（TikTok/抖音 API 常用格式） | ✅ 已完成 |
-| **CBOR** | CBOR 编解码（IoT 和 WebAuthn 常用） | 📋 计划中 |
+| **CBOR** | CBOR 编解码（IoT 和 WebAuthn 常用） | ✅ 已完成 |
 | **BSON** | BSON 解析（MongoDB 格式） | 📋 计划中 |
 | **Plist** | Apple Property List 解析（二进制和 XML 格式） | ✅ 已完成 |
 | **SAML Token** | SAML 断言解析 | 📋 计划中 |
@@ -197,10 +197,10 @@
 | **密码生成** | 安全密码生成器 | ✅ 已完成 |
 | **密钥对生成** | RSA/ECC 密钥对生成 | ✅ 已完成 |
 | **Lorem Ipsum** | 占位文本生成 | ✅ 已完成 |
-| **时间戳格式猜测** | 自动识别时间戳格式（Unix/毫秒/Windows FILETIME/Cocoa 等） | 📋 计划中 |
+| **时间戳格式猜测** | 自动识别时间戳格式（Unix/毫秒/Windows FILETIME/Cocoa 等） | ✅ 已完成 |
 | **Snowflake ID 解码** | Twitter/Discord 风格雪花 ID 解析（提取时间戳和节点信息） | ✅ 已完成 |
-| **MongoDB ObjectID** | ObjectID 解析（提取创建时间和机器标识） | 📋 计划中 |
-| **ULID 解析/生成** | ULID 解析与生成（可排序的 UUID 替代方案） | 📋 计划中 |
+| **MongoDB ObjectID** | ObjectID 解析（提取创建时间和机器标识） | ✅ 已完成 |
+| **ULID 解析/生成** | ULID 解析与生成（可排序的 UUID 替代方案） | ✅ 已完成 |
 
 ### 数值转换 (Number Conversion)
 
@@ -250,7 +250,7 @@
 
 | 功能 | 描述 | 状态 |
 |------|------|------|
-| **图片 EXIF 查看** | 查看和清除图片元数据 | 📋 计划中 |
+| **图片 EXIF 查看** | 查看和清除图片元数据 | ✅ 已完成 |
 | **LSB 隐写分析** | 图片最低有效位隐写分析（支持不同颜色通道） | 📋 计划中 |
 
 ### 移动端逆向 (Mobile Reverse Engineering)

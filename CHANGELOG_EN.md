@@ -9,6 +9,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.12] - 2026-01-13
+
+### Added
+- **HKDF Key Derivation** - HMAC-based Key Derivation Function (RFC 5869)
+  - Support SHA-256, SHA-384, SHA-512 algorithms
+  - Extract and Expand two-step key derivation
+  - Support hexadecimal and UTF-8 format input
+  - Configurable output key length (1-512 bytes)
+- **xxHash Hash** - Ultra-fast non-cryptographic hash algorithm
+  - Support XXH32 and XXH64 variants
+  - Custom seed value support
+  - Hash comparison feature
+  - Batch calculation for multiple inputs
+- **CBOR Codec** - Concise Binary Object Representation (RFC 7049)
+  - JSON to CBOR encoding with hex and Base64 output
+  - CBOR to JSON decoding with formatted output
+  - File upload decoding support
+  - Encoded data file download
+- **EXIF Viewer** - Image metadata extraction tool
+  - Support JPEG, TIFF, HEIC, PNG, WebP, AVIF formats
+  - Display basic info, camera parameters, GPS location
+  - OpenStreetMap location link (if GPS data available)
+  - Export data as JSON format
+
+---
+
 ## [1.0.11] - 2026-01-13
 
 ### Added

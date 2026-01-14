@@ -1,0 +1,22 @@
+{
+    "title": "EXIF 查看器",
+    "description": "读取图片 EXIF 元数据，支持相机参数、GPS 位置等信息提取",
+    "uploadText": "拖拽图片到此处或点击选择文件",
+    "uploadHint": "支持 JPEG、TIFF、HEIC、PNG、WebP、AVIF 格式",
+    "imagePreview": "图片预览",
+    "exifData": "EXIF 数据",
+    "basicInfo": "基本信息",
+    "cameraInfo": "相机信息",
+    "gpsInfo": "GPS 信息",
+    "allData": "全部数据",
+    "thumbnail": "缩略图",
+    "copyJson": "复制 JSON",
+    "export": "导出",
+    "viewOnMap": "在地图上查看",
+    "noExifData": "此图片不包含 EXIF 数据或格式不支持。",
+    "noData": "无数据",
+    "extractSuccess": "EXIF 数据提取成功",
+    "exportSuccess": "导出成功",
+    "unsupportedFormat": "不支持的图片格式",
+    "extractError": "提取失败: "
+}

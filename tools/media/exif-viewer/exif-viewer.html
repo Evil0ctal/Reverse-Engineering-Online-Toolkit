@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.exif-viewer.title">EXIF 查看器 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="exif-viewer.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.exif-viewer.title">EXIF 查看器</h1>
+            <p data-i18n="tools.exif-viewer.description">提取图片 EXIF 元数据，支持 JPEG/TIFF/HEIC/PNG/WebP/AVIF 格式</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>
+                    <p class="upload-text" data-i18n="tools.exif-viewer.uploadText">
+                        拖拽图片到此处或点击选择文件
+                    </p>
+                    <p class="upload-hint" data-i18n="tools.exif-viewer.uploadHint">
+                        支持 JPEG、TIFF、HEIC、PNG、WebP、AVIF 格式
+                    </p>
+                    <input type="file" id="image-input" accept="image/jpeg,image/tiff,image/heic,image/heif,image/png,image/webp,image/avif,.jpg,.jpeg,.tif,.tiff,.heic,.heif,.png,.webp,.avif" style="display: none;">
+                </div>
+            </section>
+
+            <!-- Preview Section -->
+            <section class="preview-section" id="preview-section" style="display: none;">
+                <div class="section-header">
+                    <h3 data-i18n="tools.exif-viewer.imagePreview">图片预览</h3>
+                    <button id="clear-btn" class="btn btn--sm btn--outline" data-i18n="common.clear">清除</button>
+                </div>
+                <div class="preview-container">
+                    <img id="preview-image" alt="Preview" />
+                    <div class="image-info" id="image-info"></div>
+                </div>
+            </section>
+
+            <!-- EXIF Data Section -->
+            <section class="exif-section" id="exif-section" style="display: none;">
+                <div class="section-header">
+                    <h3 data-i18n="tools.exif-viewer.exifData">EXIF 数据</h3>
+                    <div class="section-actions">
+                        <button id="copy-json-btn" class="btn btn--sm btn--outline" data-i18n="tools.exif-viewer.copyJson">
+                            复制 JSON
+                        </button>
+                        <button id="export-btn" class="btn btn--sm btn--outline" data-i18n="tools.exif-viewer.export">
+                            导出
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="exif-tabs">
+                    <button class="exif-tab active" data-tab="basic" data-i18n="tools.exif-viewer.basicInfo">基本信息</button>
+                    <button class="exif-tab" data-tab="camera" data-i18n="tools.exif-viewer.cameraInfo">相机信息</button>
+                    <button class="exif-tab" data-tab="gps" data-i18n="tools.exif-viewer.gpsInfo">GPS 信息</button>
+                    <button class="exif-tab" data-tab="all" data-i18n="tools.exif-viewer.allData">全部数据</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="exif-content">
+                    <div id="tab-basic" class="tab-panel active">
+                        <table class="exif-table" id="basic-table"></table>
+                    </div>
+                    <div id="tab-camera" class="tab-panel">
+                        <table class="exif-table" id="camera-table"></table>
+                    </div>
+                    <div id="tab-gps" class="tab-panel">
+                        <table class="exif-table" id="gps-table"></table>
+                        <div id="map-container" class="map-container" style="display: none;">
+                            <a id="map-link" target="_blank" class="map-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span data-i18n="tools.exif-viewer.viewOnMap">在地图上查看</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="tab-all" class="tab-panel">
+                        <table class="exif-table" id="all-table"></table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- No EXIF Message -->
+            <section class="no-exif-section" id="no-exif-section" style="display: none;">
+                <div class="no-exif-message">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <p data-i18n="tools.exif-viewer.noExifData">此图片不包含 EXIF 数据或格式不支持。</p>
+                </div>
+            </section>
+
+            <!-- Thumbnail Section -->
+            <section class="thumbnail-section" id="thumbnail-section" style="display: none;">
+                <div class="section-header">
+                    <h3 data-i18n="tools.exif-viewer.thumbnail">缩略图</h3>
+                </div>
+                <div class="thumbnail-container">
+                    <img id="thumbnail-image" alt="Thumbnail" />
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section class="about-section">
+                <h3 data-i18n="tools.exif-viewer.aboutTitle">关于 EXIF</h3>
+                <div class="about-content">
+                    <p data-i18n="tools.exif-viewer.aboutDesc">EXIF (Exchangeable Image File Format) 是一种图片元数据标准，用于存储拍摄参数、相机信息、GPS 位置等数据。</p>
+
+                    <div class="about-grid">
+                        <div class="about-item">
+                            <h4 data-i18n="tools.exif-viewer.supportedFormats">支持格式</h4>
+                            <ul>
+                                <li><strong>JPEG/JPG</strong> - 最常见的 EXIF 载体</li>
+                                <li><strong>TIFF</strong> - 原生 EXIF 格式</li>
+                                <li><strong>HEIC/HEIF</strong> - Apple 设备格式</li>
+                                <li><strong>PNG</strong> - 有限 EXIF 支持</li>
+                                <li><strong>WebP/AVIF</strong> - 现代图片格式</li>
+                            </ul>
+                        </div>
+                        <div class="about-item">
+                            <h4 data-i18n="tools.exif-viewer.dataCategories">数据分类</h4>
+                            <ul>
+                                <li><strong data-i18n="tools.exif-viewer.basicInfo">基本信息</strong> - 尺寸、时间、方向</li>
+                                <li><strong data-i18n="tools.exif-viewer.cameraInfo">相机信息</strong> - 厂商、型号、曝光参数</li>
+                                <li><strong data-i18n="tools.exif-viewer.gpsInfo">GPS 信息</strong> - 经纬度、海拔、时间戳</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="about-note">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span data-i18n="tools.exif-viewer.privacyNote">隐私提示：EXIF 数据可能包含敏感的位置信息，分享图片前请注意检查。</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="exif-viewer.js"></script>
+</body>
+</html>

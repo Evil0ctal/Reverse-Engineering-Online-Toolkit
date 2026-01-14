@@ -1,0 +1,189 @@
+/**
+ * xxHash 哈希工具样式
+ */
+
+/* 选项区域 */
+.options-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.option-group label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* 输入区域头部 */
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.input-header label {
+    font-weight: 500;
+}
+
+.input-options {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+/* 比对区域 */
+.comparison-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.compare-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.compare-row .form-input {
+    flex: 1;
+}
+
+.compare-result {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.compare-result.match {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: var(--color-success, #22c55e);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.compare-result.mismatch {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--color-error, #ef4444);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* 批量计算区域 */
+.batch-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+/* 输出区域样式 */
+.output-area {
+    font-family: var(--font-mono);
+    background-color: var(--bg-secondary);
+}
+
+/* 关于区域 */
+.about-section {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.about-section h3 {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.about-content {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.about-content > p {
+    margin-bottom: var(--spacing-md);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.about-item h4 {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.about-item ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.about-item li {
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.about-item li:last-child {
+    border-bottom: none;
+}
+
+.about-item li strong {
+    color: var(--text-primary);
+}
+
+.about-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background-color: rgba(var(--color-warning-rgb, 245, 158, 11), 0.1);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--color-warning, #f59e0b);
+}
+
+.about-note svg {
+    flex-shrink: 0;
+    color: var(--color-warning, #f59e0b);
+    margin-top: 2px;
+}
+
+.about-note span {
+    color: var(--text-primary);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .options-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .compare-row {
+        flex-direction: column;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+}

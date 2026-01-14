@@ -588,6 +588,45 @@
         "timestamp-guesser": {
             "title": "Timestamp Format Guesser",
             "description": "Auto-detect timestamp formats"
+        },
+        "hkdf": {
+            "title": "HKDF Key Derivation",
+            "description": "HMAC-based Key Derivation Function (RFC 5869)"
+        },
+        "xxhash": {
+            "title": "xxHash",
+            "description": "High-performance non-cryptographic hash algorithm, supports xxHash32/xxHash64"
+        },
+        "cbor": {
+            "title": "CBOR Codec",
+            "description": "Concise Binary Object Representation binary data format encoder/decoder"
+        },
+        "exif-viewer": {
+            "title": "EXIF Viewer",
+            "description": "Extract image EXIF metadata, supports JPEG/TIFF/HEIC/PNG/WebP/AVIF formats",
+            "uploadText": "Drag and drop image here or click to select file",
+            "uploadHint": "Supports JPEG, TIFF, HEIC, PNG, WebP, AVIF formats",
+            "imagePreview": "Image Preview",
+            "exifData": "EXIF Data",
+            "copyJson": "Copy JSON",
+            "export": "Export",
+            "basicInfo": "Basic Info",
+            "cameraInfo": "Camera Info",
+            "gpsInfo": "GPS Info",
+            "allData": "All Data",
+            "viewOnMap": "View on Map",
+            "noExifData": "This image does not contain EXIF data or the format is not supported.",
+            "thumbnail": "Thumbnail",
+            "noData": "No data",
+            "unsupportedFormat": "Unsupported image format",
+            "extractSuccess": "EXIF data extracted successfully",
+            "extractError": "Extraction failed: ",
+            "exportSuccess": "Export successful",
+            "aboutTitle": "About EXIF",
+            "aboutDesc": "EXIF (Exchangeable Image File Format) is an image metadata standard used to store shooting parameters, camera information, GPS location and other data.",
+            "supportedFormats": "Supported Formats",
+            "dataCategories": "Data Categories",
+            "privacyNote": "Privacy Note: EXIF data may contain sensitive location information. Please check before sharing images."
         }
     }
 }
