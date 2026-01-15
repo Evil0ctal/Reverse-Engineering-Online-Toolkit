@@ -1429,6 +1429,15 @@
             path: '/tools/formatting/javascript/',
             keywords: ['javascript', 'js', 'ecmascript', '脚本', '格式化']
         },
+        {
+            id: 'graphql',
+            category: 'formatting',
+            name: 'tools.graphql.title',
+            description: 'tools.graphql.description',
+            icon: '◈',
+            path: '/tools/formatting/graphql/',
+            keywords: ['graphql', 'gql', 'query', 'mutation', 'subscription', 'api', '查询', '格式化']
+        },
 
         // ========== 压缩工具（新增） ==========
         {

@@ -9,6 +9,26 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.13] - 2026-01-15
+
+### 新增
+- **GraphQL 格式化** - GraphQL 查询格式化与解析工具
+  - 支持标准 GraphQL 语法格式化和压缩
+  - 支持 query、mutation、subscription、fragment 解析
+  - 自动检测并解析 Facebook/Instagram API URL 编码请求
+  - 解析 doc_id、variables、fb_api_req_friendly_name 等参数
+  - 格式化 Variables JSON 并显示所有请求参数
+  - AST 结构树可视化
+
+### 修复
+- **JSON 格式化** - 修复 Python Dict 转换中嵌套 JSON 字符串的转义问题
+  - 正确处理 `\\"` 三字符序列（转义引号）
+  - 嵌套 JSON 字符串中的引号现在正确双重转义为 `\\\"`
+  - 改进错误消息，显示 Python Dict 转换后的实际错误
+  - 添加 Unicode 转义序列 `\uXXXX` 支持
+
+---
+
 ## [1.0.12] - 2026-01-13
 
 ### 新增

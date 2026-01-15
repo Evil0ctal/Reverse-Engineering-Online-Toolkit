@@ -450,6 +450,10 @@
             "title": "JavaScript Formatter",
             "description": "JavaScript code formatting, beautification, and minification"
         },
+        "graphql": {
+            "title": "GraphQL Formatter",
+            "description": "GraphQL query formatting and parsing, with FB/IG API decoding"
+        },
         "brotli": {
             "title": "Brotli Compression",
             "description": "Brotli compression and decompression for text and files"

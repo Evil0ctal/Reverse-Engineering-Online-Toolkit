@@ -95,6 +95,7 @@
 
     /**
      * 将单引号字符串转换为双引号
+     * 处理 Python 字典格式的字符串转换为 JSON 格式
      */
     function convertQuotes(str) {
         let result = '';
@@ -105,6 +106,7 @@
         while (i < str.length) {
             const char = str[i];
             const nextChar = str[i + 1];
+            const nextNextChar = str[i + 2];
 
             if (!inString) {
                 if (char === "'" || char === '"') {
@@ -115,17 +117,40 @@
                     result += char;
                 }
             } else {
-                if (char === '\\' && nextChar) {
-                    // 处理转义字符
-                    if (nextChar === stringChar) {
-                        result += '\\' + (stringChar === "'" ? '"' : stringChar);
-                        i++;
-                    } else if (nextChar === '"' && stringChar === "'") {
-                        // 在单引号字符串中的双引号需要转义
+                if (char === '\\') {
+                    // 首先检查三字符序列 \\"（转义反斜杠+引号）
+                    if (nextChar === '\\' && nextNextChar === '"') {
+                        // \\" -> \\\" (嵌套 JSON 中的转义引号，需要双重转义)
+                        result += '\\\\\\"';
+                        i += 2; // 跳过 \\", 循环末尾会 +1
+                    } else if (nextChar === '\\') {
+                        // \\ -> \\ (两个反斜杠表示一个转义反斜杠)
+                        result += '\\\\';
+                        i++; // 跳过下一个反斜杠
+                    } else if (nextChar === stringChar) {
+                        // \' 或 \" - 转义的字符串定界符
                         result += '\\"';
+                        i++; // 跳过引号
+                    } else if (nextChar === '"' && stringChar === "'") {
+                        // 单引号字符串中的 \" 序列 -> 保持为 \"
+                        result += '\\"';
+                        i++; // 跳过引号
+                    } else if (nextChar === 'n' || nextChar === 't' || nextChar === 'r' ||
+                               nextChar === 'b' || nextChar === 'f') {
+                        // 常见转义序列 \n, \t, \r, \b, \f - 直接保留
+                        result += '\\' + nextChar;
+                        i++;
+                    } else if (nextChar === 'u' && str.slice(i + 2, i + 6).match(/^[0-9a-fA-F]{4}$/)) {
+                        // Unicode 转义 \uXXXX
+                        result += str.slice(i, i + 6);
+                        i += 5;
+                    } else if (nextChar) {
+                        // 其他转义序列，保留反斜杠
+                        result += '\\' + nextChar;
                         i++;
                     } else {
-                        result += char;
+                        // 字符串末尾的单独反斜杠
+                        result += '\\\\';
                     }
                 } else if (char === stringChar) {
                     // 字符串结束
@@ -133,7 +158,7 @@
                     stringChar = null;
                     result += '"';
                 } else if (char === '"' && stringChar === "'") {
-                    // 单引号字符串内的双引号需要转义
+                    // 单引号字符串内的未转义双引号需要转义
                     result += '\\"';
                 } else {
                     result += char;
@@ -194,32 +219,38 @@
             return null;
         }
 
+        let lastError = null;
+
         // 先尝试直接解析为 JSON
         try {
             return JSON.parse(input);
         } catch (e) {
-            // 尝试解析转义的 JSON 字符串（JSON dump 格式）
-            const unescaped = unescapeJsonString(input);
-            if (unescaped) {
-                try {
-                    return JSON.parse(unescaped);
-                } catch (e2) {
-                    // 转义解析也失败，继续尝试其他格式
-                }
-            }
-
-            // 如果启用了 Python 自动转换，尝试转换
-            const autoPython = document.getElementById('auto-python');
-            if (autoPython && autoPython.checked) {
-                try {
-                    const converted = pythonDictToJson(input);
-                    return JSON.parse(converted);
-                } catch (e2) {
-                    throw new Error(`JSON 解析错误: ${e.message}`);
-                }
-            }
-            throw new Error(`JSON 解析错误: ${e.message}`);
+            lastError = e;
         }
+
+        // 尝试解析转义的 JSON 字符串（JSON dump 格式）
+        const unescaped = unescapeJsonString(input);
+        if (unescaped) {
+            try {
+                return JSON.parse(unescaped);
+            } catch (e2) {
+                // 转义解析也失败，继续尝试其他格式
+            }
+        }
+
+        // 如果启用了 Python 自动转换，尝试转换
+        const autoPython = document.getElementById('auto-python');
+        if (autoPython && autoPython.checked) {
+            try {
+                const converted = pythonDictToJson(input);
+                return JSON.parse(converted);
+            } catch (e2) {
+                // Python 转换失败，显示转换后的错误
+                throw new Error(`Python Dict 转换后解析失败: ${e2.message}`);
+            }
+        }
+
+        throw new Error(`JSON 解析错误: ${lastError.message}`);
     }
 
     /**

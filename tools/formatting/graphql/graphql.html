@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="tools.graphql.title">GraphQL 格式化 - REOT</title>
+    <script>
+        (function() {
+            if (!window.REOT && window.location.pathname.startsWith('/tools/')) {
+                window.location.href = '/?path=' + encodeURIComponent(window.location.pathname);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/themes/light.css" id="theme-light">
+    <link rel="stylesheet" href="../../../assets/css/themes/dark.css" id="theme-dark">
+    <link rel="stylesheet" href="../../../assets/css/code-editor.css">
+    <link rel="stylesheet" href="graphql.css">
+</head>
+<body>
+    <div class="tool-container">
+        <header class="tool-header">
+            <h1 data-i18n="tools.graphql.title">GraphQL 格式化</h1>
+            <p data-i18n="tools.graphql.description">GraphQL 查询格式化与解析，支持 Facebook/Instagram API 请求解码</p>
+        </header>
+
+        <main class="tool-main">
+            <!-- 选项区域 -->
+            <section class="options-section">
+                <div class="option-row">
+                    <div class="option-group">
+                        <label data-i18n="tools.graphql.indent">缩进</label>
+                        <select id="indent-select" class="form-select">
+                            <option value="2" selected>2 空格</option>
+                            <option value="4">4 空格</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="sort-fields" >
+                            <span data-i18n="tools.graphql.sortFields">排序字段</span>
+                        </label>
+                    </div>
+                    <div class="option-group">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="sort-args">
+                            <span data-i18n="tools.graphql.sortArgs">排序参数</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 输入区域 -->
+            <section class="input-section">
+                <div class="section-header">
+                    <label data-i18n="common.input">输入</label>
+                    <button id="example-btn" class="btn btn--sm btn--outline" data-i18n="tools.graphql.loadExample">加载示例</button>
+                </div>
+                <div id="input-editor" class="code-editor-container code-editor-container--code"></div>
+                <textarea id="input"
+                          class="form-input form-textarea form-textarea--code"
+                          data-i18n-placeholder="tools.graphql.inputPlaceholder"
+                          placeholder="请输入 GraphQL 查询..."
+                          style="display: none;"></textarea>
+            </section>
+
+            <!-- 操作按钮 -->
+            <section class="action-section">
+                <button id="format-btn" class="btn btn--primary" data-i18n="common.format">格式化</button>
+                <button id="minify-btn" class="btn btn--secondary" data-i18n="common.minify">压缩</button>
+                <button id="parse-btn" class="btn btn--secondary" data-i18n="tools.graphql.parse">解析结构</button>
+                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制结果</button>
+            </section>
+
+            <!-- 输出区域 -->
+            <section class="output-section">
+                <label data-i18n="common.output">输出</label>
+                <div id="output-editor" class="code-editor-container code-editor-container--code"></div>
+                <textarea id="output"
+                          class="form-input form-textarea form-textarea--code"
+                          readonly
+                          style="display: none;"></textarea>
+            </section>
+
+            <!-- 解析结果区域 -->
+            <section class="parse-section" id="parse-section" style="display: none;">
+                <h3 data-i18n="tools.graphql.parseResult">解析结果</h3>
+                <div class="parse-grid">
+                    <div class="parse-item">
+                        <span class="parse-label" data-i18n="tools.graphql.operations">操作</span>
+                        <div class="parse-value" id="parse-operations"></div>
+                    </div>
+                    <div class="parse-item">
+                        <span class="parse-label" data-i18n="tools.graphql.fragments">片段</span>
+                        <div class="parse-value" id="parse-fragments"></div>
+                    </div>
+                    <div class="parse-item">
+                        <span class="parse-label" data-i18n="tools.graphql.variables">变量</span>
+                        <div class="parse-value" id="parse-variables"></div>
+                    </div>
+                    <div class="parse-item">
+                        <span class="parse-label" data-i18n="tools.graphql.directives">指令</span>
+                        <div class="parse-value" id="parse-directives"></div>
+                    </div>
+                </div>
+                <div class="parse-tree">
+                    <h4 data-i18n="tools.graphql.astTree">AST 结构树</h4>
+                    <pre id="parse-tree-output" class="parse-tree-output"></pre>
+                </div>
+            </section>
+
+            <!-- FB/IG API 解析结果区域 -->
+            <section class="fb-api-section" id="fb-api-section" style="display: none;">
+                <h3 data-i18n="tools.graphql.fbApiResult">Facebook/Instagram API 请求解析</h3>
+                <div class="fb-api-grid">
+                    <div class="fb-api-item">
+                        <span class="fb-api-label" data-i18n="tools.graphql.docId">Doc ID (查询标识)</span>
+                        <code class="fb-api-value" id="fb-doc-id"></code>
+                    </div>
+                    <div class="fb-api-item">
+                        <span class="fb-api-label" data-i18n="tools.graphql.friendlyName">API 名称</span>
+                        <code class="fb-api-value" id="fb-friendly-name"></code>
+                    </div>
+                    <div class="fb-api-item">
+                        <span class="fb-api-label">LSD Token</span>
+                        <code class="fb-api-value" id="fb-lsd"></code>
+                    </div>
+                    <div class="fb-api-item">
+                        <span class="fb-api-label">User ID</span>
+                        <code class="fb-api-value" id="fb-user-id"></code>
+                    </div>
+                </div>
+                <div class="fb-api-variables">
+                    <h4 data-i18n="tools.graphql.variablesJson">Variables (JSON)</h4>
+                    <pre id="fb-variables-output" class="fb-api-pre"></pre>
+                </div>
+                <div class="fb-api-params">
+                    <h4 data-i18n="tools.graphql.allParams">所有参数</h4>
+                    <pre id="fb-params-output" class="fb-api-pre"></pre>
+                </div>
+            </section>
+
+            <!-- 说明 -->
+            <section class="about-section">
+                <h3 data-i18n="tools.graphql.aboutTitle">关于 GraphQL</h3>
+                <div class="about-content">
+                    <p data-i18n="tools.graphql.aboutDesc">GraphQL 是一种用于 API 的查询语言，由 Facebook 开发。它提供了一种更高效、更强大的数据获取方式。</p>
+
+                    <div class="about-grid">
+                        <div class="about-item">
+                            <h4 data-i18n="tools.graphql.operationTypes">操作类型</h4>
+                            <ul>
+                                <li><strong>query</strong> - 查询数据（只读）</li>
+                                <li><strong>mutation</strong> - 修改数据</li>
+                                <li><strong>subscription</strong> - 实时订阅</li>
+                            </ul>
+                        </div>
+                        <div class="about-item">
+                            <h4 data-i18n="tools.graphql.features">主要特性</h4>
+                            <ul>
+                                <li>按需获取数据字段</li>
+                                <li>单次请求获取多个资源</li>
+                                <li>强类型系统</li>
+                                <li>自文档化 API</li>
+                            </ul>
+                        </div>
+                        <div class="about-item">
+                            <h4 data-i18n="tools.graphql.fbApiSupport">FB/IG API 支持</h4>
+                            <ul>
+                                <li>自动检测 URL 编码请求</li>
+                                <li>解析 doc_id 和 variables</li>
+                                <li>提取 API 名称和参数</li>
+                                <li>格式化 JSON 变量</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="about-note">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span data-i18n="tools.graphql.usageNote">使用提示：支持标准 GraphQL 语法格式化，以及 Facebook/Instagram API 的 URL 编码请求解析。</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/utils.js"></script>
+    <script src="../../../assets/js/i18n.js"></script>
+    <script src="../../../assets/js/code-editor.js"></script>
+    <script src="graphql.js"></script>
+</body>
+</html>

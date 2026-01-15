@@ -450,6 +450,10 @@
             "title": "JavaScript 格式化",
             "description": "JavaScript 代码格式化、美化与压缩"
         },
+        "graphql": {
+            "title": "GraphQL 格式化",
+            "description": "GraphQL 查询格式化与解析，支持 FB/IG API 请求解码"
+        },
         "brotli": {
             "title": "Brotli 压缩",
             "description": "Brotli 压缩与解压，支持文本和文件"

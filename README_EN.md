@@ -110,6 +110,7 @@
 | **HTML** | HTML formatting and minification | ✅ Done |
 | **CSS** | CSS formatting and minification | ✅ Done |
 | **JavaScript** | JavaScript formatting and minification | ✅ Done |
+| **GraphQL** | GraphQL query formatting and parsing | ✅ Done |
 
 ### Binary Analysis
 

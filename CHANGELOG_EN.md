@@ -9,6 +9,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.13] - 2026-01-15
+
+### Added
+- **GraphQL Formatter** - GraphQL query formatting and parsing tool
+  - Support standard GraphQL syntax formatting and minification
+  - Support query, mutation, subscription, fragment parsing
+  - Auto-detect and parse Facebook/Instagram API URL-encoded requests
+  - Parse doc_id, variables, fb_api_req_friendly_name and other parameters
+  - Format Variables JSON and display all request parameters
+  - AST structure tree visualization
+
+### Fixed
+- **JSON Formatter** - Fixed escape sequence handling in Python Dict conversion for nested JSON strings
+  - Correctly handle `\\"` three-character sequence (escaped quote)
+  - Quotes in nested JSON strings now properly double-escaped as `\\\"`
+  - Improved error messages to show actual error after Python Dict conversion
+  - Added Unicode escape sequence `\uXXXX` support
+
+---
+
 ## [1.0.12] - 2026-01-13
 
 ### Added
