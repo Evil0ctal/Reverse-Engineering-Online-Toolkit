@@ -154,6 +154,14 @@
             code += '}\n\n';
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += 'cookies = {\n';
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i1}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += '}\n\n';
+        }
+
         if (parsed.data) {
             code += `data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -164,6 +172,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += ', headers=headers';
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += ', cookies=cookies';
         }
         if (parsed.data) {
             code += ', data=data';
@@ -213,6 +224,14 @@
             code += `${i2}}\n\n`;
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i2}cookies = {\n`;
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i3}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += `${i2}}\n\n`;
+        }
+
         if (parsed.data) {
             code += `${i2}data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -223,6 +242,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += ', headers=headers';
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += ', cookies=cookies';
         }
         if (parsed.data) {
             code += ', data=data';
@@ -324,6 +346,14 @@
             code += `${i2}}\n\n`;
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i2}cookies = {\n`;
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i2}${i1}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += `${i2}}\n\n`;
+        }
+
         if (parsed.data) {
             code += `${i2}data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -334,6 +364,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += ', headers=headers';
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += ', cookies=cookies';
         }
         if (parsed.data) {
             code += ', data=data';
@@ -703,6 +736,14 @@
             code += '}\n\n';
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += 'cookies = {\n';
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i1}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += '}\n\n';
+        }
+
         if (parsed.data) {
             code += `data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -716,6 +757,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += `${i1}${i1}headers=headers,\n`;
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i1}${i1}cookies=cookies,\n`;
         }
         if (parsed.data) {
             code += `${i1}${i1}data=data,\n`;
@@ -766,6 +810,14 @@
             code += `${i2}}\n\n`;
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i2}cookies = {\n`;
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i2}${i1}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += `${i2}}\n\n`;
+        }
+
         if (parsed.data) {
             code += `${i2}data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -778,6 +830,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += `${i2}${i1}headers=headers,\n`;
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i2}${i1}cookies=cookies,\n`;
         }
         if (parsed.data) {
             code += `${i2}${i1}data=data,\n`;
@@ -826,6 +881,14 @@
             code += '}\n\n';
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += 'cookies = {\n';
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i1}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += '}\n\n';
+        }
+
         if (parsed.data) {
             code += `data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -840,6 +903,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += `${i1}headers=headers,\n`;
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i1}cookies=cookies,\n`;
         }
         if (parsed.data) {
             code += `${i1}body=data,\n`;
@@ -891,6 +957,14 @@
             code += `${i1}}\n\n`;
         }
 
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i1}cookies = {\n`;
+            for (const [key, value] of Object.entries(parsed.cookies)) {
+                code += `${i1}${i1}${pyStr(key, opts)}: ${pyStr(value, opts)},\n`;
+            }
+            code += `${i1}}\n\n`;
+        }
+
         if (parsed.data) {
             code += `${i1}data = ${pyStr(parsed.data, opts)}\n\n`;
         }
@@ -902,6 +976,9 @@
         }
         if (Object.keys(parsed.headers).length > 0) {
             code += `${i1}${i1}headers=headers,\n`;
+        }
+        if (parsed.cookies && Object.keys(parsed.cookies).length > 0) {
+            code += `${i1}${i1}cookies=cookies,\n`;
         }
         if (parsed.data) {
             code += `${i1}${i1}body=data,\n`;
