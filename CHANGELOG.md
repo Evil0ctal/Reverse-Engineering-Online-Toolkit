@@ -9,6 +9,23 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.14] - 2026-01-24
+
+### 修复
+- **cURL 解析器** - 修复多个 `--data-urlencode` 参数解析丢失问题
+  - 修复当 curl 命令包含多个 `--data-urlencode` 参数时只保留最后一个的问题
+  - 改为正确累加所有参数，用 `&` 连接
+  - 按照 curl 规范对 value 部分进行 URL 编码
+  - 同时修复 `-d`/`--data`/`--data-raw`/`--data-binary` 多参数累加问题
+  - 修复 cURL 对比功能在复杂请求体时差异显示不完整的问题
+- **cURL 转代码** - 修复转换为 Python 代码时丢失 cookie 的问题 (PR #1 by [@JoeanAmier](https://github.com/JoeanAmier))
+  - 修复 Python - httpx (同步/异步)
+  - 修复 Python - curl_cffi (同步/异步)
+  - 修复 Python - rnet (同步/异步)
+  - 修复 Python - aiohttp
+
+---
+
 ## [1.0.13] - 2026-01-15
 
 ### 新增
@@ -398,3 +415,4 @@
 感谢所有为本项目做出贡献的开发者！
 
 - [@Evil0ctal](https://github.com/Evil0ctal) - 项目创建者与主要维护者
+- [@JoeanAmier](https://github.com/JoeanAmier) - 修复 cURL 转代码丢失 cookie 问题 (PR #1)

@@ -9,6 +9,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.14] - 2026-01-24
+
+### Fixed
+- **cURL Parser** - Fixed multiple `--data-urlencode` parameters parsing loss issue
+  - Fixed issue where only the last parameter was kept when curl command contains multiple `--data-urlencode` parameters
+  - Changed to correctly accumulate all parameters, joined with `&`
+  - URL encode the value part according to curl specification
+  - Also fixed `-d`/`--data`/`--data-raw`/`--data-binary` multiple parameter accumulation issue
+  - Fixed cURL comparison showing incomplete differences for complex request bodies
+- **cURL to Code** - Fixed cookie loss when converting to Python code (PR #1 by [@JoeanAmier](https://github.com/JoeanAmier))
+  - Fixed Python - httpx (sync/async)
+  - Fixed Python - curl_cffi (sync/async)
+  - Fixed Python - rnet (sync/async)
+  - Fixed Python - aiohttp
+
+---
+
 ## [1.0.13] - 2026-01-15
 
 ### Added
@@ -398,3 +415,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Thanks to all the developers who contributed to this project!
 
 - [@Evil0ctal](https://github.com/Evil0ctal) - Project creator and main maintainer
+- [@JoeanAmier](https://github.com/JoeanAmier) - Fixed cURL to code cookie loss issue (PR #1)
