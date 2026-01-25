@@ -227,36 +227,36 @@
                     <div class="feature-intro__icon">⚖️</div>
                     <div class="feature-intro__content">
                         <h3 class="feature-intro__title" data-i18n="tools.curl-converter.intro.compare.title">对比 cURL 命令</h3>
-                        <p class="feature-intro__desc" data-i18n="tools.curl-converter.intro.compare.desc">并排对比两个 cURL 命令的差异，快速定位变化的参数。</p>
+                        <p class="feature-intro__desc" data-i18n="tools.curl-converter.intro.compare.desc">对比多个 cURL 命令的差异，快速定位变化的参数。支持无限数量对比。</p>
                         <ul class="feature-intro__list">
                             <li data-i18n="tools.curl-converter.intro.compare.feature1">🔄 对比 URL、查询参数、请求头和请求体的差异</li>
                             <li data-i18n="tools.curl-converter.intro.compare.feature2">🎨 高亮显示新增、删除和修改的内容</li>
-                            <li data-i18n="tools.curl-converter.intro.compare.feature3">📈 生成差异摘要统计</li>
+                            <li data-i18n="tools.curl-converter.intro.compare.feature3">➕ 支持添加多个 cURL 进行对比</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="compare-container">
-                    <div class="compare-input">
-                        <label data-i18n="tools.curl-converter.firstRequest">第一个请求</label>
-                        <div id="compare-editor-1" class="code-editor-container code-editor-container--sm"></div>
-                        <textarea id="compare-input-1" class="form-input form-textarea form-textarea--code"
-                                  data-i18n-placeholder="tools.curl-converter.inputPlaceholder"
-                                  placeholder="粘贴第一个 cURL 命令..."
-                                  style="display: none;"></textarea>
+                <!-- 动态 cURL 输入区域 -->
+                <div class="compare-inputs-wrapper">
+                    <div class="compare-inputs-header">
+                        <span class="compare-count-badge" id="compare-count-badge">2 个请求</span>
+                        <button id="add-compare-btn" class="btn btn--sm btn--outline btn--icon-text" title="添加更多 cURL">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>添加</span>
+                        </button>
                     </div>
-                    <div class="compare-input">
-                        <label data-i18n="tools.curl-converter.secondRequest">第二个请求</label>
-                        <div id="compare-editor-2" class="code-editor-container code-editor-container--sm"></div>
-                        <textarea id="compare-input-2" class="form-input form-textarea form-textarea--code"
-                                  data-i18n-placeholder="tools.curl-converter.inputPlaceholder"
-                                  placeholder="粘贴第二个 cURL 命令..."
-                                  style="display: none;"></textarea>
+                    <div class="compare-container" id="compare-inputs-container">
+                        <!-- 动态生成的 cURL 输入框会插入这里 -->
                     </div>
                 </div>
+
                 <section class="action-section">
                     <button id="compare-btn" class="btn btn--primary" data-i18n="tools.curl-converter.compare">对比</button>
                     <button id="compare-sample-btn" class="btn btn--outline" data-i18n="tools.curl-converter.sample">示例</button>
+                    <button id="compare-clear-btn" class="btn btn--outline" data-i18n="common.clear">清除全部</button>
                 </section>
 
                 <!-- 对比结果 -->
@@ -273,15 +273,8 @@
                         <div class="diff-section" id="diff-query">
                             <h5 data-i18n="tools.curl-converter.queryDiff">查询参数差异</h5>
                             <div class="diff-table-container">
-                                <table class="diff-table">
-                                    <thead>
-                                        <tr>
-                                            <th data-i18n="tools.curl-converter.paramName">参数名</th>
-                                            <th data-i18n="tools.curl-converter.firstValue">第一个值</th>
-                                            <th data-i18n="tools.curl-converter.secondValue">第二个值</th>
-                                            <th data-i18n="tools.curl-converter.status">状态</th>
-                                        </tr>
-                                    </thead>
+                                <table class="diff-table" id="diff-query-table">
+                                    <thead></thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
@@ -289,15 +282,8 @@
                         <div class="diff-section" id="diff-headers">
                             <h5 data-i18n="tools.curl-converter.headersDiff">请求头差异</h5>
                             <div class="diff-table-container">
-                                <table class="diff-table">
-                                    <thead>
-                                        <tr>
-                                            <th data-i18n="tools.curl-converter.headerName">请求头</th>
-                                            <th data-i18n="tools.curl-converter.firstValue">第一个值</th>
-                                            <th data-i18n="tools.curl-converter.secondValue">第二个值</th>
-                                            <th data-i18n="tools.curl-converter.status">状态</th>
-                                        </tr>
-                                    </thead>
+                                <table class="diff-table" id="diff-headers-table">
+                                    <thead></thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
@@ -305,15 +291,8 @@
                         <div class="diff-section" id="diff-body">
                             <h5 data-i18n="tools.curl-converter.bodyDiff">请求体差异</h5>
                             <div class="diff-table-container">
-                                <table class="diff-table">
-                                    <thead>
-                                        <tr>
-                                            <th data-i18n="tools.curl-converter.paramName">参数名</th>
-                                            <th data-i18n="tools.curl-converter.firstValue">第一个值</th>
-                                            <th data-i18n="tools.curl-converter.secondValue">第二个值</th>
-                                            <th data-i18n="tools.curl-converter.status">状态</th>
-                                        </tr>
-                                    </thead>
+                                <table class="diff-table" id="diff-body-table">
+                                    <thead></thead>
                                     <tbody></tbody>
                                 </table>
                             </div>

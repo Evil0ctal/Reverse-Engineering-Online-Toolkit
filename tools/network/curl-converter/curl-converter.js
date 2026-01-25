@@ -13,8 +13,8 @@
 
     // CodeMirror 编辑器实例
     let inputEditor = null;
-    let compareEditor1 = null;
-    let compareEditor2 = null;
+    let compareEditors = []; // 多个对比编辑器数组
+    let compareEditorCount = 0; // 编辑器计数器
     let genInputEditor = null;
     let codeOutputEditor = null;
     let exportedCurlEditor = null;
@@ -1167,6 +1167,294 @@
     /**
      * 对比两个 cURL 命令
      */
+    // ==================== 多 cURL 对比功能 ====================
+
+    /**
+     * 创建对比编辑器输入框
+     */
+    async function createCompareInput(index) {
+        const container = document.getElementById('compare-inputs-container');
+        if (!container) return null;
+
+        compareEditorCount++;
+        const id = compareEditorCount;
+
+        const card = document.createElement('div');
+        card.className = 'compare-input-card';
+        card.dataset.compareId = id;
+
+        // 使用 DOM API 构建元素避免 innerHTML 安全问题
+        const header = document.createElement('div');
+        header.className = 'compare-input-header';
+
+        // 左侧：折叠按钮 + 标签
+        const leftGroup = document.createElement('div');
+        leftGroup.className = 'compare-input-header-left';
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'compare-input-toggle';
+        toggleBtn.title = '折叠';
+        toggleBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+        const label = document.createElement('span');
+        label.className = 'compare-input-label';
+        const numSpan = document.createElement('span');
+        numSpan.className = 'compare-input-number';
+        numSpan.textContent = index;
+        label.appendChild(numSpan);
+        label.appendChild(document.createTextNode(' 请求 ' + index));
+
+        leftGroup.appendChild(toggleBtn);
+        leftGroup.appendChild(label);
+
+        // 右侧：删除按钮
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'compare-input-remove';
+        removeBtn.dataset.removeId = id;
+        removeBtn.title = '移除';
+        removeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
+        header.appendChild(leftGroup);
+        header.appendChild(removeBtn);
+
+        const body = document.createElement('div');
+        body.className = 'compare-input-body';
+        const editorDiv = document.createElement('div');
+        editorDiv.id = 'compare-editor-' + id;
+        editorDiv.className = 'code-editor-container';
+        body.appendChild(editorDiv);
+
+        card.appendChild(header);
+        card.appendChild(body);
+        container.appendChild(card);
+
+        // 创建 CodeMirror 编辑器
+        let editor = null;
+        try {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            if (REOT.CodeEditor) {
+                editor = await REOT.CodeEditor.create('#compare-editor-' + id, {
+                    language: 'shell',
+                    value: '',
+                    readOnly: false,
+                    theme: theme,
+                    lineWrapping: true,
+                    placeholder: '粘贴第 ' + index + ' 个 cURL 命令...'
+                });
+            }
+        } catch (e) {
+            console.error('Failed to create compare editor:', e);
+        }
+
+        const editorInfo = { id, index, editor, element: card };
+        compareEditors.push(editorInfo);
+
+        updateCompareInputsUI();
+        return editorInfo;
+    }
+
+    /**
+     * 移除对比编辑器
+     */
+    function removeCompareInput(id) {
+        const index = compareEditors.findIndex(e => e.id === id);
+        if (index === -1) return;
+
+        // 至少保留2个
+        if (compareEditors.length <= 2) {
+            REOT.utils?.showNotification('至少需要保留 2 个对比输入框', 'warning');
+            return;
+        }
+
+        const editorInfo = compareEditors[index];
+        if (editorInfo.editor && editorInfo.editor.destroy) {
+            editorInfo.editor.destroy();
+        }
+        editorInfo.element.remove();
+        compareEditors.splice(index, 1);
+
+        // 重新编号
+        reindexCompareInputs();
+        updateCompareInputsUI();
+    }
+
+    /**
+     * 重新编号对比输入框
+     */
+    function reindexCompareInputs() {
+        compareEditors.forEach((editorInfo, idx) => {
+            const newIndex = idx + 1;
+            editorInfo.index = newIndex;
+            const label = editorInfo.element.querySelector('.compare-input-label');
+            if (label) {
+                label.innerHTML = '';
+                const numSpan = document.createElement('span');
+                numSpan.className = 'compare-input-number';
+                numSpan.textContent = newIndex;
+                label.appendChild(numSpan);
+                label.appendChild(document.createTextNode(' 请求 ' + newIndex));
+            }
+        });
+    }
+
+    /**
+     * 更新对比输入 UI
+     */
+    function updateCompareInputsUI() {
+        const count = compareEditors.length;
+        const badge = document.getElementById('compare-count-badge');
+        if (badge) {
+            badge.textContent = count + ' 个请求';
+        }
+
+        // 更新删除按钮状态
+        const canRemove = count > 2;
+        compareEditors.forEach(editorInfo => {
+            const removeBtn = editorInfo.element.querySelector('.compare-input-remove');
+            if (removeBtn) {
+                removeBtn.disabled = !canRemove;
+            }
+        });
+
+        // 更新容器列数样式
+        const container = document.getElementById('compare-inputs-container');
+        if (container) {
+            container.classList.remove('cols-3', 'cols-4', 'cols-5-plus');
+            if (count === 3) {
+                container.classList.add('cols-3');
+            } else if (count === 4) {
+                container.classList.add('cols-4');
+            } else if (count >= 5) {
+                container.classList.add('cols-5-plus');
+            }
+        }
+    }
+
+    /**
+     * 初始化对比编辑器（默认2个）
+     */
+    async function initCompareEditors() {
+        const container = document.getElementById('compare-inputs-container');
+        if (!container || compareEditors.length > 0) return;
+
+        await createCompareInput(1);
+        await createCompareInput(2);
+    }
+
+    /**
+     * 清除所有对比编辑器内容
+     */
+    function clearAllCompareInputs() {
+        compareEditors.forEach(editorInfo => {
+            if (editorInfo.editor) {
+                if (editorInfo.editor.setValue) {
+                    editorInfo.editor.setValue('');
+                } else if (editorInfo.editor.dispatch) {
+                    editorInfo.editor.dispatch({
+                        changes: { from: 0, to: editorInfo.editor.state.doc.length, insert: '' }
+                    });
+                }
+            }
+            // 展开输入框
+            editorInfo.element.classList.remove('collapsed');
+        });
+        // 隐藏结果
+        const result = document.getElementById('compare-result');
+        if (result) result.style.display = 'none';
+    }
+
+    /**
+     * 折叠所有对比编辑器输入框
+     */
+    function collapseAllCompareInputs() {
+        compareEditors.forEach(editorInfo => {
+            editorInfo.element.classList.add('collapsed');
+            const toggleBtn = editorInfo.element.querySelector('.compare-input-toggle');
+            if (toggleBtn) {
+                toggleBtn.title = '展开';
+            }
+        });
+    }
+
+    /**
+     * 多 cURL 对比
+     * @param {string[]} curls - cURL 命令数组
+     * @returns {Object} 对比结果
+     */
+    function compareMultipleCurls(curls) {
+        if (curls.length < 2) {
+            throw new Error('至少需要 2 个 cURL 命令进行对比');
+        }
+
+        const parsedList = curls.map(curl => parseCurl(curl));
+
+        // 对比结果结构
+        const diff = {
+            urls: parsedList.map((p, i) => ({ index: i + 1, url: p.url, method: p.method })),
+            query: compareMultipleObjects(parsedList.map(p => p.queryParams)),
+            headers: compareMultipleObjects(parsedList.map(p => p.headers)),
+            body: compareMultipleObjects(parsedList.map(p => p.bodyParams)),
+            count: curls.length,
+            stats: { different: 0, same: 0 }
+        };
+
+        // 统计
+        [diff.query, diff.headers, diff.body].forEach(section => {
+            section.forEach(item => {
+                if (item.allSame) {
+                    diff.stats.same++;
+                } else {
+                    diff.stats.different++;
+                }
+            });
+        });
+
+        return diff;
+    }
+
+    /**
+     * 比较多个对象
+     * @param {Object[]} objects - 对象数组
+     */
+    function compareMultipleObjects(objects) {
+        // 收集所有 key
+        const allKeys = new Set();
+        objects.forEach(obj => {
+            if (obj) {
+                Object.keys(obj).forEach(key => allKeys.add(key));
+            }
+        });
+
+        const results = [];
+
+        allKeys.forEach(key => {
+            const values = objects.map(obj => obj?.[key] ?? undefined);
+            const valuesStr = values.map(v => valueToString(v));
+
+            // 检查是否所有值都相同
+            const firstVal = valuesStr[0];
+            const allSame = valuesStr.every(v => v === firstVal);
+
+            results.push({
+                key,
+                values,
+                valuesStr,
+                allSame
+            });
+        });
+
+        // 排序：不同的排前面
+        results.sort((a, b) => {
+            if (a.allSame !== b.allSame) {
+                return a.allSame ? 1 : -1;
+            }
+            return a.key.localeCompare(b.key);
+        });
+
+        return results;
+    }
+
+    // 保留旧的两个 cURL 对比函数用于兼容
     function compareCurls(curl1, curl2) {
         const parsed1 = parseCurl(curl1);
         const parsed2 = parseCurl(curl2);
@@ -1268,8 +1556,253 @@
         return results;
     }
 
+    // 存储当前对比结果用于复制
+    let currentMultiDiff = null;
+
     /**
-     * 渲染对比结果
+     * 渲染多 cURL 对比结果
+     */
+    function renderMultiCompareResult(diff) {
+        currentMultiDiff = diff;
+        const result = document.getElementById('compare-result');
+        result.style.display = 'block';
+
+        // 统计摘要
+        const stats = document.getElementById('diff-stats');
+        stats.innerHTML = '';
+        const differentStat = document.createElement('div');
+        differentStat.className = 'diff-stat changed';
+        differentStat.innerHTML = '<span class="stat-value">' + diff.stats.different + '</span><span class="stat-label">有差异</span>';
+        const sameStat = document.createElement('div');
+        sameStat.className = 'diff-stat same';
+        sameStat.innerHTML = '<span class="stat-value">' + diff.stats.same + '</span><span class="stat-label">完全相同</span>';
+        stats.appendChild(differentStat);
+        stats.appendChild(sameStat);
+
+        // URL 差异
+        const urlContent = document.querySelector('#diff-url .diff-content');
+        urlContent.innerHTML = '';
+        const urlGrid = document.createElement('div');
+        urlGrid.className = 'diff-url-grid';
+
+        // 检查 URL 是否都相同
+        const allUrlsSame = diff.urls.every(u => u.url === diff.urls[0].url);
+
+        diff.urls.forEach((urlInfo, i) => {
+            const item = document.createElement('div');
+            item.className = 'diff-url-item' + (allUrlsSame ? ' url-same' : ' url-different');
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'url-label';
+            labelSpan.textContent = '请求 ' + urlInfo.index;
+            const valueSpan = document.createElement('span');
+            valueSpan.className = 'url-value clickable-cell';
+            valueSpan.dataset.copy = urlInfo.url || '';
+            valueSpan.title = urlInfo.url || '';
+            valueSpan.textContent = urlInfo.url || '';
+            item.appendChild(labelSpan);
+            item.appendChild(valueSpan);
+            urlGrid.appendChild(item);
+        });
+        urlContent.appendChild(urlGrid);
+
+        // 渲染多列差异表格并添加复制按钮
+        renderMultiDiffTable('#diff-query-table', diff.query, diff.count, 'query');
+        renderMultiDiffTable('#diff-headers-table', diff.headers, diff.count, 'headers');
+        renderMultiDiffTable('#diff-body-table', diff.body, diff.count, 'body');
+
+        // 添加复制JSON按钮到各个section
+        addCopyJsonButtons();
+    }
+
+    /**
+     * 添加复制JSON按钮到差异section
+     */
+    function addCopyJsonButtons() {
+        const sections = [
+            { id: 'diff-query', type: 'query', label: '查询参数' },
+            { id: 'diff-headers', type: 'headers', label: '请求头' },
+            { id: 'diff-body', type: 'body', label: '请求体' }
+        ];
+
+        sections.forEach(section => {
+            const sectionEl = document.getElementById(section.id);
+            if (!sectionEl) return;
+
+            const h5 = sectionEl.querySelector('h5');
+            if (!h5) return;
+
+            // 检查是否已有按钮容器
+            let btnContainer = sectionEl.querySelector('.diff-section-actions');
+            if (!btnContainer) {
+                // 创建标题和按钮的容器
+                const headerWrapper = document.createElement('div');
+                headerWrapper.className = 'diff-section-header';
+
+                // 移动h5到容器中
+                h5.parentNode.insertBefore(headerWrapper, h5);
+                headerWrapper.appendChild(h5);
+
+                // 创建按钮容器
+                btnContainer = document.createElement('div');
+                btnContainer.className = 'diff-section-actions';
+                headerWrapper.appendChild(btnContainer);
+            } else {
+                btnContainer.innerHTML = '';
+            }
+
+            // 复制不同参数按钮
+            const copyDiffBtn = document.createElement('button');
+            copyDiffBtn.className = 'btn btn--sm btn--outline';
+            copyDiffBtn.dataset.copyType = section.type;
+            copyDiffBtn.dataset.copyMode = 'different';
+            copyDiffBtn.textContent = '复制差异';
+            copyDiffBtn.title = '复制有差异的参数为 JSON';
+            btnContainer.appendChild(copyDiffBtn);
+
+            // 复制全部按钮
+            const copyAllBtn = document.createElement('button');
+            copyAllBtn.className = 'btn btn--sm btn--outline';
+            copyAllBtn.dataset.copyType = section.type;
+            copyAllBtn.dataset.copyMode = 'all';
+            copyAllBtn.textContent = '复制全部';
+            copyAllBtn.title = '复制全部参数为 JSON';
+            btnContainer.appendChild(copyAllBtn);
+        });
+    }
+
+    /**
+     * 复制差异参数为JSON
+     */
+    function copyDiffAsJson(type, mode) {
+        if (!currentMultiDiff) {
+            REOT.utils?.showNotification('没有可复制的数据', 'warning');
+            return;
+        }
+
+        let items = currentMultiDiff[type];
+        if (!items || items.length === 0) {
+            REOT.utils?.showNotification('没有可复制的数据', 'warning');
+            return;
+        }
+
+        // 根据模式过滤
+        if (mode === 'different') {
+            items = items.filter(item => !item.allSame);
+        }
+
+        if (items.length === 0) {
+            REOT.utils?.showNotification('没有差异数据', 'info');
+            return;
+        }
+
+        // 构建每个请求的参数对象
+        const result = {};
+        for (let i = 0; i < currentMultiDiff.count; i++) {
+            result['请求' + (i + 1)] = {};
+        }
+
+        items.forEach(item => {
+            item.values.forEach((val, i) => {
+                if (val !== undefined && val !== '') {
+                    result['请求' + (i + 1)][item.key] = val;
+                }
+            });
+        });
+
+        const jsonStr = JSON.stringify(result, null, 2);
+        REOT.utils?.copyToClipboard(jsonStr);
+        REOT.utils?.showNotification('已复制 ' + items.length + ' 个参数', 'success');
+    }
+
+    /**
+     * 渲染多列差异表格
+     */
+    function renderMultiDiffTable(tableSelector, items, count, type) {
+        const table = document.querySelector(tableSelector);
+        if (!table) return;
+
+        table.classList.add('multi-compare');
+        const thead = table.querySelector('thead');
+        const tbody = table.querySelector('tbody');
+        thead.innerHTML = '';
+        tbody.innerHTML = '';
+
+        // 创建表头
+        const headerRow = document.createElement('tr');
+        const keyTh = document.createElement('th');
+        keyTh.textContent = '参数名';
+        headerRow.appendChild(keyTh);
+
+        for (let i = 1; i <= count; i++) {
+            const th = document.createElement('th');
+            th.className = 'value-col';
+            th.textContent = '请求 ' + i;
+            headerRow.appendChild(th);
+        }
+
+        const statusTh = document.createElement('th');
+        statusTh.textContent = '状态';
+        headerRow.appendChild(statusTh);
+        thead.appendChild(headerRow);
+
+        // 空数据提示
+        if (items.length === 0) {
+            const emptyRow = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = count + 2;
+            emptyTd.style.textAlign = 'center';
+            emptyTd.style.color = 'var(--text-muted)';
+            emptyTd.textContent = '无数据';
+            emptyRow.appendChild(emptyTd);
+            tbody.appendChild(emptyRow);
+            return;
+        }
+
+        // 渲染数据行
+        const maxDisplayLen = 150;
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = item.allSame ? 'diff-same' : 'diff-changed';
+
+            // 参数名列
+            const keyTd = document.createElement('td');
+            keyTd.className = 'diff-key clickable-cell';
+            keyTd.dataset.copy = item.key;
+            keyTd.title = item.key;
+            keyTd.textContent = item.key;
+            tr.appendChild(keyTd);
+
+            // 各请求的值列
+            item.valuesStr.forEach((valStr, i) => {
+                const valTd = document.createElement('td');
+                valTd.className = 'diff-value value-col clickable-cell';
+                valTd.dataset.copy = valStr;
+                valTd.title = valStr;
+                const displayVal = valStr.length > maxDisplayLen ? valStr.substring(0, maxDisplayLen) + '...' : valStr;
+                valTd.textContent = displayVal;
+
+                // 如果不同，高亮显示
+                if (!item.allSame && valStr !== item.valuesStr[0]) {
+                    valTd.style.background = 'rgba(245, 158, 11, 0.15)';
+                }
+                tr.appendChild(valTd);
+            });
+
+            // 状态列
+            const statusTd = document.createElement('td');
+            statusTd.className = 'diff-status';
+            const badge = document.createElement('span');
+            badge.className = 'status-badge ' + (item.allSame ? 'same' : 'changed');
+            badge.textContent = item.allSame ? '相同' : '不同';
+            statusTd.appendChild(badge);
+            tr.appendChild(statusTd);
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    /**
+     * 渲染对比结果（兼容旧版两个 cURL 对比）
      */
     function renderCompareResult(diff) {
         const result = document.getElementById('compare-result');
@@ -1277,73 +1810,115 @@
 
         // 统计摘要
         const stats = document.getElementById('diff-stats');
-        stats.innerHTML = `
-            <div class="diff-stat changed">
-                <span class="stat-value">${diff.stats.changed}</span>
-                <span class="stat-label">已改变</span>
-            </div>
-            <div class="diff-stat added">
-                <span class="stat-value">${diff.stats.added}</span>
-                <span class="stat-label">新增</span>
-            </div>
-            <div class="diff-stat removed">
-                <span class="stat-value">${diff.stats.removed}</span>
-                <span class="stat-label">移除</span>
-            </div>
-            <div class="diff-stat same">
-                <span class="stat-value">${diff.stats.same}</span>
-                <span class="stat-label">相同</span>
-            </div>
-        `;
+        stats.innerHTML = '';
+        const changedStat = document.createElement('div');
+        changedStat.className = 'diff-stat changed';
+        changedStat.innerHTML = '<span class="stat-value">' + diff.stats.changed + '</span><span class="stat-label">已改变</span>';
+        const addedStat = document.createElement('div');
+        addedStat.className = 'diff-stat added';
+        addedStat.innerHTML = '<span class="stat-value">' + diff.stats.added + '</span><span class="stat-label">新增</span>';
+        const removedStat = document.createElement('div');
+        removedStat.className = 'diff-stat removed';
+        removedStat.innerHTML = '<span class="stat-value">' + diff.stats.removed + '</span><span class="stat-label">移除</span>';
+        const sameStat = document.createElement('div');
+        sameStat.className = 'diff-stat same';
+        sameStat.innerHTML = '<span class="stat-value">' + diff.stats.same + '</span><span class="stat-label">相同</span>';
+        stats.appendChild(changedStat);
+        stats.appendChild(addedStat);
+        stats.appendChild(removedStat);
+        stats.appendChild(sameStat);
 
         // URL 差异
         const urlContent = document.querySelector('#diff-url .diff-content');
+        urlContent.innerHTML = '';
         if (diff.url.status !== 'same') {
-            urlContent.innerHTML = `
-                <div style="color: #ef4444;">- ${escapeHtml(diff.url.val1 || '(空)')}</div>
-                <div style="color: #10b981;">+ ${escapeHtml(diff.url.val2 || '(空)')}</div>
-            `;
+            const div1 = document.createElement('div');
+            div1.style.color = '#ef4444';
+            div1.textContent = '- ' + (diff.url.val1 || '(空)');
+            const div2 = document.createElement('div');
+            div2.style.color = '#10b981';
+            div2.textContent = '+ ' + (diff.url.val2 || '(空)');
+            urlContent.appendChild(div1);
+            urlContent.appendChild(div2);
         } else {
-            urlContent.innerHTML = `<div style="color: var(--text-muted);">URL 相同</div>`;
+            const div = document.createElement('div');
+            div.style.color = 'var(--text-muted)';
+            div.textContent = 'URL 相同';
+            urlContent.appendChild(div);
         }
 
-        // 渲染差异表格
-        renderDiffTable('#diff-query tbody', diff.query);
-        renderDiffTable('#diff-headers tbody', diff.headers);
-        renderDiffTable('#diff-body tbody', diff.body);
+        // 渲染差异表格（转换为多列格式）
+        const convertToMulti = (items) => items.map(item => ({
+            key: item.key,
+            values: [item.val1, item.val2],
+            valuesStr: [valueToString(item.val1), valueToString(item.val2)],
+            allSame: item.status === 'same'
+        }));
+
+        renderMultiDiffTable('#diff-query-table', convertToMulti(diff.query), 2);
+        renderMultiDiffTable('#diff-headers-table', convertToMulti(diff.headers), 2);
+        renderMultiDiffTable('#diff-body-table', convertToMulti(diff.body), 2);
     }
 
     /**
-     * 渲染差异表格
+     * 渲染差异表格（旧版，保留兼容）
      */
     function renderDiffTable(selector, items) {
         const tbody = document.querySelector(selector);
+        if (!tbody) return;
         tbody.innerHTML = '';
 
         if (items.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">无数据</td></tr>';
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 4;
+            td.style.textAlign = 'center';
+            td.style.color = 'var(--text-muted)';
+            td.textContent = '无数据';
+            tr.appendChild(td);
+            tbody.appendChild(tr);
             return;
         }
 
+        const maxDisplayLen = 200;
         items.forEach(item => {
             const tr = document.createElement('tr');
-            tr.className = `diff-${item.status}`;
+            tr.className = 'diff-' + item.status;
 
-            // 使用 valueToString 正确处理复杂值
             const val1Str = valueToString(item.val1);
             const val2Str = valueToString(item.val2);
-
-            // 截断过长的值用于显示
-            const maxDisplayLen = 200;
             const val1Display = val1Str.length > maxDisplayLen ? val1Str.substring(0, maxDisplayLen) + '...' : val1Str;
             const val2Display = val2Str.length > maxDisplayLen ? val2Str.substring(0, maxDisplayLen) + '...' : val2Str;
 
-            tr.innerHTML = `
-                <td class="diff-key clickable-cell" data-copy="${escapeHtml(item.key)}" title="${escapeHtml(item.key)}">${escapeHtml(item.key)}</td>
-                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val1Str)}" title="${escapeHtml(val1Str)}">${escapeHtml(val1Display)}</td>
-                <td class="diff-value clickable-cell" data-copy="${escapeHtml(val2Str)}" title="${escapeHtml(val2Str)}">${escapeHtml(val2Display)}</td>
-                <td class="diff-status"><span class="status-badge ${item.status}">${getStatusText(item.status)}</span></td>
-            `;
+            const keyTd = document.createElement('td');
+            keyTd.className = 'diff-key clickable-cell';
+            keyTd.dataset.copy = item.key;
+            keyTd.title = item.key;
+            keyTd.textContent = item.key;
+
+            const val1Td = document.createElement('td');
+            val1Td.className = 'diff-value clickable-cell';
+            val1Td.dataset.copy = val1Str;
+            val1Td.title = val1Str;
+            val1Td.textContent = val1Display;
+
+            const val2Td = document.createElement('td');
+            val2Td.className = 'diff-value clickable-cell';
+            val2Td.dataset.copy = val2Str;
+            val2Td.title = val2Str;
+            val2Td.textContent = val2Display;
+
+            const statusTd = document.createElement('td');
+            statusTd.className = 'diff-status';
+            const badge = document.createElement('span');
+            badge.className = 'status-badge ' + item.status;
+            badge.textContent = getStatusText(item.status);
+            statusTd.appendChild(badge);
+
+            tr.appendChild(keyTd);
+            tr.appendChild(val1Td);
+            tr.appendChild(val2Td);
+            tr.appendChild(statusTd);
             tbody.appendChild(tr);
         });
     }
@@ -1588,27 +2163,9 @@
                 });
             }
 
-            // 对比页面的编辑器 (使用 shell 语法高亮)
-            if (document.getElementById('compare-editor-1')) {
-                compareEditor1 = await REOT.CodeEditor.create('#compare-editor-1', {
-                    language: 'shell',
-                    value: '',
-                    readOnly: false,
-                    theme: theme,
-                    lineWrapping: true,
-                    placeholder: '粘贴第一个 cURL 命令...'
-                });
-            }
-
-            if (document.getElementById('compare-editor-2')) {
-                compareEditor2 = await REOT.CodeEditor.create('#compare-editor-2', {
-                    language: 'shell',
-                    value: '',
-                    readOnly: false,
-                    theme: theme,
-                    lineWrapping: true,
-                    placeholder: '粘贴第二个 cURL 命令...'
-                });
+            // 对比页面的编辑器 (动态创建)
+            if (document.getElementById('compare-inputs-container')) {
+                await initCompareEditors();
             }
 
             // 代码生成页面的输入编辑器 (使用 shell 语法高亮)
@@ -1753,31 +2310,131 @@
             }
         }
 
+        // 添加对比输入框按钮
+        if (target.id === 'add-compare-btn' || target.closest('#add-compare-btn')) {
+            const newIndex = compareEditors.length + 1;
+            await createCompareInput(newIndex);
+            REOT.utils?.showNotification('已添加第 ' + newIndex + ' 个对比输入', 'success');
+            return;
+        }
+
+        // 移除对比输入框按钮
+        const removeBtn = target.closest('.compare-input-remove');
+        if (removeBtn) {
+            const removeId = parseInt(removeBtn.dataset.removeId);
+            if (removeId) {
+                removeCompareInput(removeId);
+            }
+            return;
+        }
+
+        // 展开/折叠对比输入框
+        const toggleBtn = target.closest('.compare-input-toggle');
+        if (toggleBtn) {
+            const card = toggleBtn.closest('.compare-input-card');
+            if (card) {
+                card.classList.toggle('collapsed');
+                const isCollapsed = card.classList.contains('collapsed');
+                toggleBtn.title = isCollapsed ? '展开' : '折叠';
+                toggleBtn.querySelector('svg').style.transform = isCollapsed ? 'rotate(-90deg)' : '';
+            }
+            return;
+        }
+
+        // 复制差异参数为JSON按钮
+        if (target.dataset.copyType && target.dataset.copyMode) {
+            copyDiffAsJson(target.dataset.copyType, target.dataset.copyMode);
+            return;
+        }
+        const copyJsonBtn = target.closest('[data-copy-type][data-copy-mode]');
+        if (copyJsonBtn) {
+            copyDiffAsJson(copyJsonBtn.dataset.copyType, copyJsonBtn.dataset.copyMode);
+            return;
+        }
+
+        // 清除全部按钮
+        if (target.id === 'compare-clear-btn' || target.closest('#compare-clear-btn')) {
+            clearAllCompareInputs();
+            REOT.utils?.showNotification('已清除全部内容', 'success');
+            return;
+        }
+
         // 对比按钮
         if (target.id === 'compare-btn' || target.closest('#compare-btn')) {
-            const curl1 = getEditorValue(compareEditor1, 'compare-input-1');
-            const curl2 = getEditorValue(compareEditor2, 'compare-input-2');
+            // 收集所有 cURL 输入
+            const curls = [];
+            let hasEmpty = false;
 
-            if (!curl1.trim() || !curl2.trim()) {
-                REOT.utils?.showNotification('请输入两个 cURL 命令', 'warning');
+            compareEditors.forEach(editorInfo => {
+                let value = '';
+                if (editorInfo.editor) {
+                    if (editorInfo.editor.getValue) {
+                        value = editorInfo.editor.getValue();
+                    } else if (editorInfo.editor.state) {
+                        value = editorInfo.editor.state.doc.toString();
+                    }
+                }
+                if (!value.trim()) {
+                    hasEmpty = true;
+                } else {
+                    curls.push(value);
+                }
+            });
+
+            if (curls.length < 2) {
+                REOT.utils?.showNotification('至少需要填写 2 个 cURL 命令', 'warning');
                 return;
             }
 
+            if (hasEmpty && curls.length < compareEditors.length) {
+                // 有空的输入框，但有足够的非空输入
+                REOT.utils?.showNotification('部分输入框为空，将只对比已填写的 ' + curls.length + ' 个请求', 'info');
+            }
+
             try {
-                const diff = compareCurls(curl1, curl2);
-                renderCompareResult(diff);
-                REOT.utils?.showNotification('对比完成', 'success');
+                const diff = compareMultipleCurls(curls);
+                renderMultiCompareResult(diff);
+                // 对比完成后折叠所有输入框
+                collapseAllCompareInputs();
+                REOT.utils?.showNotification('对比完成，共 ' + curls.length + ' 个请求', 'success');
             } catch (error) {
                 REOT.utils?.showNotification(error.message, 'error');
             }
+            return;
         }
 
         // 对比示例按钮
         if (target.id === 'compare-sample-btn' || target.closest('#compare-sample-btn')) {
-            setEditorValue(compareEditor1, 'compare-input-1', SAMPLE_COMPARE_1);
-            setEditorValue(compareEditor2, 'compare-input-2', SAMPLE_COMPARE_2);
-            const diff = compareCurls(SAMPLE_COMPARE_1, SAMPLE_COMPARE_2);
-            renderCompareResult(diff);
+            // 确保至少有2个输入框
+            while (compareEditors.length < 2) {
+                await createCompareInput(compareEditors.length + 1);
+            }
+
+            // 设置示例值
+            if (compareEditors[0] && compareEditors[0].editor) {
+                if (compareEditors[0].editor.setValue) {
+                    compareEditors[0].editor.setValue(SAMPLE_COMPARE_1);
+                } else if (compareEditors[0].editor.dispatch) {
+                    compareEditors[0].editor.dispatch({
+                        changes: { from: 0, to: compareEditors[0].editor.state.doc.length, insert: SAMPLE_COMPARE_1 }
+                    });
+                }
+            }
+            if (compareEditors[1] && compareEditors[1].editor) {
+                if (compareEditors[1].editor.setValue) {
+                    compareEditors[1].editor.setValue(SAMPLE_COMPARE_2);
+                } else if (compareEditors[1].editor.dispatch) {
+                    compareEditors[1].editor.dispatch({
+                        changes: { from: 0, to: compareEditors[1].editor.state.doc.length, insert: SAMPLE_COMPARE_2 }
+                    });
+                }
+            }
+
+            const diff = compareMultipleCurls([SAMPLE_COMPARE_1, SAMPLE_COMPARE_2]);
+            renderMultiCompareResult(diff);
+            // 对比完成后折叠所有输入框
+            collapseAllCompareInputs();
+            return;
         }
 
         // 代码生成按钮
@@ -1964,8 +2621,12 @@
         parseCurl,
         generateCode,
         compareCurls,
+        compareMultipleCurls,
         inferDataType,
         initializeEditors,
+        initCompareEditors,
+        createCompareInput,
+        removeCompareInput,
         detectShellType,
         SHELL_TYPES
     };
