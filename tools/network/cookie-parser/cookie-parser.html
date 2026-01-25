@@ -24,26 +24,34 @@
         </header>
 
         <main class="tool-main">
-            <!-- 输入区域 -->
-            <section class="input-section">
-                <label data-i18n="common.input">输入</label>
-                <textarea id="input"
-                          class="form-input form-textarea form-textarea--code"
-                          data-i18n-placeholder="tools.cookie-parser.inputPlaceholder"
-                          placeholder="请输入 Cookie（支持字符串、JSON 或 Netscape 格式）..."></textarea>
-            </section>
+            <!-- 功能选项卡 -->
+            <div class="feature-tabs">
+                <button class="feature-tab active" data-feature="parse">解析</button>
+                <button class="feature-tab" data-feature="compare">对比</button>
+            </div>
 
-            <!-- 操作按钮 -->
-            <section class="action-section">
-                <button id="parse-btn" class="btn btn--primary" data-i18n="tools.cookie-parser.parse">解析</button>
-                <button id="get-browser-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.getBrowser">获取浏览器 Cookie</button>
-                <button id="to-string-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toString">转为字符串</button>
-                <button id="to-json-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toJsonList">转为 JSON 列表</button>
-                <button id="to-json-object-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toJsonObject">转为 JSON 对象</button>
-                <button id="to-netscape-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toNetscape">转为 Netscape</button>
-                <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
-                <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制</button>
-            </section>
+            <!-- 解析功能区 -->
+            <div id="parse-section" class="feature-section active">
+                <!-- 输入区域 -->
+                <section class="input-section">
+                    <label data-i18n="common.input">输入</label>
+                    <textarea id="input"
+                              class="form-input form-textarea form-textarea--code"
+                              data-i18n-placeholder="tools.cookie-parser.inputPlaceholder"
+                              placeholder="请输入 Cookie（支持字符串、JSON 或 Netscape 格式）..."></textarea>
+                </section>
+
+                <!-- 操作按钮 -->
+                <section class="action-section">
+                    <button id="parse-btn" class="btn btn--primary" data-i18n="tools.cookie-parser.parse">解析</button>
+                    <button id="get-browser-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.getBrowser">获取浏览器 Cookie</button>
+                    <button id="to-string-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toString">转为字符串</button>
+                    <button id="to-json-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toJsonList">转为 JSON 列表</button>
+                    <button id="to-json-object-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toJsonObject">转为 JSON 对象</button>
+                    <button id="to-netscape-btn" class="btn btn--secondary" data-i18n="tools.cookie-parser.toNetscape">转为 Netscape</button>
+                    <button id="clear-btn" class="btn btn--outline" data-i18n="common.clear">清除</button>
+                    <button id="copy-btn" class="btn btn--outline" data-i18n="common.copy">复制</button>
+                </section>
 
             <!-- 解析结果表格 -->
             <section class="output-section" id="table-section" style="display: none;">
@@ -90,11 +98,77 @@
                           class="form-input form-textarea form-textarea--code"
                           readonly></textarea>
             </section>
+            </div>
+
+            <!-- 对比功能区 -->
+            <div id="compare-section" class="feature-section">
+                <div class="feature-intro">
+                    <div class="feature-intro__icon">⚖️</div>
+                    <div class="feature-intro__content">
+                        <h3 class="feature-intro__title">对比 Cookie</h3>
+                        <p class="feature-intro__desc">对比多个 Cookie 的差异，快速定位变化的参数。支持无限数量对比。</p>
+                        <ul class="feature-intro__list">
+                            <li>🔄 对比 Cookie 名称和值的差异</li>
+                            <li>🎨 高亮显示新增、删除和修改的内容</li>
+                            <li>➕ 支持添加多个 Cookie 进行对比</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 动态 Cookie 输入区域 -->
+                <div class="compare-inputs-wrapper">
+                    <div class="compare-inputs-header">
+                        <span class="compare-count-badge" id="cookie-compare-count-badge">2 个 Cookie</span>
+                        <button id="add-cookie-compare-btn" class="btn btn--sm btn--outline btn--icon-text" title="添加更多 Cookie">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>添加</span>
+                        </button>
+                    </div>
+                    <div class="compare-container" id="cookie-compare-inputs-container">
+                        <!-- 动态生成的 Cookie 输入框会插入这里 -->
+                    </div>
+                </div>
+
+                <section class="action-section">
+                    <button id="cookie-compare-btn" class="btn btn--primary">对比</button>
+                    <button id="cookie-compare-sample-btn" class="btn btn--outline">示例</button>
+                    <button id="cookie-compare-clear-btn" class="btn btn--outline">清除全部</button>
+                </section>
+
+                <!-- 对比结果 -->
+                <div id="cookie-compare-result" class="compare-result" style="display: none;">
+                    <div class="diff-summary">
+                        <h4>差异摘要</h4>
+                        <div class="diff-stats" id="cookie-diff-stats"></div>
+                    </div>
+                    <div class="diff-details">
+                        <div class="diff-section" id="diff-cookies">
+                            <div class="diff-section-header">
+                                <h5>Cookie 差异</h5>
+                                <div class="diff-section-actions">
+                                    <button class="btn btn--sm btn--outline copy-diff-btn" data-type="cookies" data-mode="diff">复制差异</button>
+                                    <button class="btn btn--sm btn--outline copy-diff-btn" data-type="cookies" data-mode="all">复制全部</button>
+                                </div>
+                            </div>
+                            <div class="diff-table-container">
+                                <table class="diff-table" id="diff-cookies-table">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script src="../../../assets/js/utils.js"></script>
     <script src="../../../assets/js/i18n.js"></script>
+    <script src="../../../assets/js/code-editor.js"></script>
     <script src="cookie-parser.js"></script>
 </body>
 </html>

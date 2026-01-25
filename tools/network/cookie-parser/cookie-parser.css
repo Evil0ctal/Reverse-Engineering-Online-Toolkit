@@ -178,3 +178,625 @@
 [data-theme="dark"] .stat-item {
     background: var(--bg-tertiary);
 }
+
+/* ==================== 功能选项卡 ==================== */
+.feature-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 4px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.feature-tab {
+    padding: 8px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.feature-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+.feature-tab.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.feature-section {
+    display: none;
+}
+
+.feature-section.active {
+    display: block;
+}
+
+/* ==================== 功能介绍卡片 ==================== */
+.feature-intro {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.feature-intro__icon {
+    font-size: 2.5em;
+    flex-shrink: 0;
+}
+
+.feature-intro__content {
+    flex: 1;
+}
+
+.feature-intro__title {
+    margin: 0 0 8px 0;
+    font-size: 1.2em;
+    color: var(--text-primary);
+}
+
+.feature-intro__desc {
+    margin: 0 0 12px 0;
+    color: var(--text-secondary);
+    font-size: 0.95em;
+}
+
+.feature-intro__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.feature-intro__list li {
+    padding: 4px 0;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+/* ==================== 对比输入区域 ==================== */
+.compare-inputs-wrapper {
+    margin-bottom: 20px;
+}
+
+.compare-inputs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.compare-count-badge {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.compare-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 12px;
+}
+
+.compare-input-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.compare-input-card:hover {
+    border-color: var(--color-primary-light);
+}
+
+.compare-input-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-input-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    font-size: 0.9em;
+    color: var(--text-primary);
+}
+
+.compare-input-toggle,
+.compare-input-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.compare-input-toggle:hover,
+.compare-input-remove:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.compare-input-remove:hover {
+    color: var(--color-danger);
+}
+
+.compare-input-toggle svg {
+    transition: transform 0.2s ease;
+}
+
+.compare-input-body {
+    padding: 12px;
+    transition: all 0.2s ease;
+}
+
+.compare-textarea {
+    min-height: 120px;
+    max-height: 200px;
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 0.85em;
+    resize: vertical;
+}
+
+.compare-input-card {
+    min-width: 0;
+}
+
+/* 代码编辑器容器 */
+.compare-input-body .code-editor-container {
+    min-height: 120px;
+    max-height: 200px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.compare-input-body .code-editor-container .cm-editor {
+    height: 100%;
+    min-height: 120px;
+    max-height: 200px;
+}
+
+.compare-input-body .code-editor-container .cm-scroller {
+    overflow: auto;
+}
+
+/* 输入框头部左侧布局 */
+.compare-input-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.compare-input-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.75em;
+    font-weight: 600;
+    border-radius: 50%;
+}
+
+/* 折叠状态 */
+.compare-input-card.collapsed .compare-input-body {
+    display: none;
+}
+
+.compare-input-card.collapsed .compare-input-header {
+    border-bottom: none;
+}
+
+.compare-input-card.collapsed .compare-input-toggle svg {
+    transform: rotate(-90deg);
+}
+
+/* ==================== 对比结果 ==================== */
+.compare-result {
+    margin-top: 24px;
+}
+
+.diff-summary {
+    margin-bottom: 24px;
+}
+
+.diff-summary h4 {
+    margin: 0 0 12px 0;
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.diff-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.diff-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: var(--bg-secondary);
+}
+
+.diff-stat-value {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.diff-stat-label {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.diff-stat--identical .diff-stat-value {
+    color: var(--color-success);
+}
+
+.diff-stat--different .diff-stat-value {
+    color: var(--color-danger);
+}
+
+.diff-stat--partial .diff-stat-value {
+    color: var(--color-warning);
+}
+
+/* ==================== 差异详情 ==================== */
+.diff-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.diff-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.diff-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.diff-section-header h5 {
+    margin: 0;
+    font-size: 0.95em;
+    color: var(--text-primary);
+}
+
+.diff-section-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.diff-table-container {
+    overflow-x: auto;
+}
+
+.diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+}
+
+.diff-table th,
+.diff-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.diff-table th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.diff-table tr:last-child td {
+    border-bottom: none;
+}
+
+.diff-value {
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    color: var(--text-secondary);
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+}
+
+.diff-value:not(.diff-value--missing):hover {
+    background: var(--bg-tertiary);
+    color: var(--color-primary);
+}
+
+.diff-value:not(.diff-value--missing)::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.diff-value:not(.diff-value--missing):hover::after {
+    opacity: 0.6;
+}
+
+.diff-value--missing {
+    color: var(--text-muted);
+    font-style: italic;
+    cursor: default;
+}
+
+.diff-key {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.diff-key:hover {
+    background: var(--bg-tertiary);
+    color: var(--color-primary);
+}
+
+.diff-status {
+    font-size: 0.8em;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.diff-status--identical {
+    background: rgba(var(--color-success-rgb, 46, 160, 67), 0.15);
+    color: var(--color-success);
+}
+
+.diff-status--different {
+    background: rgba(var(--color-danger-rgb, 248, 81, 73), 0.15);
+    color: var(--color-danger);
+}
+
+.diff-status--partial {
+    background: rgba(var(--color-warning-rgb, 210, 153, 34), 0.15);
+    color: var(--color-warning);
+}
+
+/* 差异行高亮 */
+.diff-row--different {
+    background: rgba(var(--color-danger-rgb, 248, 81, 73), 0.05);
+}
+
+.diff-row--partial {
+    background: rgba(var(--color-warning-rgb, 210, 153, 34), 0.05);
+}
+
+.empty-cell {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 24px !important;
+}
+
+/* ==================== 按钮样式 ==================== */
+.btn--icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn--icon-text svg {
+    flex-shrink: 0;
+}
+
+/* ==================== 多列差异表优化 ==================== */
+.diff-table-container {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.diff-table {
+    table-layout: auto;
+}
+
+.diff-table th:first-child,
+.diff-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--bg-secondary);
+}
+
+.diff-table td:first-child {
+    background: var(--bg-primary);
+}
+
+.diff-row--different td:first-child {
+    background: rgba(var(--color-danger-rgb, 248, 81, 73), 0.05);
+}
+
+.diff-row--partial td:first-child {
+    background: rgba(var(--color-warning-rgb, 210, 153, 34), 0.05);
+}
+
+.diff-table th:last-child,
+.diff-table td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+}
+
+.diff-table th:last-child {
+    background: var(--bg-secondary);
+}
+
+.diff-table td:last-child {
+    background: var(--bg-primary);
+}
+
+.diff-row--different td:last-child {
+    background: rgba(var(--color-danger-rgb, 248, 81, 73), 0.05);
+}
+
+.diff-row--partial td:last-child {
+    background: rgba(var(--color-warning-rgb, 210, 153, 34), 0.05);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 768px) {
+    .feature-tabs {
+        width: 100%;
+    }
+
+    .feature-tab {
+        flex: 1;
+        text-align: center;
+        padding: 8px 12px;
+    }
+
+    .feature-intro {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .feature-intro__icon {
+        font-size: 2em;
+    }
+
+    .diff-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .diff-stat {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px 16px;
+    }
+
+    .diff-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .compare-inputs-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .compare-container {
+        grid-template-columns: 1fr;
+    }
+
+    .diff-value {
+        max-width: 120px;
+    }
+}
+
+/* ==================== 暗色主题 ==================== */
+[data-theme="dark"] .feature-tabs {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .feature-intro {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+}
+
+[data-theme="dark"] .compare-input-card {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .compare-input-header {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .diff-section {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .diff-stat {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .diff-table th {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .diff-table th:first-child,
+[data-theme="dark"] .diff-table th:last-child {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .diff-table td:first-child,
+[data-theme="dark"] .diff-table td:last-child {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .diff-row--different td:first-child,
+[data-theme="dark"] .diff-row--different td:last-child {
+    background: rgba(var(--color-danger-rgb, 248, 81, 73), 0.08);
+}
+
+[data-theme="dark"] .diff-row--partial td:first-child,
+[data-theme="dark"] .diff-row--partial td:last-child {
+    background: rgba(var(--color-warning-rgb, 210, 153, 34), 0.08);
+}
+
+[data-theme="dark"] .diff-value:not(.diff-value--missing):hover {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .diff-key:hover {
+    background: var(--bg-primary);
+}

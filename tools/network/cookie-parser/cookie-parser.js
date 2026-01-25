@@ -11,6 +11,10 @@
     let cookies = [];
     let inputFormat = 'string'; // 'string' | 'json' | 'netscape' - 记录输入格式
 
+    // 对比功能相关变量
+    let compareInputs = [];
+    let compareInputCount = 0;
+
     /**
      * 检测输入格式
      */
@@ -648,6 +652,584 @@
                     }
                 }
             }
+        }
+    });
+
+    // ==================== 对比功能 ====================
+
+    /**
+     * 创建对比输入框（使用 CodeMirror 编辑器）
+     */
+    async function createCompareInput(index) {
+        const id = ++compareInputCount;
+        const container = document.getElementById('cookie-compare-inputs-container');
+        if (!container) return null;
+
+        const card = document.createElement('div');
+        card.className = 'compare-input-card';
+        card.dataset.id = id;
+
+        // 构建 DOM 元素
+        const header = document.createElement('div');
+        header.className = 'compare-input-header';
+
+        // 左侧：折叠按钮 + 标签
+        const leftGroup = document.createElement('div');
+        leftGroup.className = 'compare-input-header-left';
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'compare-input-toggle';
+        toggleBtn.title = '折叠';
+        toggleBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+        const label = document.createElement('span');
+        label.className = 'compare-input-label';
+        const numSpan = document.createElement('span');
+        numSpan.className = 'compare-input-number';
+        numSpan.textContent = index;
+        label.appendChild(numSpan);
+        label.appendChild(document.createTextNode(' Cookie ' + index));
+
+        leftGroup.appendChild(toggleBtn);
+        leftGroup.appendChild(label);
+
+        // 右侧：删除按钮
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'compare-input-remove';
+        removeBtn.dataset.removeId = id;
+        removeBtn.title = '移除';
+        removeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
+        header.appendChild(leftGroup);
+        header.appendChild(removeBtn);
+
+        const body = document.createElement('div');
+        body.className = 'compare-input-body';
+
+        const editorDiv = document.createElement('div');
+        editorDiv.id = 'cookie-compare-editor-' + id;
+        editorDiv.className = 'code-editor-container';
+
+        body.appendChild(editorDiv);
+        card.appendChild(header);
+        card.appendChild(body);
+        container.appendChild(card);
+
+        // 创建 CodeMirror 编辑器
+        let editor = null;
+        try {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            if (REOT.CodeEditor) {
+                editor = await REOT.CodeEditor.create('#cookie-compare-editor-' + id, {
+                    language: 'javascript',
+                    value: '',
+                    readOnly: false,
+                    theme: theme,
+                    lineWrapping: true,
+                    placeholder: '粘贴第 ' + index + ' 个 Cookie...'
+                });
+            }
+        } catch (e) {
+            console.error('Failed to create cookie compare editor:', e);
+            // 降级为 textarea
+            editorDiv.remove();
+            const textarea = document.createElement('textarea');
+            textarea.className = 'form-input form-textarea form-textarea--code compare-textarea';
+            textarea.placeholder = '粘贴第 ' + index + ' 个 Cookie...';
+            textarea.dataset.id = id;
+            body.appendChild(textarea);
+        }
+
+        const editorInfo = {
+            id: id,
+            index: index,
+            editor: editor,
+            element: card
+        };
+        compareInputs.push(editorInfo);
+
+        updateCompareInputsUI();
+        return editorInfo;
+    }
+
+    /**
+     * 移除对比输入框
+     */
+    function removeCompareInput(id) {
+        const index = compareInputs.findIndex(input => input.id === id);
+        if (index === -1) return;
+
+        // 至少保留2个
+        if (compareInputs.length <= 2) {
+            REOT.utils?.showNotification('至少需要保留 2 个对比输入框', 'warning');
+            return;
+        }
+
+        const input = compareInputs[index];
+
+        // 销毁编辑器
+        if (input.editor && REOT.CodeEditor) {
+            REOT.CodeEditor.destroy(input.editor);
+        }
+
+        input.element.remove();
+        compareInputs.splice(index, 1);
+
+        reindexCompareInputs();
+        updateCompareInputsUI();
+    }
+
+    /**
+     * 重新编号输入框
+     */
+    function reindexCompareInputs() {
+        compareInputs.forEach((input, index) => {
+            input.index = index + 1;
+            const label = input.element.querySelector('.compare-input-label');
+            if (label) {
+                const numSpan = label.querySelector('.compare-input-number');
+                if (numSpan) {
+                    numSpan.textContent = index + 1;
+                }
+                // 更新文本节点
+                const textNode = label.childNodes[1];
+                if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+                    textNode.textContent = ' Cookie ' + (index + 1);
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取编辑器值
+     */
+    function getCompareEditorValue(editorInfo) {
+        if (editorInfo.editor) {
+            return editorInfo.editor.getValue();
+        }
+        // 降级到 textarea
+        const textarea = editorInfo.element.querySelector('.compare-textarea');
+        return textarea ? textarea.value : '';
+    }
+
+    /**
+     * 设置编辑器值
+     */
+    function setCompareEditorValue(editorInfo, value) {
+        if (editorInfo.editor) {
+            editorInfo.editor.setValue(value);
+        } else {
+            const textarea = editorInfo.element.querySelector('.compare-textarea');
+            if (textarea) {
+                textarea.value = value;
+            }
+        }
+    }
+
+    /**
+     * 更新对比输入框 UI
+     */
+    function updateCompareInputsUI() {
+        const badge = document.getElementById('cookie-compare-count-badge');
+        if (badge) {
+            badge.textContent = compareInputs.length + ' 个 Cookie';
+        }
+
+        // 更新删除按钮显示状态
+        compareInputs.forEach(input => {
+            const removeBtn = input.element.querySelector('.compare-input-remove');
+            if (removeBtn) {
+                removeBtn.style.display = compareInputs.length <= 2 ? 'none' : '';
+            }
+        });
+    }
+
+    /**
+     * 初始化对比输入框
+     */
+    async function initCompareInputs() {
+        const container = document.getElementById('cookie-compare-inputs-container');
+        if (!container || compareInputs.length > 0) return;
+
+        await createCompareInput(1);
+        await createCompareInput(2);
+    }
+
+    /**
+     * 清除所有对比输入
+     */
+    function clearAllCompareInputs() {
+        compareInputs.forEach(input => {
+            setCompareEditorValue(input, '');
+        });
+
+        // 隐藏结果
+        const result = document.getElementById('cookie-compare-result');
+        if (result) {
+            result.style.display = 'none';
+        }
+    }
+
+    /**
+     * 折叠所有对比输入
+     */
+    function collapseAllCompareInputs() {
+        compareInputs.forEach(input => {
+            input.element.classList.add('collapsed');
+        });
+    }
+
+    /**
+     * 对比多个 Cookie
+     */
+    function compareMultipleCookies(cookieStrings) {
+        const parsedCookies = cookieStrings.map((str, index) => {
+            const parsed = parseCookieString(str);
+            const cookieMap = {};
+            parsed.forEach(c => {
+                cookieMap[c.name] = c.value;
+            });
+            return {
+                index: index + 1,
+                cookies: cookieMap,
+                count: parsed.length
+            };
+        });
+
+        return compareMultipleCookieObjects(parsedCookies);
+    }
+
+    /**
+     * 对比多个 Cookie 对象
+     */
+    function compareMultipleCookieObjects(cookieObjects) {
+        const count = cookieObjects.length;
+        const allKeys = new Set();
+
+        // 收集所有 cookie 名称
+        cookieObjects.forEach(obj => {
+            Object.keys(obj.cookies).forEach(key => allKeys.add(key));
+        });
+
+        const result = {
+            count: count,
+            totalKeys: allKeys.size,
+            cookies: [],
+            stats: {
+                identical: 0,
+                different: 0,
+                partial: 0
+            }
+        };
+
+        // 对每个 key 进行对比
+        allKeys.forEach(key => {
+            const values = cookieObjects.map(obj => obj.cookies[key] || null);
+            const nonNullValues = values.filter(v => v !== null);
+            const uniqueValues = [...new Set(nonNullValues)];
+
+            let status;
+            if (nonNullValues.length === count && uniqueValues.length === 1) {
+                status = 'identical';
+                result.stats.identical++;
+            } else if (nonNullValues.length < count) {
+                status = 'partial';
+                result.stats.partial++;
+            } else {
+                status = 'different';
+                result.stats.different++;
+            }
+
+            result.cookies.push({
+                name: key,
+                values: values,
+                status: status
+            });
+        });
+
+        // 按状态排序：different -> partial -> identical
+        result.cookies.sort((a, b) => {
+            const order = { different: 0, partial: 1, identical: 2 };
+            return order[a.status] - order[b.status];
+        });
+
+        return result;
+    }
+
+    /**
+     * 渲染对比结果
+     */
+    function renderCompareResult(diff) {
+        const resultDiv = document.getElementById('cookie-compare-result');
+        if (!resultDiv) return;
+
+        // 渲染统计信息
+        const statsDiv = document.getElementById('cookie-diff-stats');
+        if (statsDiv) {
+            statsDiv.textContent = '';
+
+            const stats = [
+                { className: 'diff-stat--identical', value: diff.stats.identical, label: '相同' },
+                { className: 'diff-stat--different', value: diff.stats.different, label: '不同' },
+                { className: 'diff-stat--partial', value: diff.stats.partial, label: '部分存在' }
+            ];
+
+            stats.forEach(stat => {
+                const div = document.createElement('div');
+                div.className = 'diff-stat ' + stat.className;
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'diff-stat-value';
+                valueSpan.textContent = stat.value;
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'diff-stat-label';
+                labelSpan.textContent = stat.label;
+
+                div.appendChild(valueSpan);
+                div.appendChild(labelSpan);
+                statsDiv.appendChild(div);
+            });
+        }
+
+        // 渲染 Cookie 差异表格
+        renderDiffTable('#diff-cookies-table', diff.cookies, diff.count);
+
+        resultDiv.style.display = 'block';
+    }
+
+    /**
+     * 渲染差异表格
+     */
+    function renderDiffTable(tableSelector, items, count) {
+        const table = document.querySelector(tableSelector);
+        if (!table) return;
+
+        const thead = table.querySelector('thead');
+        const tbody = table.querySelector('tbody');
+
+        // 清空表格
+        thead.textContent = '';
+        tbody.textContent = '';
+
+        // 生成表头
+        const headerRow = document.createElement('tr');
+        const nameHeader = document.createElement('th');
+        nameHeader.textContent = '名称';
+        headerRow.appendChild(nameHeader);
+
+        for (let i = 1; i <= count; i++) {
+            const th = document.createElement('th');
+            th.textContent = 'Cookie ' + i;
+            headerRow.appendChild(th);
+        }
+
+        const statusHeader = document.createElement('th');
+        statusHeader.textContent = '状态';
+        headerRow.appendChild(statusHeader);
+        thead.appendChild(headerRow);
+
+        // 生成表体
+        if (items.length === 0) {
+            const emptyRow = document.createElement('tr');
+            const emptyCell = document.createElement('td');
+            emptyCell.setAttribute('colspan', count + 2);
+            emptyCell.className = 'empty-cell';
+            emptyCell.textContent = '无差异';
+            emptyRow.appendChild(emptyCell);
+            tbody.appendChild(emptyRow);
+            return;
+        }
+
+        items.forEach(item => {
+            const row = document.createElement('tr');
+            row.className = 'diff-row diff-row--' + item.status;
+
+            const keyCell = document.createElement('td');
+            keyCell.className = 'diff-key';
+            keyCell.textContent = item.name;
+            row.appendChild(keyCell);
+
+            item.values.forEach(value => {
+                const valueCell = document.createElement('td');
+                valueCell.className = 'diff-value';
+                if (value === null) {
+                    valueCell.classList.add('diff-value--missing');
+                    valueCell.textContent = '-';
+                } else {
+                    valueCell.textContent = truncate(value, 30);
+                    valueCell.title = value;
+                }
+                row.appendChild(valueCell);
+            });
+
+            const statusLabels = {
+                identical: '相同',
+                different: '不同',
+                partial: '部分'
+            };
+            const statusCell = document.createElement('td');
+            statusCell.className = 'diff-status diff-status--' + item.status;
+            statusCell.textContent = statusLabels[item.status];
+            row.appendChild(statusCell);
+
+            tbody.appendChild(row);
+        });
+    }
+
+    /**
+     * 复制差异为 JSON
+     */
+    function copyCookieDiffAsJson(mode) {
+        const cookieStrings = compareInputs.map(input => getCompareEditorValue(input)).filter(v => v.trim());
+        if (cookieStrings.length < 2) return;
+
+        const diff = compareMultipleCookies(cookieStrings);
+        let data;
+
+        if (mode === 'diff') {
+            // 只复制有差异的项
+            data = diff.cookies
+                .filter(item => item.status !== 'identical')
+                .map(item => {
+                    const obj = { name: item.name };
+                    item.values.forEach((v, i) => {
+                        obj['cookie' + (i + 1)] = v;
+                    });
+                    return obj;
+                });
+        } else {
+            // 复制所有项
+            data = diff.cookies.map(item => {
+                const obj = { name: item.name, status: item.status };
+                item.values.forEach((v, i) => {
+                    obj['cookie' + (i + 1)] = v;
+                });
+                return obj;
+            });
+        }
+
+        copyToClipboard(JSON.stringify(data, null, 2));
+    }
+
+    /**
+     * 加载示例数据
+     */
+    async function loadCompareSampleData() {
+        const samples = [
+            'session_id=abc123; user_id=1001; theme=dark; language=zh-CN; _ga=GA1.2.123456',
+            'session_id=xyz789; user_id=1001; theme=light; language=en-US; _ga=GA1.2.123456; new_feature=enabled'
+        ];
+
+        // 确保有足够的输入框
+        while (compareInputs.length < samples.length) {
+            await createCompareInput(compareInputs.length + 1);
+        }
+
+        samples.forEach((sample, index) => {
+            if (compareInputs[index]) {
+                setCompareEditorValue(compareInputs[index], sample);
+            }
+        });
+    }
+
+    // 功能选项卡切换
+    document.addEventListener('click', (e) => {
+        const tab = e.target.closest('.feature-tab');
+        if (tab && isCookieParserToolActive()) {
+            const feature = tab.dataset.feature;
+
+            // 更新选项卡状态
+            document.querySelectorAll('.feature-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // 切换功能区
+            document.querySelectorAll('.feature-section').forEach(s => s.classList.remove('active'));
+            const section = document.getElementById(feature + '-section');
+            if (section) {
+                section.classList.add('active');
+            }
+
+            // 初始化对比输入框
+            if (feature === 'compare') {
+                initCompareInputs();
+            }
+        }
+    });
+
+    // 对比功能事件处理
+    document.addEventListener('click', async (e) => {
+        if (!isCookieParserToolActive()) return;
+
+        const target = e.target;
+
+        // 添加对比输入框
+        if (target.id === 'add-cookie-compare-btn' || target.closest('#add-cookie-compare-btn')) {
+            await createCompareInput(compareInputs.length + 1);
+        }
+
+        // 移除对比输入框
+        const removeBtn = target.closest('.compare-input-remove');
+        if (removeBtn) {
+            const card = removeBtn.closest('.compare-input-card');
+            if (card) {
+                const id = parseInt(card.dataset.id, 10);
+                removeCompareInput(id);
+            }
+        }
+
+        // 折叠/展开输入框
+        const toggleBtn = target.closest('.compare-input-toggle');
+        if (toggleBtn) {
+            const card = toggleBtn.closest('.compare-input-card');
+            if (card) {
+                card.classList.toggle('collapsed');
+            }
+        }
+
+        // 对比按钮
+        if (target.id === 'cookie-compare-btn' || target.closest('#cookie-compare-btn')) {
+            const cookieStrings = compareInputs.map(input => getCompareEditorValue(input)).filter(v => v.trim());
+
+            if (cookieStrings.length < 2) {
+                REOT.utils?.showNotification('请至少输入 2 个 Cookie 进行对比', 'warning');
+                return;
+            }
+
+            const diff = compareMultipleCookies(cookieStrings);
+            renderCompareResult(diff);
+            collapseAllCompareInputs();
+
+            REOT.utils?.showNotification('对比完成：' + diff.stats.different + ' 个不同，' + diff.stats.partial + ' 个部分存在', 'success');
+        }
+
+        // 示例按钮
+        if (target.id === 'cookie-compare-sample-btn' || target.closest('#cookie-compare-sample-btn')) {
+            await loadCompareSampleData();
+        }
+
+        // 清除按钮
+        if (target.id === 'cookie-compare-clear-btn' || target.closest('#cookie-compare-clear-btn')) {
+            clearAllCompareInputs();
+        }
+
+        // 复制差异 JSON
+        const copyDiffBtn = target.closest('.copy-diff-btn');
+        if (copyDiffBtn) {
+            const mode = copyDiffBtn.dataset.mode;
+            copyCookieDiffAsJson(mode);
+        }
+
+        // 点击复制 diff 表格单元格
+        const diffKey = target.closest('.diff-key');
+        if (diffKey) {
+            copyToClipboard(diffKey.textContent);
+        }
+
+        const diffValue = target.closest('.diff-value:not(.diff-value--missing)');
+        if (diffValue) {
+            const fullValue = diffValue.title || diffValue.textContent;
+            copyToClipboard(fullValue);
         }
     });
 

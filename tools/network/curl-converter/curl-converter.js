@@ -1722,6 +1722,20 @@
         if (!table) return;
 
         table.classList.add('multi-compare');
+
+        // 检查是否需要横向滚动提示
+        const container = table.closest('.diff-table-container');
+        if (container) {
+            // 延迟检查，等待表格渲染完成
+            setTimeout(() => {
+                if (container.scrollWidth > container.clientWidth) {
+                    container.classList.add('scrollable');
+                } else {
+                    container.classList.remove('scrollable');
+                }
+            }, 100);
+        }
+
         const thead = table.querySelector('thead');
         const tbody = table.querySelector('tbody');
         thead.innerHTML = '';
@@ -2615,6 +2629,20 @@
             setTimeout(initializeEditors, 100);
         }
     });
+
+    // 支持 Shift+滚轮 横向滚动差异表格
+    document.addEventListener('wheel', (e) => {
+        if (!e.shiftKey) return;
+
+        const container = e.target.closest('.diff-table-container');
+        if (!container) return;
+
+        // 检查是否有横向滚动空间
+        if (container.scrollWidth > container.clientWidth) {
+            e.preventDefault();
+            container.scrollLeft += e.deltaY;
+        }
+    }, { passive: false });
 
     // 导出工具函数
     window.CurlConverterTool = {

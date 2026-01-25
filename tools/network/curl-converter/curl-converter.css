@@ -914,7 +914,51 @@
 /* 差异表格容器 */
 .diff-table-container {
     overflow-x: auto;
+    overflow-y: visible;
     max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-light) transparent;
+    position: relative;
+}
+
+.diff-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.diff-table-container::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.diff-table-container::-webkit-scrollbar-thumb {
+    background: var(--color-primary-light);
+    border-radius: 4px;
+}
+
+.diff-table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* 横向滚动提示 */
+.diff-table-container.scrollable::after {
+    content: '← Shift+滚轮 横向滚动 →';
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 支持 Shift + 滚轮横向滚动 */
+.diff-table-container:focus {
+    outline: none;
 }
 
 .diff-table {
@@ -1786,23 +1830,103 @@
 }
 
 /* 多列对比表格动态列宽 */
+.diff-table.multi-compare {
+    table-layout: auto;
+    width: auto;
+    min-width: 100%;
+}
+
+.diff-table.multi-compare th,
+.diff-table.multi-compare td {
+    width: auto !important;
+    max-width: none !important;
+}
+
 .diff-table.multi-compare th:first-child,
 .diff-table.multi-compare td:first-child {
-    width: 120px;
+    width: 120px !important;
     min-width: 100px;
+    max-width: 150px !important;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--bg-tertiary);
+}
+
+.diff-table.multi-compare td:first-child {
+    background: var(--bg-primary);
+}
+
+.diff-table.multi-compare tr.diff-added td:first-child {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.diff-table.multi-compare tr.diff-removed td:first-child {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.diff-table.multi-compare tr.diff-changed td:first-child {
+    background: rgba(245, 158, 11, 0.1);
 }
 
 .diff-table.multi-compare th:last-child,
 .diff-table.multi-compare td:last-child {
-    width: 80px;
+    width: 80px !important;
     min-width: 70px;
+    max-width: 100px !important;
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    background: var(--bg-tertiary);
+}
+
+.diff-table.multi-compare td:last-child {
+    background: var(--bg-primary);
+}
+
+.diff-table.multi-compare tr.diff-added td:last-child {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.diff-table.multi-compare tr.diff-removed td:last-child {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.diff-table.multi-compare tr.diff-changed td:last-child {
+    background: rgba(245, 158, 11, 0.1);
 }
 
 .diff-table.multi-compare th.value-col,
 .diff-table.multi-compare td.value-col {
-    min-width: 120px;
-    max-width: 200px;
+    min-width: 150px;
+    max-width: 250px !important;
     word-break: break-all;
+}
+
+/* 暗色主题多列对比 */
+[data-theme="dark"] .diff-table.multi-compare th:first-child,
+[data-theme="dark"] .diff-table.multi-compare th:last-child {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .diff-table.multi-compare td:first-child,
+[data-theme="dark"] .diff-table.multi-compare td:last-child {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .diff-table.multi-compare tr.diff-added td:first-child,
+[data-theme="dark"] .diff-table.multi-compare tr.diff-added td:last-child {
+    background: rgba(16, 185, 129, 0.15);
+}
+
+[data-theme="dark"] .diff-table.multi-compare tr.diff-removed td:first-child,
+[data-theme="dark"] .diff-table.multi-compare tr.diff-removed td:last-child {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+[data-theme="dark"] .diff-table.multi-compare tr.diff-changed td:first-child,
+[data-theme="dark"] .diff-table.multi-compare tr.diff-changed td:last-child {
+    background: rgba(245, 158, 11, 0.15);
 }
 
 /* URL 对比多行显示 */
